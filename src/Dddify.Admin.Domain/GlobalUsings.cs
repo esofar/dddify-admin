@@ -1,0 +1,9 @@
+﻿global using Dddify.Admin.Domain.Entities.Dictionaries;
+global using Dddify.Admin.Domain.Entities.Organizations;
+global using Dddify.Admin.Domain.Entities.Permissions;
+global using Dddify.Admin.Domain.Entities.Roles;
+global using Dddify.Admin.Domain.Entities.Users;
+global using Dddify.Domain;
+global using Dddify.Domain.Entities;
+global using Dddify.Exceptions;
+global using Microsoft.EntityFrameworkCore;

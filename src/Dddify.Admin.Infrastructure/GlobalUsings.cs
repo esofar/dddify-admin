@@ -1,0 +1,14 @@
+﻿global using Dddify.Admin.Application.Interfaces;
+global using Dddify.Admin.Domain.Entities.Dictionaries;
+global using Dddify.Admin.Domain.Entities.Organizations;
+global using Dddify.Admin.Domain.Entities.Permissions;
+global using Dddify.Admin.Domain.Entities.Roles;
+global using Dddify.Admin.Domain.Entities.Users;
+global using Dddify.Admin.Domain.Repositories;
+global using Dddify.Admin.Infrastructure.Repositories;
+global using Dddify.Admin.Infrastructure.Services;
+global using Dddify.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.EntityFrameworkCore.Metadata.Builders;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.Logging;

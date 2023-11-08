@@ -1,0 +1,6 @@
+{
+  "invalid_email": "Email does not exist.",
+  "invalid_phonenumber": "Phone number does not exist.",
+  "credentials_error": "Email or password is not correct.",
+  "captcha_error": "Captcha is not correct."
+}

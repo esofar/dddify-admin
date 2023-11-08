@@ -1,0 +1,82 @@
+@import '~antd/es/style/variable.less';
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+.colorWeak {
+  filter: invert(80%);
+}
+
+.ant-layout {
+  min-height: 100vh;
+}
+
+.ant-pro-sider.ant-layout-sider.ant-pro-sider-fixed {
+  left: unset;
+}
+
+canvas {
+  display: block;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+@media (max-width: @screen-xs) {
+  .ant-table {
+    width: 100%;
+    overflow-x: auto;
+
+    &-thead>tr,
+    &-tbody>tr {
+
+      >th,
+      >td {
+        white-space: pre;
+
+        >span {
+          display: block;
+        }
+      }
+    }
+  }
+}
+
+.ant-page-header-heading {
+  display: none !important;
+}
+
+.ant-pro-page-container .ant-pro-page-container-warp-page-header {
+  padding-inline-start: 20px !important;
+  padding-inline-end: 20px !important;
+  margin-block-end: 0px !important;
+}
+
+.ant-pro-page-container-children-content {
+  margin-inline: 20px;
+}
+
+.row-dragging {
+  background: #fafafa;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.row-dragging td {
+  padding: 12px 8px;
+}
+
+.row-dragging .drag-visible {
+  visibility: visible;
+}
