@@ -1,0 +1,44 @@
+{
+  "user_invalid_credentials": "Invalid account or password.",
+  "user_invalid_sms_code": "Invalid SMS verification code.",
+  "user_not_found": "User not found.",
+  "user_email_duplicate": "Email address is already in use.",
+  "user_phone_number_duplicate": "Phone number is already in use.",
+  "user_already_enabled": "User is already enabled.",
+  "user_already_disabled": "User is already disabled.",
+  "user_already_deleted": "User has already been deleted.",
+  "user_role_not_assigned": "The specified role is not assigned to the user.",
+  "user_roles_empty": "At least one role must be assigned to the user.",
+
+  "session_invalid_refresh_token": "Login session has expired, please log in again.",
+  "session_refresh_token_reused": "Login session is abnormal, please log in again.",
+
+  "department_not_found": "Department not found.",
+  "department_name_already_exists": "The department name already exists.",
+  "department_has_children": "This department has child departments and cannot be deleted.",
+  "department_parent_cycle": "The parent department cannot be a descendant of the current department.",
+
+  "role_not_found": "Role not found.",
+  "role_name_duplicate": "Role name is already in use.",
+  "role_preset_cannot_be_deleted": "Built-in roles cannot be deleted.",
+  "role_has_assigned_users": "This role has been assigned to {0} users. Please remove user assignments before deleting it.",
+
+  "permission_not_found": "Permission not found.",
+  "permission_code_already_exists": "Permission code already exists.",
+  "permission_name_already_exists": "A permission with the same name already exists under the same parent.",
+  "permission_parent_cycle": "The parent permission cannot be a descendant of the current permission.",
+  "permission_has_children": "This permission has child permissions and cannot be deleted.",
+
+  "lookup_duplicate": "Dictionary code or name already exists.",
+  "lookup_has_items": "This dictionary contains dictionary items and cannot be deleted.",
+  "lookup_item_not_found": "Dictionary item not found or has been deleted.",
+  "lookup_already_exists": "Dictionary item value or label already exists.",
+  "lookup_item_already_enabled": "Dictionary item is already enabled.",
+  "lookup_item_already_disabled": "Dictionary item is already disabled.",
+  "lookup_preset_item_not_allowed": "Built-in dictionary items do not allow this operation.",
+
+  "sms_template_not_found": "SMS template not found.",
+  "sms_provider_unavailable": "SMS provider is unavailable.",
+  "sms_send_failed": "Failed to send SMS, please try again later.",
+  "sms_rate_limit_exceeded": "SMS requests are too frequent, please try again later."
+}

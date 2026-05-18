@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Dddify.Admin.Application/Dddify.Admin.Application.csproj" />
+    <Project Path="src/Dddify.Admin.Domain/Dddify.Admin.Domain.csproj" />
+    <Project Path="src/Dddify.Admin.Infrastructure/Dddify.Admin.Infrastructure.csproj" />
+    <Project Path="src/Dddify.Admin.Web/Dddify.Admin.Web.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Dddify.Admin.Application.Tests/Dddify.Admin.Application.Tests.csproj" />
+    <Project Path="tests/Dddify.Admin.Domain.Tests/Dddify.Admin.Domain.Tests.csproj" />
+    <Project Path="tests/Dddify.Admin.IntegrationTests/Dddify.Admin.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

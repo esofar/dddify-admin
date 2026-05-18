@@ -1,0 +1,44 @@
+{
+  "user_invalid_credentials": "账号或密码错误",
+  "user_invalid_sms_code": "短信验证码错误",
+  "user_not_found": "用户不存在",
+  "user_email_duplicate": "邮箱已被使用",
+  "user_phone_number_duplicate": "手机号已被使用",
+  "user_already_enabled": "用户已被启用",
+  "user_already_disabled": "用户已被禁用",
+  "user_already_deleted": "用户已被删除",
+  "user_role_not_assigned": "用户未分配指定角色",
+  "user_roles_empty": "用户必须至少分配一个角色",
+
+  "session_invalid_refresh_token": "登录状态已失效，请重新登录",
+  "session_refresh_token_reused": "登录状态异常，请重新登录",
+
+  "department_not_found": "部门不存在",
+  "department_name_already_exists": "该部门名称已存在",
+  "department_has_children": "该部门存在子部门，无法删除",
+  "department_parent_cycle": "父级部门不能是当前部门的子级部门",
+
+  "role_not_found": "角色不存在",
+  "role_name_duplicate": "角色名称已被使用",
+  "role_preset_cannot_be_deleted": "内置角色不允许删除",
+  "role_has_assigned_users": "当前角色已分配给 {0} 个用户，请先解除用户关联后再删除",
+
+  "permission_not_found": "权限不存在",
+  "permission_code_already_exists": "权限编码已存在",
+  "permission_name_already_exists": "权限名称在同一上级下已存在",
+  "permission_parent_cycle": "父级权限不能是当前权限的子级权限",
+  "permission_has_children": "该权限存在子级权限，无法删除",
+
+  "lookup_duplicate": "字典编码或名称已存在",
+  "lookup_has_items": "该字典包含字典项，无法删除",
+  "lookup_item_not_found": "字典项不存在或已被删除",
+  "lookup_already_exists": "字典项值或标签已存在",
+  "lookup_item_already_enabled": "字典项已处于启用状态",
+  "lookup_item_already_disabled": "字典项已处于禁用状态",
+  "lookup_preset_item_not_allowed": "内置字典项不允许此操作",
+
+  "sms_template_not_found": "短信模板不存在",
+  "sms_provider_unavailable": "短信服务商不可用",
+  "sms_send_failed": "短信发送失败，请稍后重试",
+  "sms_rate_limit_exceeded": "短信发送过于频繁，请稍后再试"
+}

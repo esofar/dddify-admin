@@ -1,0 +1,17 @@
+﻿namespace Dddify.Admin.Domain.Aggregates.Users;
+
+/// <summary>
+/// 用户性别枚举。
+/// </summary>
+public enum UserGender
+{
+    /// <summary>
+    /// 男性。
+    /// </summary>
+    Male = 1,
+
+    /// <summary>
+    /// 女性。
+    /// </summary>
+    Female = 2,
+}
