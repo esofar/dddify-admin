@@ -1,4 +1,4 @@
-namespace Dddify.Admin.Application.Common.Locking;
+namespace Dddify.Admin.Application.Services.Locking;
 
 /// <summary>
 /// 提供跨进程、跨实例的分布式互斥锁能力。

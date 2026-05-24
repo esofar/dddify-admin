@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Dddify.Admin.Application.Common.Sms;
+namespace Dddify.Admin.Application.Services.Sms;
 
 public static class PhoneNumberProtector
 {

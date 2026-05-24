@@ -1,13 +1,11 @@
-global using Dddify.Admin.Application.Common.Locking;
-global using Dddify.Admin.Application.Common.Sms;
-global using Dddify.Admin.Application.Exceptions;
 global using Dddify.Admin.Application.Services;
+global using Dddify.Admin.Application.Services.Locking;
+global using Dddify.Admin.Application.Services.Sms;
 global using Dddify.Admin.Domain.Repositories;
 global using Dddify.Admin.Infrastructure.Data;
 global using Dddify.Dependency;
 global using Dddify.EntityFrameworkCore;
 global using Dddify.Timing;
-//global using Microsoft.AspNetCore.Http;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.EntityFrameworkCore.Metadata.Builders;
 global using Microsoft.Extensions.Configuration;

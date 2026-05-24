@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace Dddify.Admin.Application.Common.Caching;
+namespace Dddify.Admin.Application.Services.Caching;
 
 /// <summary>
 /// Provides JSON-based extension methods for <see cref="IDistributedCache"/>.

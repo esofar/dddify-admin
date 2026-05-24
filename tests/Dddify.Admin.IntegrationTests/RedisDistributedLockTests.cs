@@ -1,4 +1,4 @@
-using Dddify.Admin.Application.Common.Locking;
+using Dddify.Admin.Application.Services.Locking;
 using Dddify.Admin.Infrastructure.Caching;
 using Dddify.Admin.Infrastructure.Locking;
 using Microsoft.Extensions.Logging.Abstractions;

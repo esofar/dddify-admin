@@ -1,5 +1,6 @@
-﻿global using Dddify.Admin.Application.Common.Caching;
-global using Dddify.Admin.Application.Services;
+﻿global using Dddify.Admin.Application.Services;
+global using Dddify.Admin.Application.Services.Caching;
+global using Dddify.Admin.Application.Services.Security;
 global using Dddify.Admin.Domain.Repositories;
 global using Dddify.EntityFrameworkCore;
 global using Dddify.Exceptions;
@@ -12,3 +13,4 @@ global using Mapster;
 global using MediatR;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.Extensions.Caching.Distributed;
+global using Microsoft.Extensions.Localization;

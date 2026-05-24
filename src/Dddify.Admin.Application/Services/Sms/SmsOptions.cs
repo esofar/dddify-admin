@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Dddify.Admin.Application.Common.Sms;
+namespace Dddify.Admin.Application.Services.Sms;
 
 public sealed class SmsOptions
 {

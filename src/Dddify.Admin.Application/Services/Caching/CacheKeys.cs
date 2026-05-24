@@ -1,4 +1,4 @@
-﻿namespace Dddify.Admin.Application.Common.Caching;
+﻿namespace Dddify.Admin.Application.Services.Caching;
 
 public static class CacheKeys
 {

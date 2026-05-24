@@ -1,4 +1,6 @@
-﻿namespace Dddify.Admin.Infrastructure.Authentication;
+﻿using Dddify.Admin.Application.Services.Security;
+
+namespace Dddify.Admin.Infrastructure.Security;
 
 [SingletonDependency(RegistrationMode.AsImplementedInterfaces)]
 public class PasswordHasher : IPasswordHasher

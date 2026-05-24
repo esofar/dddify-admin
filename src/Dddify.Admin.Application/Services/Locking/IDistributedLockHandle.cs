@@ -1,4 +1,4 @@
-namespace Dddify.Admin.Application.Common.Locking;
+namespace Dddify.Admin.Application.Services.Locking;
 
 /// <summary>
 /// 表示一次已获取的分布式锁持有句柄。
