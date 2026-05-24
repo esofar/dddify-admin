@@ -12,6 +12,16 @@ export const USER_STATUS = {
   Disabled: 'Disabled',
 } as const;
 
+export const USER_PERMISSIONS = {
+  create: 'system:user:create',
+  update: 'system:user:update',
+  delete: 'system:user:delete',
+  disable: 'system:user:disable',
+  enable: 'system:user:enable',
+  assignRoles: 'system:user:assign-roles',
+  resetPassword: 'system:user:reset-password',
+} as const;
+
 export type UserGenderValue = (typeof USER_GENDER)[keyof typeof USER_GENDER];
 
 export type UserStatusValue = (typeof USER_STATUS)[keyof typeof USER_STATUS];

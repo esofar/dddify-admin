@@ -2,11 +2,13 @@ import { ModalForm } from '@ant-design/pro-components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import type { TransferProps } from 'antd';
-import { message, Space, Tag, Transfer } from 'antd';
+import { message, Space, Transfer, Typography } from 'antd';
 import type { FC, Key, ReactElement } from 'react';
 import { useCallback, useState } from 'react';
 import { getAllRoles } from '@/services/v1/role';
 import { assignUserRoles, getUserRoles } from '@/services/v1/user';
+
+const { Text } = Typography;
 
 type AssignRolesFormProps = {
   trigger?: ReactElement;
@@ -31,6 +33,9 @@ const AssignRolesForm: FC<AssignRolesFormProps> = ({
   const [targetKeys, setTargetKeys] = useState<Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   const mergedOpen = open ?? innerOpen;
+  const assignableRoleCount = roles.filter(
+    (role) => !targetKeys.includes(role.id),
+  ).length;
 
   const saveMutation = useMutation({
     mutationFn: (roleIds: string[]) =>
@@ -96,20 +101,9 @@ const AssignRolesForm: FC<AssignRolesFormProps> = ({
     <>
       {contextHolder}
       <ModalForm
-        title={
-          <Space>
-            <FormattedMessage id="user.formTitle.assignRoles" />
-            <Tag
-              color="geekblue"
-              variant="filled"
-              style={{ fontWeight: 'normal' }}
-            >
-              {user.name}
-            </Tag>
-          </Space>
-        }
+        title={<FormattedMessage id="user.action.assignRoles" />}
         trigger={trigger}
-        width={520}
+        width={580}
         autoComplete="off"
         open={mergedOpen}
         onOpenChange={handleOpenChange}
@@ -124,7 +118,7 @@ const AssignRolesForm: FC<AssignRolesFormProps> = ({
           if (!success) {
             messageApi.error(
               errorMessage ??
-                intl.formatMessage({ id: 'message.assign.failure' }),
+              intl.formatMessage({ id: 'message.assign.failure' }),
             );
             return false;
           }
@@ -144,25 +138,47 @@ const AssignRolesForm: FC<AssignRolesFormProps> = ({
           },
         }}
       >
-        <Transfer<API.RoleListDto>
-          dataSource={roles}
-          titles={[
-            <FormattedMessage key="source" id="user.assign.roles.source" />,
-            <FormattedMessage key="target" id="user.assign.roles.target" />,
-          ]}
-          targetKeys={targetKeys}
-          selectedKeys={selectedKeys}
-          onChange={handleChange}
-          onSelectChange={handleSelectChange}
-          rowKey={(item) => item.id}
-          render={(item) => item.name}
-          oneWay
-          style={{ marginTop: 15 }}
-          listStyle={{
-            width: 220,
-            height: 350,
-          }}
-        />
+        <Space orientation="vertical" size="small" style={{ width: '100%' }}>
+          <Transfer<API.RoleListDto>
+            style={{
+              marginTop: 5
+            }}
+            dataSource={roles}
+            titles={[
+              <FormattedMessage
+                key="source"
+                id="user.assignRoles.source"
+              />,
+              <FormattedMessage
+                key="target"
+                id="user.assignRoles.assigned"
+              />,
+            ]}
+            targetKeys={targetKeys}
+            selectedKeys={selectedKeys}
+            onChange={handleChange}
+            onSelectChange={handleSelectChange}
+            rowKey={(item) => item.id}
+            render={(item) => item.name}
+            oneWay
+            showSearch
+            locale={{
+              searchPlaceholder: intl.formatMessage({
+                id: 'user.assignRoles.searchPlaceholder',
+              }),
+            }}
+            styles={{
+              section: {
+                width: 250,
+                height: 360,
+              },
+            }}
+          />
+
+          <Text type="secondary">
+            <FormattedMessage id="user.assignRoles.helpText" />
+          </Text>
+        </Space>
       </ModalForm>
     </>
   );

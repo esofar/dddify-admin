@@ -26,14 +26,11 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
 
   const loginOut = async () => {
     const { deviceId } = await getFingerprint();
-    const { success, errorMessage } = await logout(
-      { deviceId },
-      {
-        headers: {
-          [DEVICE_ID_HEADER]: deviceId,
-        },
+    const { success, errorMessage } = await logout({
+      headers: {
+        [DEVICE_ID_HEADER]: deviceId,
       },
-    );
+    });
 
     if (!success) {
       message.error(errorMessage);

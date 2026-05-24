@@ -22,6 +22,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { deleteRole, searchRoles } from '@/services/v1/role';
 import AssignPermissionsForm from './components/AssignPermissionsForm';
 import RoleForm from './components/RoleForm';
+import { ROLE_PERMISSIONS } from './data';
 
 const { Text } = Typography;
 
@@ -114,7 +115,7 @@ const RolePage: FC = () => {
         width: 230,
         render: (_, record) => (
           <Space size={0} split={<Divider type="vertical" />}>
-            {access.has('system:role:update') && (
+            {access.has(ROLE_PERMISSIONS.update) && (
               <RoleForm
                 trigger={
                   <Button type="link" size="small" icon={<EditOutlined />}>
@@ -126,7 +127,7 @@ const RolePage: FC = () => {
               />
             )}
 
-            {access.has('system:role:delete') && (
+            {access.has(ROLE_PERMISSIONS.delete) && (
               <Popconfirm
                 title={<FormattedMessage id="common.confirmText.delete" />}
                 okButtonProps={{ danger: true }}
@@ -145,7 +146,7 @@ const RolePage: FC = () => {
               </Popconfirm>
             )}
 
-            {access.has('system:role:assign-permissions') && (
+            {access.has(ROLE_PERMISSIONS.assignPermissions) && (
               <Button
                 type="link"
                 size="small"
@@ -183,7 +184,7 @@ const RolePage: FC = () => {
         }}
         headerTitle={
           <Space>
-            {access.has('system:role:create') && (
+            {access.has(ROLE_PERMISSIONS.create) && (
               <RoleForm
                 trigger={
                   <Button type="primary" icon={<PlusOutlined />}>

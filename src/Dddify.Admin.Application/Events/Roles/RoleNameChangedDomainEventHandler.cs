@@ -1,7 +1,7 @@
 using Dddify.Admin.Application.Commands.Users;
 using Dddify.Admin.Domain.Events.Roles;
 
-namespace Dddify.Admin.Application.EventHandlers.Roles;
+namespace Dddify.Admin.Application.Events.Roles;
 
 public class RoleNameChangedDomainEventHandler(ISender sender) : IDomainEventHandler<RoleNameChangedDomainEvent>
 {

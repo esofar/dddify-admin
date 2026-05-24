@@ -16,7 +16,11 @@ import {
   getLookupItems,
   sortLookupItems,
 } from '@/services/v1/lookup';
-import { lookupItemStatusValueEnum, yesOrNoValueEnum } from '../data';
+import {
+  LOOKUP_PERMISSIONS,
+  lookupItemStatusValueEnum,
+  yesOrNoValueEnum,
+} from '../data';
 import LookupItemForm from './LookupItemForm';
 
 type LookupItemListProps = {
@@ -113,7 +117,7 @@ const LookupItemList: FC<LookupItemListProps> = ({
         fixed: 'right',
         render: (_, record) => (
           <Space size={0} split={<Divider type="vertical" />}>
-            {access.has('system:lookup:item:update') && (
+            {access.has(LOOKUP_PERMISSIONS.updateItem) && (
               <LookupItemForm
                 trigger={
                   <Button type="link" size="small" icon={<EditOutlined />}>
@@ -127,7 +131,7 @@ const LookupItemList: FC<LookupItemListProps> = ({
             )}
 
             {record.isEnabled
-              ? access.has('system:lookup:item:disable') && (
+              ? access.has(LOOKUP_PERMISSIONS.disableItem) && (
                   <Popconfirm
                     title={<FormattedMessage id="common.confirmText.disable" />}
                     disabled={record.isPreset}
@@ -150,7 +154,7 @@ const LookupItemList: FC<LookupItemListProps> = ({
                     </Button>
                   </Popconfirm>
                 )
-              : access.has('system:lookup:item:enable') && (
+              : access.has(LOOKUP_PERMISSIONS.enableItem) && (
                   <Popconfirm
                     title={<FormattedMessage id="common.confirmText.enable" />}
                     disabled={record.isPreset}
@@ -228,7 +232,7 @@ const LookupItemList: FC<LookupItemListProps> = ({
         }}
         headerTitle={
           <Space>
-            {access.has('system:lookup:item:create') && (
+            {access.has(LOOKUP_PERMISSIONS.createItem) && (
               <LookupItemForm
                 trigger={
                   <Button

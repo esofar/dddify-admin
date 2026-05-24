@@ -18,6 +18,7 @@ import DepartmentForm from './components/DepartmentForm';
 import type { DepartmentTreeNode } from './data';
 import {
   buildDepartmentTree,
+  DEPARTMENT_PERMISSIONS,
   departmentStatusValueEnum,
   toDepartmentTypeValueEnum,
 } from './data';
@@ -126,7 +127,7 @@ const DepartmentPage: FC = () => {
         width: 170,
         render: (_, record) => (
           <Space size={0} separator={<Divider orientation="vertical" />}>
-            {access.has('system:department:update') && (
+            {access.has(DEPARTMENT_PERMISSIONS.update) && (
               <DepartmentForm
                 trigger={
                   <Button type="link" size="small" icon={<EditOutlined />}>
@@ -139,7 +140,7 @@ const DepartmentPage: FC = () => {
               />
             )}
 
-            {access.has('system:department:delete') && (
+            {access.has(DEPARTMENT_PERMISSIONS.delete) && (
               <Popconfirm
                 title={<FormattedMessage id="common.confirmText.delete" />}
                 okButtonProps={{ danger: true }}
@@ -189,7 +190,7 @@ const DepartmentPage: FC = () => {
         }}
         headerTitle={
           <Space>
-            {access.has('system:department:create') && (
+            {access.has(DEPARTMENT_PERMISSIONS.create) && (
               <DepartmentForm
                 trigger={
                   <Button type="primary" icon={<PlusOutlined />}>

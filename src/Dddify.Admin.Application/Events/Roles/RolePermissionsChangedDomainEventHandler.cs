@@ -1,7 +1,7 @@
 using Dddify.Admin.Application.Commands.Sessions;
 using Dddify.Admin.Domain.Events.Roles;
 
-namespace Dddify.Admin.Application.EventHandlers.Roles;
+namespace Dddify.Admin.Application.Events.Roles;
 
 public class RolePermissionsChangedDomainEventHandler(ISender sender) : IDomainEventHandler<RolePermissionsChangedDomainEvent>
 {

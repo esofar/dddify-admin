@@ -1,4 +1,3 @@
-using Dddify.Admin.Application.Exceptions;
 using Dddify.Admin.Application.Exceptions.Users;
 using Dddify.Admin.Domain.Aggregates.Users;
 

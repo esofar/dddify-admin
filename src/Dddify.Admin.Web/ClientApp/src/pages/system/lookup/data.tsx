@@ -1,5 +1,15 @@
 import { FormattedMessage } from '@umijs/max';
 
+export const LOOKUP_PERMISSIONS = {
+  create: 'system:lookup:create',
+  update: 'system:lookup:update',
+  delete: 'system:lookup:delete',
+  createItem: 'system:lookup:item:create',
+  updateItem: 'system:lookup:item:update',
+  enableItem: 'system:lookup:item:enable',
+  disableItem: 'system:lookup:item:disable',
+} as const;
+
 export const lookupItemStatusValueEnum = {
   true: {
     text: (

@@ -1,7 +1,7 @@
 using Dddify.Admin.Application.Commands.Users;
 using Dddify.Admin.Domain.Events.Departments;
 
-namespace Dddify.Admin.Application.EventHandlers.Departments;
+namespace Dddify.Admin.Application.Events.Departments;
 
 public class DepartmentRenamedDomainEventHandler(ISender sender) : IDomainEventHandler<DepartmentRenamedDomainEvent>
 {

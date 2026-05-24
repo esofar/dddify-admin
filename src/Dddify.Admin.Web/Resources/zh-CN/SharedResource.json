@@ -9,6 +9,8 @@
   "user_already_deleted": "用户已被删除",
   "user_role_not_assigned": "用户未分配指定角色",
   "user_roles_empty": "用户必须至少分配一个角色",
+  "user_password_reset_email_subject": "账户密码已重置",
+  "user_password_reset_email_body": "您好，\n\n管理员已重置您的账户密码，新密码为：{0}。\n\n请使用新的登录凭据访问系统。为保障账户安全，系统已自动注销您所有已登录设备。\n\n如有疑问，请联系管理员。\n\n谢谢。",
 
   "session_invalid_refresh_token": "登录状态已失效，请重新登录",
   "session_refresh_token_reused": "登录状态异常，请重新登录",

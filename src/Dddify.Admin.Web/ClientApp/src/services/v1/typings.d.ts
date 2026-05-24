@@ -414,11 +414,6 @@ declare namespace API {
     id: string;
   };
 
-  type ResetUserPasswordRequest = {
-    /** 新密码。 */
-    newPassword: string;
-  };
-
   type RoleDetailDto = {
     concurrencyStamp: any;
     id: string;

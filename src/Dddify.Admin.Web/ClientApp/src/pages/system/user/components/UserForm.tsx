@@ -8,7 +8,7 @@ import {
 } from '@ant-design/pro-components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { message } from 'antd';
+import { message, theme } from 'antd';
 import type { FC, ReactElement } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import { createUser, getUserDetail, updateUser } from '@/services/v1/user';
@@ -50,6 +50,7 @@ const UserForm: FC<UserFormProps> = ({
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const { token } = theme.useToken();
   const formRef = useRef<ProFormInstance<UserFormValues> | undefined>(
     undefined,
   );
@@ -139,7 +140,7 @@ const UserForm: FC<UserFormProps> = ({
       <DrawerForm<UserFormValues>
         title={
           <FormattedMessage
-            id={isEditing ? 'user.formTitle.update' : 'user.formTitle.create'}
+            id={isEditing ? 'user.action.update' : 'user.action.create'}
           />
         }
         trigger={trigger}
@@ -147,7 +148,7 @@ const UserForm: FC<UserFormProps> = ({
         layout="horizontal"
         labelCol={{ span: 5 }}
         colProps={{ xs: 24, sm: 24 }}
-        width={520}
+        width={560}
         autoComplete="off"
         formRef={formRef}
         open={open}
@@ -159,11 +160,11 @@ const UserForm: FC<UserFormProps> = ({
           if (!success) {
             messageApi.error(
               errorMessage ??
-                intl.formatMessage({
-                  id: isEditing
-                    ? 'message.update.failure'
-                    : 'message.create.failure',
-                }),
+              intl.formatMessage({
+                id: isEditing
+                  ? 'message.update.failure'
+                  : 'message.create.failure',
+              }),
             );
             return false;
           }
@@ -189,84 +190,106 @@ const UserForm: FC<UserFormProps> = ({
           maskClosable: false,
         }}
       >
-        <ProFormText name="concurrencyStamp" hidden colProps={{ span: 0 }} />
-
-        <ProFormText
-          name="name"
-          label={<FormattedMessage id="user.label.name" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 20,
+        <div
+          style={{
+            width: '100%',
+            padding: `${token.paddingMD}px ${token.padding}px 0`,
+            border: `1px solid ${token.colorBorderSecondary}`,
+            borderRadius: token.borderRadius,
+            background: token.colorFillAlter,
           }}
-          rules={[requiredRule, noSpecialRule]}
-        />
+        >
+          <ProFormText name="concurrencyStamp" hidden colProps={{ span: 0 }} />
 
-        <ProFormText
-          name="nickName"
-          label={<FormattedMessage id="user.label.nickName" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 20,
-          }}
-          rules={[noSpecialRule]}
-        />
+          <ProFormText
+            name="name"
+            label={<FormattedMessage id="user.label.name" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 20,
+            }}
+            rules={[requiredRule, noSpecialRule]}
+          />
 
-        <ProFormSelect
-          name="gender"
-          label={<FormattedMessage id="user.label.gender" />}
-          valueEnum={userGenderValueEnum}
-          rules={[requiredRule]}
-        />
+          <ProFormText
+            name="nickName"
+            label={<FormattedMessage id="user.label.nickName" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 20,
+            }}
+            rules={[noSpecialRule]}
+          />
 
-        <ProFormDatePicker
-          name="birthDate"
-          label={<FormattedMessage id="user.label.birthDate" />}
-          width="100%"
-        />
+          <ProFormSelect
+            name="gender"
+            label={<FormattedMessage id="user.label.gender" />}
+            valueEnum={userGenderValueEnum}
+            rules={[requiredRule]}
+          />
 
-        <ProFormText
-          name="email"
-          label={<FormattedMessage id="user.label.email" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 50,
-          }}
-          rules={[requiredRule, emailRule]}
-        />
+          <ProFormDatePicker
+            name="birthDate"
+            label={<FormattedMessage id="user.label.birthDate" />}
+            width="100%"
+          />
 
-        <ProFormText
-          name="phoneNumber"
-          label={<FormattedMessage id="user.label.phoneNumber" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 11,
-          }}
-          rules={[requiredRule, phoneNumberRule]}
-        />
+          <ProFormText
+            name="email"
+            label={<FormattedMessage id="user.label.email" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 50,
+            }}
+            rules={[requiredRule, emailRule]}
+          />
 
-        <ProFormTreeSelect
-          name="departmentId"
-          label={<FormattedMessage id="user.label.departmentId" />}
-          fieldProps={{
-            treeData: departments,
-            allowClear: true,
-            treeDataSimpleMode: true,
-            treeDefaultExpandAll: true,
-            treeLine: true,
-            fieldNames: {
-              label: 'name',
-              value: 'id',
-            },
-          }}
-          rules={[requiredRule]}
-        />
+          <ProFormText
+            name="phoneNumber"
+            label={<FormattedMessage id="user.label.phoneNumber" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 11,
+            }}
+            rules={[requiredRule, phoneNumberRule]}
+          />
+
+          <ProFormTreeSelect
+            name="departmentId"
+            label={<FormattedMessage id="user.label.departmentId" />}
+            fieldProps={{
+              treeData: departments,
+              allowClear: true,
+              showSearch: true,
+              treeNodeFilterProp: 'name',
+              treeDataSimpleMode: true,
+              treeDefaultExpandAll: true,
+              treeLine: true,
+              fieldNames: {
+                label: 'name',
+                value: 'id',
+              },
+            }}
+            rules={[requiredRule]}
+          />
+
+        </div>
 
         {!isEditing && (
-          <>
+          <div
+            style={{
+              width: '100%',
+              marginTop: token.margin,
+              padding: `${token.paddingMD}px ${token.padding}px 0`,
+              border: `1px solid ${token.colorBorderSecondary}`,
+              borderRadius: token.borderRadius,
+              background: token.colorFillAlter,
+            }}
+          >
             <ProFormText.Password
               name="password"
               label={<FormattedMessage id="user.label.password" />}
-              tooltip={<FormattedMessage id="form.rules.password.tooltip" />}
+              tooltip={<FormattedMessage id="user.label.password.tooltip" />}
               fieldProps={{
                 showCount: false,
                 maxLength: 16,
@@ -277,6 +300,7 @@ const UserForm: FC<UserFormProps> = ({
             <ProFormText.Password
               name="confirmPassword"
               label={<FormattedMessage id="user.label.confirmPassword" />}
+              tooltip={<FormattedMessage id="user.label.confirmPassword.tooltip" />}
               dependencies={['password']}
               fieldProps={{
                 showCount: false,
@@ -301,7 +325,7 @@ const UserForm: FC<UserFormProps> = ({
                 }),
               ]}
             />
-          </>
+          </div>
         )}
       </DrawerForm>
     </>

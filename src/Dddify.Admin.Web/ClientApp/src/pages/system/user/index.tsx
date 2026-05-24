@@ -3,6 +3,7 @@ import {
   CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleFilled,
   PlusOutlined,
   SafetyCertificateOutlined,
   UndoOutlined,
@@ -21,7 +22,7 @@ import {
   Button,
   Divider,
   message,
-  Popconfirm,
+  Modal,
   Space,
   Tag,
   Typography,
@@ -35,14 +36,15 @@ import {
   deleteUser,
   disableUser,
   enableUser,
+  resetUserPassword,
   searchUsers,
 } from '@/services/v1/user';
 import AssignRolesForm from './components/AssignRolesForm';
-import ResetPasswordForm from './components/ResetPasswordForm';
 import UserForm from './components/UserForm';
 import {
   toDepartmentTreeNodes,
   toRoleValueEnum,
+  USER_PERMISSIONS,
   USER_STATUS,
   userGenderValueEnum,
   userStatusValueEnum,
@@ -58,16 +60,16 @@ const UserPage: FC = () => {
   const queryClient = useQueryClient();
   const actionRef = useRef<ActionType | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
+  const [modalApi, modalContextHolder] = Modal.useModal();
   const [assigningUser, setAssigningUser] = useState<API.UserListDto>();
-  const [resettingUser, setResettingUser] = useState<API.UserListDto>();
 
   const { data: departments = [] } = useQuery({
     queryKey: ['users', 'departments', 'all'],
     queryFn: async () => {
       const { success, data, errorMessage } = await getAllDepartments();
 
-      if (!success || !data) {
-        throw new Error(errorMessage ?? 'Load departments failed.');
+      if (!success) {
+        throw new Error(errorMessage);
       }
 
       return toDepartmentTreeNodes(data);
@@ -79,8 +81,8 @@ const UserPage: FC = () => {
     queryFn: async () => {
       const { success, data, errorMessage } = await getAllRoles();
 
-      if (!success || !data) {
-        throw new Error(errorMessage ?? 'Load roles failed.');
+      if (!success) {
+        throw new Error(errorMessage);
       }
 
       return toRoleValueEnum(data);
@@ -112,6 +114,71 @@ const UserPage: FC = () => {
       reloadTable();
     },
     [intl, messageApi, reloadTable],
+  );
+
+  const handleResetPassword = useCallback(
+    (record: API.UserListDto) => {
+      modalApi.confirm({
+        title: <FormattedMessage id="user.resetPassword.title" />,
+        content: (
+          <Space orientation="vertical" size="small" style={{ width: '100%' }}>
+            <Text>
+              <FormattedMessage id="user.resetPassword.summary" />
+            </Text>
+            <Text type="secondary">{record.email}</Text>
+          </Space>
+        ),
+        okButtonProps: {
+          danger: true,
+        },
+        maskClosable: false,
+        onOk: async () => {
+          const { success, errorMessage } = await resetUserPassword({
+            id: record.id,
+          });
+
+          if (!success) {
+            messageApi.error(
+              errorMessage ?? intl.formatMessage({ id: 'message.reset.failure' }),
+            );
+            throw new Error(errorMessage ?? 'Reset password failed.');
+          }
+
+          messageApi.success(
+            intl.formatMessage({ id: 'message.reset.success' }),
+          );
+        },
+      });
+    },
+    [intl, messageApi, modalApi],
+  );
+
+  const handleConfirmUserAction = useCallback(
+    (
+      record: API.UserListDto,
+      action: UserAction,
+      titleId: string,
+      descriptionId: string,
+      successMessageId: string,
+      failureMessageId: string,
+      danger?: boolean,
+    ) => {
+      modalApi.confirm({
+        title: <FormattedMessage id={titleId} />,
+        content: <FormattedMessage id={descriptionId} />,
+        okButtonProps: {
+          danger,
+        },
+        onOk: () =>
+          runUserAction(
+            record,
+            action,
+            successMessageId,
+            failureMessageId,
+          ),
+      });
+    },
+    [modalApi, runUserAction],
   );
 
   const columns = useMemo<ProColumns<API.UserListDto>[]>(
@@ -238,142 +305,151 @@ const UserPage: FC = () => {
         valueType: 'option',
         fixed: 'right',
         width: 300,
-        render: (_, record) => (
-          <Space size={0} split={<Divider type="vertical" />}>
-            {access.has('system:user:update') && (
-              <UserForm
-                trigger={
-                  <Button type="link" size="small" icon={<EditOutlined />}>
-                    <FormattedMessage id="common.button.update" />
-                  </Button>
-                }
-                user={record}
-                departments={departments}
-                onSuccess={reloadTable}
-              />
-            )}
+        render: (_, record) => {
+          const canAssignRoles = access.has(USER_PERMISSIONS.assignRoles);
+          const canResetPassword = access.has(USER_PERMISSIONS.resetPassword);
 
-            {access.has('system:user:delete') && (
-              <Popconfirm
-                title={<FormattedMessage id="common.confirmText.delete" />}
-                okButtonProps={{ danger: true }}
-                onConfirm={() =>
-                  runUserAction(
-                    record,
-                    deleteUser,
-                    'message.delete.success',
-                    'message.delete.failure',
-                  )
-                }
-              >
-                <Button
-                  type="link"
-                  size="small"
-                  danger
-                  icon={<DeleteOutlined />}
-                >
-                  <FormattedMessage id="common.button.delete" />
-                </Button>
-              </Popconfirm>
-            )}
+          return (
+            <Space size={0} separator={<Divider orientation="vertical" />}>
+              {access.has(USER_PERMISSIONS.update) && (
+                <UserForm
+                  trigger={
+                    <Button type="link" size="small" icon={<EditOutlined />}>
+                      <FormattedMessage id="common.button.update" />
+                    </Button>
+                  }
+                  user={record}
+                  departments={departments}
+                  onSuccess={reloadTable}
+                />
+              )}
 
-            {record.status === USER_STATUS.Enabled
-              ? access.has('system:user:disable') && (
-                  <Popconfirm
-                    title={<FormattedMessage id="common.confirmText.disable" />}
-                    onConfirm={() =>
-                      runUserAction(
+              {record.status === USER_STATUS.Enabled
+                ? access.has(USER_PERMISSIONS.disable) && (
+                  <Button
+                    type="link"
+                    size="small"
+                    danger
+                    icon={<CloseCircleOutlined />}
+                    onClick={() =>
+                      handleConfirmUserAction(
                         record,
                         disableUser,
+                        'user.confirm.disable.title',
+                        'user.confirm.disable.description',
                         'message.disable.success',
                         'message.disable.failure',
+                        true,
                       )
                     }
                   >
-                    <Button
-                      type="link"
-                      size="small"
-                      icon={<CloseCircleOutlined />}
-                    >
-                      <FormattedMessage id="common.button.disable" />
-                    </Button>
-                  </Popconfirm>
+                    <FormattedMessage id="common.button.disable" />
+                  </Button>
                 )
-              : access.has('system:user:enable') && (
-                  <Popconfirm
-                    title={<FormattedMessage id="common.confirmText.enable" />}
-                    onConfirm={() =>
-                      runUserAction(
+                : access.has(USER_PERMISSIONS.enable) && (
+                  <Button
+                    type="link"
+                    size="small"
+                    icon={<CheckCircleOutlined />}
+                    onClick={() =>
+                      handleConfirmUserAction(
                         record,
                         enableUser,
+                        'user.confirm.enable.title',
+                        'user.confirm.enable.description',
                         'message.enable.success',
                         'message.enable.failure',
                       )
                     }
                   >
-                    <Button
-                      type="link"
-                      size="small"
-                      icon={<CheckCircleOutlined />}
-                    >
-                      <FormattedMessage id="common.button.enable" />
-                    </Button>
-                  </Popconfirm>
+                    <FormattedMessage id="common.button.enable" />
+                  </Button>
                 )}
 
-            {(access.has('system:user:assign-roles') ||
-              access.has('system:user:reset-password')) && (
-              <TableDropdown
-                menus={[
-                  ...(access.has('system:user:assign-roles')
-                    ? [
+              {access.has(USER_PERMISSIONS.delete) && (
+                <Button
+                  type="link"
+                  size="small"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={() =>
+                    handleConfirmUserAction(
+                      record,
+                      deleteUser,
+                      'user.confirm.delete.title',
+                      'user.confirm.delete.description',
+                      'message.delete.success',
+                      'message.delete.failure',
+                      true,
+                    )
+                  }
+                >
+                  <FormattedMessage id="common.button.delete" />
+                </Button>
+              )}
+
+              {(canAssignRoles || canResetPassword) && (
+                <TableDropdown
+                  menus={[
+                    ...(canAssignRoles
+                      ? [
                         {
                           key: 'assignRoles',
                           name: (
                             <Space size={4}>
                               <SafetyCertificateOutlined />
-                              <FormattedMessage id="user.button.assignRoles" />
+                              <FormattedMessage id="user.action.assignRoles" />
                             </Space>
                           ),
                         },
                       ]
-                    : []),
-                  ...(access.has('system:user:reset-password')
-                    ? [
+                      : []),
+                    ...(canResetPassword
+                      ? [
                         {
                           key: 'resetPassword',
                           name: (
                             <Space size={4}>
                               <UndoOutlined />
-                              <FormattedMessage id="user.button.resetPassword" />
+                              <FormattedMessage id="user.action.resetPassword" />
                             </Space>
                           ),
                         },
                       ]
-                    : []),
-                ]}
-                onSelect={(key) => {
-                  if (key === 'assignRoles') {
-                    setAssigningUser(record);
-                    return;
-                  }
+                      : []),
+                  ]}
+                  onSelect={(key) => {
+                    if (key === 'assignRoles' && canAssignRoles) {
+                      setAssigningUser(record);
+                      return;
+                    }
 
-                  if (key === 'resetPassword') {
-                    setResettingUser(record);
-                  }
-                }}
-              />
-            )}
-          </Space>
-        ),
+                    if (key === 'resetPassword' && canResetPassword) {
+                      handleResetPassword(record);
+                    }
+                  }}
+                />
+              )}
+            </Space>
+          );
+        },
       },
     ],
-    [access, departments, reloadTable, roleValueEnum, runUserAction],
+    [
+      access,
+      departments,
+      handleConfirmUserAction,
+      handleResetPassword,
+      reloadTable,
+      roleValueEnum,
+      runUserAction,
+    ],
   );
 
   return (
     <PageContainer title={false}>
       {contextHolder}
+      {modalContextHolder}
       <ProTable<API.UserListDto, API.SearchUsersParams>
         actionRef={actionRef}
         rowKey="id"
@@ -392,7 +468,7 @@ const UserPage: FC = () => {
         }}
         headerTitle={
           <Space>
-            {access.has('system:user:create') && (
+            {access.has(USER_PERMISSIONS.create) && (
               <UserForm
                 trigger={
                   <Button type="primary" icon={<PlusOutlined />}>
@@ -406,7 +482,7 @@ const UserPage: FC = () => {
           </Space>
         }
       />
-      {assigningUser && (
+      {access.has(USER_PERMISSIONS.assignRoles) && assigningUser && (
         <AssignRolesForm
           open
           user={assigningUser}
@@ -416,17 +492,6 @@ const UserPage: FC = () => {
             }
           }}
           onSuccess={reloadTable}
-        />
-      )}
-      {resettingUser && (
-        <ResetPasswordForm
-          open
-          user={resettingUser}
-          onOpenChange={(open) => {
-            if (!open) {
-              setResettingUser(undefined);
-            }
-          }}
         />
       )}
     </PageContainer>

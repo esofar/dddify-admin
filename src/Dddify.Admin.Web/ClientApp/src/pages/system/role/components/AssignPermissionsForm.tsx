@@ -194,11 +194,6 @@ const AssignPermissionsForm: FC<AssignPermissionsFormProps> = ({
         title={
           <Space>
             <FormattedMessage id="role.formTitle.assignPermissions" />
-            {role && (
-              <Tag color="geekblue" variant="filled">
-                {role.name}
-              </Tag>
-            )}
           </Space>
         }
         width={560}

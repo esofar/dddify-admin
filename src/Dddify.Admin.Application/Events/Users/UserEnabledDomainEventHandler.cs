@@ -1,6 +1,6 @@
 ﻿using Dddify.Admin.Domain.Events.Users;
 
-namespace Dddify.Admin.Application.EventHandlers.Users;
+namespace Dddify.Admin.Application.Events.Users;
 
 public class UserEnabledDomainEventHandler(IEmailSender emailSender) : IDomainEventHandler<UserEnabledDomainEvent>
 {

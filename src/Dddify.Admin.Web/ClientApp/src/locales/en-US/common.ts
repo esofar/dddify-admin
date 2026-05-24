@@ -23,7 +23,6 @@ export default {
   'common.button.search': 'Search',
   'common.button.reset': 'Reset',
   'common.button.confirm': 'Confirm',
-  'common.button.cancel': 'Cancel',
   'common.button.disable': 'Disable',
   'common.button.enable': 'Enable',
   'common.button.clear': 'Clear',
@@ -43,11 +42,13 @@ export default {
   'form.rules.maxLength': 'Please enter no more than {max} characters',
   'form.rules.email': 'Invalid email format',
   'form.rules.phoneNumber': 'Invalid phone number format',
-  'form.rules.password': 'Password is too weak. Please increase the complexity',
-  'form.rules.password.tooltip': 'Please set a password between 8 and 16 characters, including uppercase letters, lowercase letters, and numbers. Special characters are recommended for better security.',
+  'form.rules.password': 'Password does not meet security requirements',
   'form.rules.confirmPassword': 'The two passwords do not match',
   'form.rules.noSpecial': 'Special characters are not allowed',
-  'form.rules.noSpecialNoSpace': 'Special characters and spaces are not allowed',
-  "form.rules.upperCaseCode": "Only uppercase letters, numbers, and underscores are allowed",
-  "form.rules.lowerCaseCode": "Only lowercase letters, numbers, and underscores are allowed"
+  'form.rules.noSpecialNoSpace':
+    'Special characters and spaces are not allowed',
+  'form.rules.upperCaseCode':
+    'Only uppercase letters, numbers, and underscores are allowed',
+  'form.rules.lowerCaseCode':
+    'Only lowercase letters, numbers, and underscores are allowed',
 };

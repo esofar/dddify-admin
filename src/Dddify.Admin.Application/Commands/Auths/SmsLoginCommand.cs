@@ -1,7 +1,6 @@
-using Dddify.Admin.Application.Common.Sms;
 using Dddify.Admin.Application.Dtos.Auths;
-using Dddify.Admin.Application.Exceptions;
 using Dddify.Admin.Application.Exceptions.Users;
+using Dddify.Admin.Application.Services.Sms;
 using Dddify.Admin.Domain.Aggregates.Users;
 using Microsoft.Extensions.Options;
 

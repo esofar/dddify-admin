@@ -1,5 +1,11 @@
 import { FormattedMessage } from '@umijs/max';
 
+export const DEPARTMENT_PERMISSIONS = {
+  create: 'system:department:create',
+  update: 'system:department:update',
+  delete: 'system:department:delete',
+} as const;
+
 export type DepartmentTreeNode = API.DepartmentListDto & {
   children?: DepartmentTreeNode[];
 };

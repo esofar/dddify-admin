@@ -1,7 +1,7 @@
 using Dddify.Admin.Application.Commands.Sessions;
 using Dddify.Admin.Domain.Events.Users;
 
-namespace Dddify.Admin.Application.EventHandlers.Users;
+namespace Dddify.Admin.Application.Events.Users;
 
 public class UserLoginSucceededDomainEventHandler(ISender sender) : IDomainEventHandler<UserLoginSucceededDomainEvent>
 {

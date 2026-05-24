@@ -12,6 +12,12 @@ export const PERMISSION_TYPE = {
   Button: 'Button',
 } as const;
 
+export const PERMISSION_PERMISSIONS = {
+  create: 'system:permission:create',
+  update: 'system:permission:update',
+  delete: 'system:permission:delete',
+} as const;
+
 type PermissionTypeOption = {
   text: ReactNode;
   icon: ReactNode;

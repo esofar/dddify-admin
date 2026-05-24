@@ -15,7 +15,11 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { deletePermission, searchPermissions } from '@/services/v1/permission';
 import PermissionForm from './components/PermissionForm';
 import type { PermissionTreeNode } from './data';
-import { buildPermissionTree, permissionTypeValueEnum } from './data';
+import {
+  buildPermissionTree,
+  PERMISSION_PERMISSIONS,
+  permissionTypeValueEnum,
+} from './data';
 
 const PermissionPage: FC = () => {
   const intl = useIntl();
@@ -99,7 +103,7 @@ const PermissionPage: FC = () => {
         width: 170,
         render: (_, record) => (
           <Space size={0} split={<Divider type="vertical" />}>
-            {access.has('system:permission:update') && (
+            {access.has(PERMISSION_PERMISSIONS.update) && (
               <PermissionForm
                 trigger={
                   <Button type="link" size="small" icon={<EditOutlined />}>
@@ -111,7 +115,7 @@ const PermissionPage: FC = () => {
               />
             )}
 
-            {access.has('system:permission:delete') && (
+            {access.has(PERMISSION_PERMISSIONS.delete) && (
               <Popconfirm
                 title={<FormattedMessage id="common.confirmText.delete" />}
                 okButtonProps={{ danger: true }}
@@ -161,7 +165,7 @@ const PermissionPage: FC = () => {
         }}
         headerTitle={
           <Space>
-            {access.has('system:permission:create') && (
+            {access.has(PERMISSION_PERMISSIONS.create) && (
               <PermissionForm
                 trigger={
                   <Button type="primary" icon={<PlusOutlined />}>

@@ -9,6 +9,8 @@
   "user_already_deleted": "User has already been deleted.",
   "user_role_not_assigned": "The specified role is not assigned to the user.",
   "user_roles_empty": "At least one role must be assigned to the user.",
+  "user_password_reset_email_subject": "Your Account Password Has Been Reset",
+  "user_password_reset_email_body": "Hello,\n\nAn administrator has reset your account password. Your new password is: {0}.\n\nPlease use the new login credentials to access the system. To protect your account, the system has automatically signed you out from all logged-in devices.\n\nIf you have any questions, please contact an administrator.\n\nThank you.",
 
   "session_invalid_refresh_token": "Login session has expired, please log in again.",
   "session_refresh_token_reused": "Login session is abnormal, please log in again.",

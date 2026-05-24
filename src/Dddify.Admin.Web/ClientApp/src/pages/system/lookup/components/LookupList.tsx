@@ -6,6 +6,7 @@ import { Button, Divider, message, Popconfirm, Space } from 'antd';
 import type { FC, MutableRefObject } from 'react';
 import { useCallback, useMemo } from 'react';
 import { deleteLookup, searchLookups } from '@/services/v1/lookup';
+import { LOOKUP_PERMISSIONS } from '../data';
 import LookupForm from './LookupForm';
 
 type LookupListProps = {
@@ -83,7 +84,7 @@ const LookupList: FC<LookupListProps> = ({
         width: 170,
         render: (_, record) => (
           <Space size={0} split={<Divider type="vertical" />}>
-            {access.has('system:lookup:update') && (
+            {access.has(LOOKUP_PERMISSIONS.update) && (
               <LookupForm
                 trigger={
                   <Button type="link" size="small" icon={<EditOutlined />}>
@@ -95,7 +96,7 @@ const LookupList: FC<LookupListProps> = ({
               />
             )}
 
-            {access.has('system:lookup:delete') && (
+            {access.has(LOOKUP_PERMISSIONS.delete) && (
               <Popconfirm
                 title={<FormattedMessage id="common.confirmText.delete" />}
                 okButtonProps={{ danger: true }}
@@ -148,7 +149,7 @@ const LookupList: FC<LookupListProps> = ({
         }}
         headerTitle={
           <Space>
-            {access.has('system:lookup:create') && (
+            {access.has(LOOKUP_PERMISSIONS.create) && (
               <LookupForm
                 trigger={
                   <Button type="primary" icon={<PlusOutlined />}>

@@ -2,7 +2,7 @@ using Dddify.Admin.Application.Commands.Roles;
 using Dddify.Admin.Application.Commands.Sessions;
 using Dddify.Admin.Domain.Events.Users;
 
-namespace Dddify.Admin.Application.EventHandlers.Users;
+namespace Dddify.Admin.Application.Events.Users;
 
 public class UserRolesChangedDomainEventHandler(ISender sender) : IDomainEventHandler<UserRolesChangedDomainEvent>
 {

@@ -175,7 +175,6 @@ public class UserController(ISender sender) : BaseController
     /// 重置用户密码。
     /// </summary>
     /// <param name="id">用户ID。</param>
-    /// <param name="request">重置密码请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
     /// <returns></returns>
     [HttpPatch("{id}/password", Name = "ResetUserPassword")]
@@ -184,10 +183,9 @@ public class UserController(ISender sender) : BaseController
     [ProducesResponseType<ApiResultWithErrors>(StatusCodes.Status400BadRequest)]
     public async Task ResetUserPasswordAsync(
         [FromRoute] Guid id,
-        [FromBody] ResetUserPasswordRequest request,
         CancellationToken cancellationToken)
     {
-        await sender.Send(new ResetUserPasswordCommand(id, request.NewPassword), cancellationToken);
+        await sender.Send(new ResetUserPasswordCommand(id), cancellationToken);
     }
 
     /// <summary>
