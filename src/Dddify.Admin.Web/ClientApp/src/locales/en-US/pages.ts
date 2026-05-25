@@ -69,10 +69,11 @@ export default {
   'user.action.resetPassword': 'Reset Password',
   'user.confirm.delete.title': 'Delete this user?',
   'user.confirm.delete.description':
-    'After deletion, the user account will be removed and can no longer sign in. This action cannot be undone.',
+    'After deletion, the user account will become unavailable and the user will no longer be able to sign in or access the system.',
+  'user.tooltip.builtIn.delete': 'Built-in users cannot be deleted',
   'user.confirm.disable.title': 'Disable this user?',
   'user.confirm.disable.description':
-    'After being disabled, the user cannot sign in and all current sessions will be invalidated.',
+    'After being disabled, the user will not be able to sign in again.',
   'user.confirm.enable.title': 'Enable this user?',
   'user.confirm.enable.description':
     'After being enabled, the user can sign in to the system normally.',
@@ -84,89 +85,111 @@ export default {
   'user.assignRoles.assigned': 'Assigned Roles',
   'user.assignRoles.searchPlaceholder': 'Search role name',
   'user.assignRoles.selectedCount': '{count} roles assigned',
+  'user.tag.builtIn': 'Built-in',
 
   'role.label.index': 'No.',
   'role.label.name': 'Role Name',
   'role.label.description': 'Role Description',
-  'role.label.assignedUserCount': 'Assigned Users',
+  'role.label.assignedUserCount': 'Associated Users',
   'role.label.order': 'Order',
   'role.label.isdefault': 'Default Role',
   'role.label.isdefault.tooltip':
-    'When enabled, new users will be automatically assigned this role. Please set it carefully.',
+    'When enabled, new users will be automatically assigned this role.',
   'role.label.option': 'Actions',
-  'role.formTitle.create': 'Create Role',
-  'role.formTitle.update': 'Update Role',
-  'role.formTitle.assignPermissions': 'Set Permissions',
-  'role.button.assignPermissions': 'Set Permissions',
-  'role.rules.code':
-    'Only lowercase letters, numbers, and underscores are allowed',
+  'role.action.create': 'Create Role',
+  'role.action.update': 'Update Role',
+  'role.action.assignPermissions': 'Set Permissions',
+  'role.assignPermissions.helpText':
+    'After permission changes are saved, users associated with this role can refresh the page to get the latest permissions.',
+  'role.confirm.delete.title': 'Delete this role?',
+  'role.confirm.delete.description':
+    'After deletion, this role will be removed. Roles associated with users cannot be deleted.',
   'role.toolbar.expandAll': 'Expand All',
   'role.toolbar.collapseAll': 'Collapse All',
   'role.toolbar.selectAll': 'Select All',
   'role.toolbar.unselectAll': 'Unselect All',
   'role.toolbar.selectedCount': '{selected} / {total} permissions selected',
-  'role.tag.preset': 'Preset',
+  'role.tag.preset': 'Built-in',
   'role.tag.default': 'Default',
-  'role.tooltip.preset.desc':
-    'Preset: system built-in role. It cannot be deleted.',
-  'role.tooltip.default.desc':
-    'Default: new users will be automatically assigned this role.',
+  'role.tooltip.builtIn.delete': 'Built-in roles cannot be deleted',
 
   'permission.label.index': 'No.',
   'permission.label.name': 'Permission Name',
   'permission.label.code': 'Permission Code',
   'permission.label.parentId': 'Parent Permission',
+  'permission.label.parentId.tooltip': 'When no parent permission is selected, this permission will be a top-level node.',
   'permission.label.type': 'Permission Type',
   'permission.label.order': 'Order',
   'permission.label.option': 'Actions',
-  'permission.formTitle.create': 'Create Permission',
-  'permission.formTitle.update': 'Update Permission',
+  'permission.action.create': 'Create Permission',
+  'permission.action.update': 'Update Permission',
   'permission.type.catalog': 'Catalog',
   'permission.type.menu': 'Menu',
   'permission.type.button': 'Button',
-  'permission.rules.code':
-    'Only lowercase letters, numbers, hyphens, and colons are allowed',
-  'permission.form.alert.title': 'Security Notice',
-  'permission.form.alert.point1':
+  'permission.form.notice.title': 'Security Notice',
+  'permission.form.notice.item0':
+    'Permission codes are used for authorization checks. Confirm the API, menu, and button configuration.',
+  'permission.form.notice.item1':
     'Only authorized developers should make changes. Assess the impact before changing.',
-  'permission.form.alert.point2':
+  'permission.form.notice.item2':
     'Do not add, delete, or change permission codes casually. It may invalidate authorization.',
-  'permission.form.alert.point3':
+  'permission.form.notice.item3':
     'Validate in testing or staging before syncing to production.',
-  'permission.form.alert.point4':
+  'permission.form.notice.item4':
     'Production changes should use migration scripts or controlled tools and keep audit records.',
+  'permission.confirm.delete.title': 'Delete this permission?',
+  'permission.confirm.delete.description':
+    'After deletion, this permission will be removed and may affect related API, menu, or button authorization.',
 
   'department.label.index': 'No.',
   'department.label.name': 'Department Name',
   'department.label.code': 'Department Code',
   'department.label.parentId': 'Parent Department',
+  'department.label.parentId.tooltip':
+    'When no parent department is selected, this department will be a top-level node.',
   'department.label.type': 'Department Type',
   'department.label.leaderId': 'Department Leader',
   'department.label.isEnabled': 'Department Status',
   'department.label.order': 'Order',
   'department.label.option': 'Actions',
-  'department.formTitle.create': 'Create Department',
-  'department.formTitle.update': 'Update Department',
+  'department.action.create': 'Create Department',
+  'department.action.update': 'Update Department',
+  'department.confirm.delete.title': 'Delete this department?',
+  'department.confirm.delete.description':
+    'After deletion, this department will be removed. Departments with child departments cannot be deleted directly. Remove or reassign child departments before deleting it.',
 
   'lookup.label.index': 'No.',
   'lookup.label.name': 'Lookup Name',
   'lookup.label.code': 'Lookup Code',
+  'lookup.label.code.tooltip':
+    'The lookup code is used for business references and system identification. It cannot be changed after creation.',
   'lookup.label.description': 'Lookup Description',
   'lookup.label.option': 'Actions',
-  'lookup.formTitle.create': 'Create Lookup',
-  'lookup.formTitle.update': 'Update Lookup',
-  'lookup.button.createLookup': 'Create Lookup',
-  'lookup.button.createLookupItem': 'Create Lookup Item',
+  'lookup.action.create': 'Create Lookup',
+  'lookup.action.update': 'Update Lookup',
+  'lookup.confirm.delete.title': 'Delete this lookup?',
+  'lookup.confirm.delete.description':
+    'Only delete invalid lookups. Deleting a lookup that is still in use will affect related page display, filters, or business logic.',
+  'lookup.item.confirm.disable.title': 'Disable this lookup item?',
+  'lookup.item.confirm.disable.description':
+    'After being disabled, this lookup item will no longer be shown as an option. Existing data will not be affected.',
+  'lookup.item.confirm.enable.title': 'Enable this lookup item?',
+  'lookup.item.confirm.enable.description':
+    'After being enabled, this lookup item will be shown as an option again.',
+  'lookup.item.confirm.delete.title': 'Delete this lookup item?',
+  'lookup.item.confirm.delete.description':
+    'Deletion will affect the display or filtering of related business data. Disabling is recommended first.',
   'lookup.item.label.index': 'No.',
   'lookup.item.label.sort': 'Sort',
   'lookup.item.label.label': 'Label',
   'lookup.item.label.value': 'Value',
+  'lookup.item.label.value.tooltip':
+    'The lookup item value is used for business logic and data storage. It cannot be changed after creation.',
   'lookup.item.label.color': 'Color',
   'lookup.item.label.isPreset': 'Preset',
-  'lookup.item.label.isPreset.tooltip':
-    'System built-in lookup items cannot be disabled.',
+  'lookup.item.label.isPreset.tooltip': 'Preset lookup items cannot be deleted',
   'lookup.item.label.status': 'Status',
   'lookup.item.label.option': 'Actions',
-  'lookup.item.formTitle.create': 'Create Lookup Item',
-  'lookup.item.formTitle.update': 'Update Lookup Item',
+  'lookup.item.action.create': 'Create Lookup Item',
+  'lookup.item.action.update': 'Update Lookup Item',
 };

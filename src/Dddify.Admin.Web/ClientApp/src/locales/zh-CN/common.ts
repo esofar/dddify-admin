@@ -50,4 +50,5 @@ export default {
   'form.rules.noSpecialNoSpace': '不允许输入特殊字符和空格',
   'form.rules.upperCaseCode': '仅支持大写字母、数字和下划线',
   'form.rules.lowerCaseCode': '仅支持小写字母、数字和下划线',
+  'form.rules.permissionCode': '仅支持小写字母、数字、连字符和冒号',
 };

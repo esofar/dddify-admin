@@ -7,6 +7,7 @@
   "user_already_enabled": "User is already enabled.",
   "user_already_disabled": "User is already disabled.",
   "user_already_deleted": "User has already been deleted.",
+  "user_built_in_cannot_be_deleted": "Built-in users cannot be deleted.",
   "user_role_not_assigned": "The specified role is not assigned to the user.",
   "user_roles_empty": "At least one role must be assigned to the user.",
   "user_password_reset_email_subject": "Your Account Password Has Been Reset",
@@ -37,7 +38,7 @@
   "lookup_already_exists": "Dictionary item value or label already exists.",
   "lookup_item_already_enabled": "Dictionary item is already enabled.",
   "lookup_item_already_disabled": "Dictionary item is already disabled.",
-  "lookup_preset_item_not_allowed": "Built-in dictionary items do not allow this operation.",
+  "lookup_item_cannot_deleted": "Preset dictionary items cannot be deleted.",
 
   "sms_template_not_found": "SMS template not found.",
   "sms_provider_unavailable": "SMS provider is unavailable.",

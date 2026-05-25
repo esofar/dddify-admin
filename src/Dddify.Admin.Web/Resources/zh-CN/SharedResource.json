@@ -7,6 +7,7 @@
   "user_already_enabled": "用户已被启用",
   "user_already_disabled": "用户已被禁用",
   "user_already_deleted": "用户已被删除",
+  "user_built_in_cannot_be_deleted": "内置用户不允许删除",
   "user_role_not_assigned": "用户未分配指定角色",
   "user_roles_empty": "用户必须至少分配一个角色",
   "user_password_reset_email_subject": "账户密码已重置",
@@ -37,7 +38,7 @@
   "lookup_already_exists": "字典项值或标签已存在",
   "lookup_item_already_enabled": "字典项已处于启用状态",
   "lookup_item_already_disabled": "字典项已处于禁用状态",
-  "lookup_preset_item_not_allowed": "内置字典项不允许此操作",
+  "lookup_item_cannot_deleted": "预设字典项不允许删除",
 
   "sms_template_not_found": "短信模板不存在",
   "sms_provider_unavailable": "短信服务商不可用",

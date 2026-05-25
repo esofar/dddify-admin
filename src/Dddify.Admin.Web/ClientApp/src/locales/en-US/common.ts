@@ -51,4 +51,6 @@ export default {
     'Only uppercase letters, numbers, and underscores are allowed',
   'form.rules.lowerCaseCode':
     'Only lowercase letters, numbers, and underscores are allowed',
+  'form.rules.permissionCode':
+    'Only lowercase letters, numbers, hyphens, and colons are supported',
 };
