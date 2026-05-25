@@ -37,7 +37,10 @@ public class CreateDepartmentCommandValidator : AbstractValidator<CreateDepartme
     }
 }
 
-public class CreateDepartmentCommandHandler(IDepartmentRepository departmentRepository, IGuidGenerator guidGenerator, IShortCodeGenerator shortCodeGenerator) : ICommandHandler<CreateDepartmentCommand>
+public class CreateDepartmentCommandHandler(
+    IDepartmentRepository departmentRepository,
+    IGuidGenerator guidGenerator,
+    IShortCodeGenerator shortCodeGenerator) : ICommandHandler<CreateDepartmentCommand>
 {
     public async Task Handle(CreateDepartmentCommand command, CancellationToken cancellationToken)
     {

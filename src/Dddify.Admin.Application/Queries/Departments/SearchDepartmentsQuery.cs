@@ -2,13 +2,16 @@
 
 namespace Dddify.Admin.Application.Queries.Departments;
 
-public record SearchDepartmentsQuery(string? Name, string? Type, bool? IsEnabled) : IQuery<IEnumerable<DepartmentListDto>>;
+public record SearchDepartmentsQuery(
+    string? Name,
+    string? Type,
+    bool? IsEnabled) : IQuery<IEnumerable<DepartmentListDto>>;
 
 public class SearchDepartmentsQueryHandler(IDepartmentRepository departmentRepository) : IQueryHandler<SearchDepartmentsQuery, IEnumerable<DepartmentListDto>>
 {
     public async Task<IEnumerable<DepartmentListDto>> Handle(SearchDepartmentsQuery query, CancellationToken cancellationToken)
     {
-        var Departments = await departmentRepository
+        var departments = await departmentRepository
             .AsQueryable()
             .AsNoTracking()
             .WhereIf(!string.IsNullOrWhiteSpace(query.Name), c => c.Name.Contains(query.Name!))
@@ -17,6 +20,6 @@ public class SearchDepartmentsQueryHandler(IDepartmentRepository departmentRepos
             .OrderBy(c => c.Order)
             .ToListAsync(cancellationToken);
 
-        return Departments.Adapt<IEnumerable<DepartmentListDto>>();
+        return departments.Adapt<IEnumerable<DepartmentListDto>>();
     }
 }

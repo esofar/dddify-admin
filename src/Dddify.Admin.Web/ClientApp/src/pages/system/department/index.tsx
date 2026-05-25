@@ -9,7 +9,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Button, Divider, message, Popconfirm, Space, Tag } from 'antd';
+import { Button, Divider, message, Modal, Space, Tag } from 'antd';
 import type { FC, Key } from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { deleteDepartment, searchDepartments } from '@/services/v1/department';
@@ -29,6 +29,7 @@ const DepartmentPage: FC = () => {
   const queryClient = useQueryClient();
   const actionRef = useRef<ActionType | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
+  const [modalApi, modalContextHolder] = Modal.useModal();
   const [expandedRowKeys, setExpandedRowKeys] = useState<Key[]>([]);
   const [allRowKeys, setAllRowKeys] = useState<Key[]>([]);
 
@@ -53,22 +54,31 @@ const DepartmentPage: FC = () => {
   }, [queryClient]);
 
   const handleDelete = useCallback(
-    async (department: API.DepartmentListDto) => {
-      const { success, errorMessage } = await deleteDepartment({
-        id: department.id,
+    (department: API.DepartmentListDto) => {
+      modalApi.confirm({
+        title: <FormattedMessage id="department.confirm.delete.title" />,
+        content: <FormattedMessage id="department.confirm.delete.description" />,
+        okButtonProps: {
+          danger: true,
+        },
+        onOk: async () => {
+          const { success, errorMessage } = await deleteDepartment({
+            id: department.id,
+          });
+
+          if (!success) {
+            messageApi.error(
+              errorMessage ?? intl.formatMessage({ id: 'message.delete.failure' }),
+            );
+            return;
+          }
+
+          messageApi.success(intl.formatMessage({ id: 'message.delete.success' }));
+          reloadTable();
+        },
       });
-
-      if (!success) {
-        messageApi.error(
-          errorMessage ?? intl.formatMessage({ id: 'message.delete.failure' }),
-        );
-        return;
-      }
-
-      messageApi.success(intl.formatMessage({ id: 'message.delete.success' }));
-      reloadTable();
     },
-    [intl, messageApi, reloadTable],
+    [intl, messageApi, modalApi, reloadTable],
   );
 
   const columns = useMemo<ProColumns<DepartmentTreeNode>[]>(
@@ -141,20 +151,15 @@ const DepartmentPage: FC = () => {
             )}
 
             {access.has(DEPARTMENT_PERMISSIONS.delete) && (
-              <Popconfirm
-                title={<FormattedMessage id="common.confirmText.delete" />}
-                okButtonProps={{ danger: true }}
-                onConfirm={() => handleDelete(record)}
+              <Button
+                type="link"
+                size="small"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => handleDelete(record)}
               >
-                <Button
-                  type="link"
-                  size="small"
-                  danger
-                  icon={<DeleteOutlined />}
-                >
-                  <FormattedMessage id="common.button.delete" />
-                </Button>
-              </Popconfirm>
+                <FormattedMessage id="common.button.delete" />
+              </Button>
             )}
           </Space>
         ),
@@ -166,6 +171,7 @@ const DepartmentPage: FC = () => {
   return (
     <PageContainer title={false}>
       {contextHolder}
+      {modalContextHolder}
       <ProTable<DepartmentTreeNode, API.SearchDepartmentsParams>
         actionRef={actionRef}
         columns={columns}

@@ -9,7 +9,7 @@ import {
 } from '@ant-design/pro-components';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { message } from 'antd';
+import { message, theme } from 'antd';
 import type { FC, ReactElement } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import ProFormUserSelect from '@/components/business/ProFormUserSelect';
@@ -48,6 +48,7 @@ const DepartmentForm: FC<DepartmentFormProps> = ({
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const { token } = theme.useToken();
   const formRef = useRef<ProFormInstance<DepartmentFormValues> | undefined>(
     undefined,
   );
@@ -104,7 +105,6 @@ const DepartmentForm: FC<DepartmentFormProps> = ({
       formRef.current?.resetFields();
       formRef.current?.setFieldsValue({
         isEnabled: true,
-        order: 0,
       });
       return;
     }
@@ -156,8 +156,8 @@ const DepartmentForm: FC<DepartmentFormProps> = ({
           <FormattedMessage
             id={
               isEditing
-                ? 'department.formTitle.update'
-                : 'department.formTitle.create'
+                ? 'department.action.update'
+                : 'department.action.create'
             }
           />
         }
@@ -166,7 +166,7 @@ const DepartmentForm: FC<DepartmentFormProps> = ({
         layout="horizontal"
         labelCol={{ span: 5 }}
         colProps={{ xs: 24, sm: 24 }}
-        width={520}
+        width={560}
         autoComplete="off"
         formRef={formRef}
         open={open}
@@ -208,73 +208,83 @@ const DepartmentForm: FC<DepartmentFormProps> = ({
           maskClosable: false,
         }}
       >
-        <ProFormText name="concurrencyStamp" hidden colProps={{ span: 0 }} />
-
-        <ProFormText
-          name="name"
-          label={<FormattedMessage id="department.label.name" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 50,
+        <div
+          style={{
+            width: '100%',
+            padding: `${token.paddingMD}px ${token.padding}px 0`,
+            border: `1px solid ${token.colorBorderSecondary}`,
+            borderRadius: token.borderRadius,
           }}
-          rules={[requiredRule, noSpecialRule]}
-        />
+        >
+          <ProFormText name="concurrencyStamp" hidden colProps={{ span: 0 }} />
 
-        <ProFormTreeSelect
-          name="parentId"
-          label={<FormattedMessage id="department.label.parentId" />}
-          fieldProps={{
-            treeData: departments,
-            allowClear: true,
-            showSearch: true,
-            treeNodeFilterProp: 'name',
-            treeDataSimpleMode: {
-              id: 'id',
-              pId: 'parentId',
-            },
-            treeLine: true,
-            fieldNames: {
-              label: 'name',
-              value: 'id',
-            },
-          }}
-        />
+          <ProFormText
+            name="name"
+            label={<FormattedMessage id="department.label.name" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 50,
+            }}
+            rules={[requiredRule, noSpecialRule]}
+          />
 
-        <ProFormSelect
-          name="type"
-          label={<FormattedMessage id="department.label.type" />}
-          valueEnum={typeValueEnum}
-          rules={[requiredRule]}
-        />
+          <ProFormSelect
+            name="type"
+            label={<FormattedMessage id="department.label.type" />}
+            valueEnum={typeValueEnum}
+            rules={[requiredRule]}
+          />
 
-        <ProFormUserSelect
-          name="leaderId"
-          multiple={false}
-          showAvatar
-          label={<FormattedMessage id="department.label.leaderId" />}
-          rules={[requiredRule]}
-        />
+          <ProFormTreeSelect
+            name="parentId"
+            label={<FormattedMessage id="department.label.parentId" />}
+            tooltip={<FormattedMessage id="department.label.parentId.tooltip" />}
+            fieldProps={{
+              treeData: departments,
+              allowClear: true,
+              showSearch: true,
+              treeNodeFilterProp: 'name',
+              treeDataSimpleMode: {
+                id: 'id',
+                pId: 'parentId',
+              },
+              treeLine: true,
+              fieldNames: {
+                label: 'name',
+                value: 'id',
+              },
+            }}
+          />
 
-        <ProFormSwitch
-          name="isEnabled"
-          label={<FormattedMessage id="department.label.isEnabled" />}
-        />
+          <ProFormUserSelect
+            name="leaderId"
+            multiple={false}
+            showAvatar
+            label={<FormattedMessage id="department.label.leaderId" />}
+            rules={[requiredRule]}
+          />
 
-        <ProFormDigit
-          name="order"
-          label={<FormattedMessage id="department.label.order" />}
-          fieldProps={{
-            min: 0,
-            max: 999,
-            changeOnWheel: true,
-          }}
-          rules={[
-            requiredRule,
-            {
-              type: 'number',
-            },
-          ]}
-        />
+          <ProFormDigit
+            name="order"
+            label={<FormattedMessage id="department.label.order" />}
+            fieldProps={{
+              min: 0,
+              max: 999,
+              changeOnWheel: true,
+            }}
+            rules={[
+              requiredRule,
+              {
+                type: 'number',
+              },
+            ]}
+          />
+
+          <ProFormSwitch
+            name="isEnabled"
+            label={<FormattedMessage id="department.label.isEnabled" />}
+          />
+        </div>
       </DrawerForm>
     </>
   );
