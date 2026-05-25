@@ -4,7 +4,9 @@ using Dddify.Admin.Domain.Aggregates.Sessions;
 
 namespace Dddify.Admin.Application.Commands.Auths;
 
-public record RefreshTokenCommand(string RefreshToken, string DeviceId) : ICommand<TokenDto>;
+public record RefreshTokenCommand(
+    string RefreshToken,
+    string DeviceId) : ICommand<TokenDto>;
 
 public class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommand>
 {

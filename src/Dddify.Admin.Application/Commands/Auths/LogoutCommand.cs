@@ -1,6 +1,8 @@
 namespace Dddify.Admin.Application.Commands.Auths;
 
-public record LogoutCommand(Guid UserId, string? DeviceId = null) : ICommand;
+public record LogoutCommand(
+    Guid UserId,
+    string? DeviceId = null) : ICommand;
 
 public class LogoutCommandValidator : AbstractValidator<LogoutCommand>
 {

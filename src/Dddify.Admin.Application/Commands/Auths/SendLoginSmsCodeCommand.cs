@@ -6,7 +6,9 @@ using System.Diagnostics;
 
 namespace Dddify.Admin.Application.Commands.Auths;
 
-public record SendLoginSmsCodeCommand(string PhoneNumber, string? IpAddress) : ICommand;
+public record SendLoginSmsCodeCommand(
+    string PhoneNumber,
+    string? IpAddress) : ICommand;
 
 public class SendLoginSmsCodeCommandValidator : AbstractValidator<SendLoginSmsCodeCommand>
 {
