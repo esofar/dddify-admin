@@ -8,6 +8,7 @@ export const LOOKUP_PERMISSIONS = {
   updateItem: 'system:lookup:item:update',
   enableItem: 'system:lookup:item:enable',
   disableItem: 'system:lookup:item:disable',
+  deleteItem: 'system:lookup:item:delete',
 } as const;
 
 export const lookupItemStatusValueEnum = {
@@ -21,7 +22,7 @@ export const lookupItemStatusValueEnum = {
     text: (
       <FormattedMessage id="common.button.disable" defaultMessage="Disable" />
     ),
-    status: 'Default',
+    status: 'Error',
   },
 } as const;
 
@@ -32,7 +33,7 @@ export const yesOrNoValueEnum = {
   },
   false: {
     text: <FormattedMessage id="common.label.no" defaultMessage="No" />,
-    status: 'Default',
+    status: 'Error',
   },
 } as const;
 

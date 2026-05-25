@@ -3,7 +3,11 @@ using Dddify.Admin.Domain.Aggregates.Lookups;
 
 namespace Dddify.Admin.Application.Commands.Lookups;
 
-public record CreateLookupItemCommand(Guid LookupId, string Value, string Label, string? Color) : ICommand;
+public record CreateLookupItemCommand(
+    Guid LookupId,
+    string Value,
+    string Label,
+    string? Color) : ICommand;
 
 public class CreateLookupItemCommandValidator : AbstractValidator<CreateLookupItemCommand>
 {
@@ -32,8 +36,12 @@ public class CreateLookupItemCommandHandler(ILookupRepository lookupRepository, 
         var lookup = await lookupRepository.GetLookupWithItemsAsync(command.LookupId, cancellationToken)
             ?? throw new LookupNotFoundException(command.LookupId);
 
-        lookup.AddItem(guidGenerator.Create(), command.Value, command.Label, command.Color);
+        lookup.AddItem(
+            guidGenerator.Create(),
+            command.Value,
+            command.Label,
+            command.Color);
 
-        distributedCache.Remove(CacheKeys.Lookup.Items(lookup.Code));
+        await distributedCache.RemoveAsync(CacheKeys.Lookup.Items(lookup.Code), cancellationToken);
     }
 }

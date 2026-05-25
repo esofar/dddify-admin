@@ -15,24 +15,22 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 查询字典列表。
     /// </summary>
-    /// <param name="current">当前页码。</param>
-    /// <param name="pageSize">每页数量。</param>
-    /// <param name="code">字典编码。</param>
-    /// <param name="name">字典名称。</param>
+    /// <param name="request">查询字典列表请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
     /// <returns></returns>
     [HttpGet(Name = "SearchLookups")]
     [Permission("system:lookup:index")]
     [ProducesResponseType<ApiResult<PagedResult<LookupDto>>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResultWithErrors>(StatusCodes.Status400BadRequest)]
-    public async Task<IPagedResult<LookupDto>> SearchAsync(
-        [FromQuery] int current,
-        [FromQuery] int pageSize,
-        [FromQuery] string? code,
-        [FromQuery] string? name,
-        CancellationToken cancellationToken)
+    public async Task<IPagedResult<LookupDto>> SearchAsync([FromQuery] SearchLookupRequest request, CancellationToken cancellationToken)
     {
-        return await sender.Send(new SearchLookupsQuery(current, pageSize, code, name), cancellationToken);
+        return await sender.Send(
+            new SearchLookupsQuery(
+                request.Current,
+                request.PageSize,
+                request.Code,
+                request.Name),
+            cancellationToken);
     }
 
     /// <summary>
@@ -137,6 +135,25 @@ public class LookupController(ISender sender) : BaseController
         CancellationToken cancellationToken)
     {
         await sender.Send(new UpdateLookupItemCommand(id, itemId, request.Label, request.Color), cancellationToken);
+    }
+
+    /// <summary>
+    /// 删除字典项。
+    /// </summary>
+    /// <param name="id">字典ID。</param>
+    /// <param name="itemId">字典项ID。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns></returns>
+    [HttpDelete("{id}/items/{itemId}", Name = "DeleteLookupItem")]
+    [Permission("system:lookup:item:delete")]
+    [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
+    [ProducesResponseType<ApiResultWithErrors>(StatusCodes.Status400BadRequest)]
+    public async Task DeleteItemAsync(
+        [FromRoute] Guid id,
+        [FromRoute] Guid itemId,
+        CancellationToken cancellationToken)
+    {
+        await sender.Send(new DeleteLookupItemCommand(id, itemId), cancellationToken);
     }
 
     /// <summary>

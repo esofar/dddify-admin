@@ -3,7 +3,10 @@ using Dddify.Admin.Domain.Aggregates.Lookups;
 
 namespace Dddify.Admin.Application.Commands.Lookups;
 
-public record UpdateLookupCommand(Guid Id, string Name, string? Description) : ICommand;
+public record UpdateLookupCommand(
+    Guid Id,
+    string Name,
+    string? Description) : ICommand;
 
 public class UpdateLookupCommandValidator : AbstractValidator<UpdateLookupCommand>
 {

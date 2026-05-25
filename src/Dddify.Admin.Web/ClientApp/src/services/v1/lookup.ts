@@ -120,6 +120,20 @@ export async function updateLookupItem(
   });
 }
 
+/** 删除字典项。 权限标识：<code>system:lookup:item:delete</code> DELETE /api/v1/lookups/${param0}/items/${param1} */
+export async function deleteLookupItem(
+  // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
+  params: API.DeleteLookupItemParams,
+  options?: { [key: string]: any }
+) {
+  const { id: param0, itemId: param1, ...queryParams } = params;
+  return request<API.ApiResult>(`/api/v1/lookups/${param0}/items/${param1}`, {
+    method: "DELETE",
+    params: { ...queryParams },
+    ...(options || {}),
+  });
+}
+
 /** 禁用字典项。 权限标识：<code>system:lookup:item:disable</code> PUT /api/v1/lookups/${param0}/items/${param1}/disable */
 export async function disableLookupItem(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)

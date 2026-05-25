@@ -1,16 +1,18 @@
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
+  DeleteOutlined,
   EditOutlined,
   PlusOutlined,
 } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { DragSortTable } from '@ant-design/pro-components';
 import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Button, Divider, message, Popconfirm, Space, Tag } from 'antd';
+import { Button, Divider, message, Modal, Space, Tag, Tooltip } from 'antd';
 import type { FC, MutableRefObject } from 'react';
 import { useCallback, useMemo } from 'react';
 import {
+  deleteLookupItem,
   disableLookupItem,
   enableLookupItem,
   getLookupItems,
@@ -37,6 +39,7 @@ const LookupItemList: FC<LookupItemListProps> = ({
   const intl = useIntl();
   const access = useAccess();
   const [messageApi, contextHolder] = message.useMessage();
+  const [modalApi, modalContextHolder] = Modal.useModal();
 
   const lookupId = lookup?.id;
 
@@ -72,6 +75,63 @@ const LookupItemList: FC<LookupItemListProps> = ({
     [intl, lookupId, messageApi, onSuccess],
   );
 
+  const handleDisable = useCallback(
+    (item: API.LookupItemDto) => {
+      modalApi.confirm({
+        title: <FormattedMessage id="lookup.item.confirm.disable.title" />,
+        content: <FormattedMessage id="lookup.item.confirm.disable.description" />,
+        okButtonProps: {
+          danger: true,
+        },
+        onOk: () =>
+          runItemAction(
+            item,
+            disableLookupItem,
+            'message.disable.success',
+            'message.disable.failure',
+          ),
+      });
+    },
+    [modalApi, runItemAction],
+  );
+
+  const handleEnable = useCallback(
+    (item: API.LookupItemDto) => {
+      modalApi.confirm({
+        title: <FormattedMessage id="lookup.item.confirm.enable.title" />,
+        content: <FormattedMessage id="lookup.item.confirm.enable.description" />,
+        onOk: () =>
+          runItemAction(
+            item,
+            enableLookupItem,
+            'message.enable.success',
+            'message.enable.failure',
+          ),
+      });
+    },
+    [modalApi, runItemAction],
+  );
+
+  const handleDelete = useCallback(
+    (item: API.LookupItemDto) => {
+      modalApi.confirm({
+        title: <FormattedMessage id="lookup.item.confirm.delete.title" />,
+        content: <FormattedMessage id="lookup.item.confirm.delete.description" />,
+        okButtonProps: {
+          danger: true,
+        },
+        onOk: () =>
+          runItemAction(
+            item,
+            deleteLookupItem,
+            'message.delete.success',
+            'message.delete.failure',
+          ),
+      });
+    },
+    [modalApi, runItemAction],
+  );
+
   const columns = useMemo<ProColumns<API.LookupItemDto>[]>(
     () => [
       {
@@ -94,7 +154,7 @@ const LookupItemList: FC<LookupItemListProps> = ({
         title: <FormattedMessage id="lookup.item.label.value" />,
         dataIndex: 'value',
         minWidth: 120,
-        copyable: true,
+        copyable: false,
         ellipsis: true,
       },
       {
@@ -113,10 +173,10 @@ const LookupItemList: FC<LookupItemListProps> = ({
         title: <FormattedMessage id="lookup.item.label.option" />,
         dataIndex: 'option',
         valueType: 'option',
-        width: 180,
+        width: 240,
         fixed: 'right',
         render: (_, record) => (
-          <Space size={0} split={<Divider type="vertical" />}>
+          <Space size={0} separator={<Divider orientation="vertical" />}>
             {access.has(LOOKUP_PERMISSIONS.updateItem) && (
               <LookupItemForm
                 trigger={
@@ -132,61 +192,58 @@ const LookupItemList: FC<LookupItemListProps> = ({
 
             {record.isEnabled
               ? access.has(LOOKUP_PERMISSIONS.disableItem) && (
-                  <Popconfirm
-                    title={<FormattedMessage id="common.confirmText.disable" />}
-                    disabled={record.isPreset}
-                    onConfirm={() =>
-                      runItemAction(
-                        record,
-                        disableLookupItem,
-                        'message.disable.success',
-                        'message.disable.failure',
-                      )
-                    }
-                  >
-                    <Button
-                      type="link"
-                      size="small"
-                      disabled={record.isPreset}
-                      icon={<CloseCircleOutlined />}
-                    >
-                      <FormattedMessage id="common.button.disable" />
-                    </Button>
-                  </Popconfirm>
+                <Button
+                  type="link"
+                  size="small"
+                  danger
+                  icon={<CloseCircleOutlined />}
+                  onClick={() => handleDisable(record)}
+                >
+                  <FormattedMessage id="common.button.disable" />
+                </Button>
                 )
               : access.has(LOOKUP_PERMISSIONS.enableItem) && (
-                  <Popconfirm
-                    title={<FormattedMessage id="common.confirmText.enable" />}
-                    disabled={record.isPreset}
-                    onConfirm={() =>
-                      runItemAction(
-                        record,
-                        enableLookupItem,
-                        'message.enable.success',
-                        'message.enable.failure',
-                      )
-                    }
-                  >
-                    <Button
-                      type="link"
-                      size="small"
-                      disabled={record.isPreset}
-                      icon={<CheckCircleOutlined />}
-                    >
-                      <FormattedMessage id="common.button.enable" />
-                    </Button>
-                  </Popconfirm>
+                <Button
+                  type="link"
+                  size="small"
+                  icon={<CheckCircleOutlined />}
+                  onClick={() => handleEnable(record)}
+                >
+                  <FormattedMessage id="common.button.enable" />
+                </Button>
                 )}
+
+            {access.has(LOOKUP_PERMISSIONS.deleteItem) && (
+              <Tooltip
+                title={
+                  record.isPreset ? (
+                    <FormattedMessage id="lookup.item.label.isPreset.tooltip" />
+                  ) : undefined
+                }
+              >
+                <Button
+                  type="link"
+                  size="small"
+                  danger
+                  disabled={record.isPreset}
+                  icon={<DeleteOutlined />}
+                  onClick={() => handleDelete(record)}
+                >
+                  <FormattedMessage id="common.button.delete" />
+                </Button>
+              </Tooltip>
+            )}
           </Space>
         ),
       },
     ],
-    [access, lookupId, onSuccess, runItemAction],
+    [access, handleDelete, handleDisable, handleEnable, lookupId, onSuccess],
   );
 
   return (
     <>
       {contextHolder}
+      {modalContextHolder}
       <DragSortTable<API.LookupItemDto>
         rowKey="id"
         dragSortKey="sort"
@@ -240,7 +297,7 @@ const LookupItemList: FC<LookupItemListProps> = ({
                     icon={<PlusOutlined />}
                     disabled={!lookupId}
                   >
-                    <FormattedMessage id="lookup.button.createLookupItem" />
+                    <FormattedMessage id="lookup.item.action.create" />
                   </Button>
                 }
                 lookupId={lookupId}

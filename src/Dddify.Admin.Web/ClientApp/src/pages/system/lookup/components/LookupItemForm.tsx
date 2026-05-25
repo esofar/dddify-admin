@@ -6,7 +6,7 @@ import {
 } from '@ant-design/pro-components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { message, Tag } from 'antd';
+import { message, Tag, theme } from 'antd';
 import type { FC, ReactElement } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import { createLookupItem, updateLookupItem } from '@/services/v1/lookup';
@@ -38,6 +38,7 @@ const LookupItemForm: FC<LookupItemFormProps> = ({
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const { token } = theme.useToken();
   const formRef = useRef<ProFormInstance<LookupItemFormValues> | undefined>(
     undefined,
   );
@@ -102,8 +103,8 @@ const LookupItemForm: FC<LookupItemFormProps> = ({
           <FormattedMessage
             id={
               isEditing
-                ? 'lookup.item.formTitle.update'
-                : 'lookup.item.formTitle.create'
+                ? 'lookup.item.action.update'
+                : 'lookup.item.action.create'
             }
           />
         }
@@ -112,7 +113,7 @@ const LookupItemForm: FC<LookupItemFormProps> = ({
         layout="horizontal"
         labelCol={{ span: 5 }}
         colProps={{ xs: 24, sm: 24 }}
-        width={520}
+        width={560}
         autoComplete="off"
         formRef={formRef}
         open={open}
@@ -154,41 +155,50 @@ const LookupItemForm: FC<LookupItemFormProps> = ({
           maskClosable: false,
         }}
       >
-        <ProFormText
-          name="value"
-          label={<FormattedMessage id="lookup.item.label.value" />}
-          disabled={isEditing}
-          fieldProps={{
-            showCount: true,
-            maxLength: 20,
+        <div
+          style={{
+            width: '100%',
+            padding: `${token.paddingMD}px ${token.padding}px 0`,
+            border: `1px solid ${token.colorBorderSecondary}`,
+            borderRadius: token.borderRadius,
           }}
-          rules={[requiredRule, lowerCaseCodeRule]}
-        />
+        >
+          <ProFormText
+            name="label"
+            label={<FormattedMessage id="lookup.item.label.label" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 20,
+            }}
+            rules={[requiredRule, noSpecialNoSpaceRule]}
+          />
 
-        <ProFormText
-          name="label"
-          label={<FormattedMessage id="lookup.item.label.label" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 20,
-          }}
-          rules={[requiredRule, noSpecialNoSpaceRule]}
-        />
+          <ProFormText
+            name="value"
+            label={<FormattedMessage id="lookup.item.label.value" />}
+            tooltip={<FormattedMessage id="lookup.item.label.value.tooltip" />}
+            disabled={isEditing}
+            fieldProps={{
+              showCount: true,
+              maxLength: 20,
+            }}
+            rules={[requiredRule, lowerCaseCodeRule]}
+          />
 
-        <ProFormSelect
-          name="color"
-          className=''
-          label={<FormattedMessage id="lookup.item.label.color" />}
-          allowClear
-          options={tagColors.map((color) => ({
-            label: (
-              <Tag color={color} variant="filled">
-                {color}
-              </Tag>
-            ),
-            value: color,
-          }))}
-        />
+          <ProFormSelect
+            name="color"
+            label={<FormattedMessage id="lookup.item.label.color" />}
+            allowClear
+            options={tagColors.map((color) => ({
+              label: (
+                <Tag color={color} variant="filled">
+                  {color}
+                </Tag>
+              ),
+              value: color,
+            }))}
+          />
+        </div>
       </DrawerForm>
     </>
   );

@@ -37,6 +37,14 @@ public class Lookup : AuditableAggregateRoot<Guid>
         Description = description;
     }
 
+    public void EnsureCanDelete()
+    {
+        if (_items.Count > 0)
+        {
+            throw new LookupHasItemsException(Id);
+        }
+    }
+
     public void AddItem(Guid itemId, string value, string label, string? color)
     {
         if (_items.Any(c => c.Value == value || c.Label == label))
@@ -64,6 +72,11 @@ public class Lookup : AuditableAggregateRoot<Guid>
     {
         var item = _items.FirstOrDefault(i => i.Id == itemId)
             ?? throw new LookupItemNotFoundException(Id, itemId);
+
+        if (item.IsPreset)
+        {
+            throw new LookupItemCannotDeletedException(Id, itemId);
+        }
 
         _items.Remove(item);
     }

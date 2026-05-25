@@ -6,7 +6,7 @@ import {
 } from '@ant-design/pro-components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { message } from 'antd';
+import { message, theme } from 'antd';
 import type { FC, ReactElement } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import { createLookup, updateLookup } from '@/services/v1/lookup';
@@ -31,6 +31,7 @@ type LookupFormProps = {
 const LookupForm: FC<LookupFormProps> = ({ trigger, lookup, onSuccess }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const { token } = theme.useToken();
   const formRef = useRef<ProFormInstance<LookupFormValues> | undefined>(
     undefined,
   );
@@ -90,7 +91,7 @@ const LookupForm: FC<LookupFormProps> = ({ trigger, lookup, onSuccess }) => {
         title={
           <FormattedMessage
             id={
-              isEditing ? 'lookup.formTitle.update' : 'lookup.formTitle.create'
+              isEditing ? 'lookup.action.update' : 'lookup.action.create'
             }
           />
         }
@@ -99,7 +100,7 @@ const LookupForm: FC<LookupFormProps> = ({ trigger, lookup, onSuccess }) => {
         layout="horizontal"
         labelCol={{ span: 5 }}
         colProps={{ xs: 24, sm: 24 }}
-        width={520}
+        width={560}
         autoComplete="off"
         formRef={formRef}
         open={open}
@@ -141,35 +142,49 @@ const LookupForm: FC<LookupFormProps> = ({ trigger, lookup, onSuccess }) => {
           maskClosable: false,
         }}
       >
-        <ProFormText
-          name="code"
-          label={<FormattedMessage id="lookup.label.code" />}
-          disabled={isEditing}
-          fieldProps={{
-            showCount: true,
-            maxLength: 20,
+        <div
+          style={{
+            width: '100%',
+            padding: `${token.paddingMD}px ${token.padding}px 0`,
+            border: `1px solid ${token.colorBorderSecondary}`,
+            borderRadius: token.borderRadius,
           }}
-          rules={[requiredRule, lowerCaseCodeRule]}
-        />
+        >
+          <ProFormText
+            name="name"
+            label={<FormattedMessage id="lookup.label.name" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 20,
+            }}
+            rules={[requiredRule, noSpecialNoSpaceRule]}
+          />
 
-        <ProFormText
-          name="name"
-          label={<FormattedMessage id="lookup.label.name" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 20,
-          }}
-          rules={[requiredRule, noSpecialNoSpaceRule]}
-        />
+          <ProFormText
+            name="code"
+            label={<FormattedMessage id="lookup.label.code" />}
+            tooltip={<FormattedMessage id="lookup.label.code.tooltip" />}
+            disabled={isEditing}
+            fieldProps={{
+              showCount: true,
+              maxLength: 20,
+            }}
+            rules={[requiredRule, lowerCaseCodeRule]}
+          />
 
-        <ProFormTextArea
-          name="description"
-          label={<FormattedMessage id="lookup.label.description" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 100,
-          }}
-        />
+          <ProFormTextArea
+            name="description"
+            label={<FormattedMessage id="lookup.label.description" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 100,
+              autoSize: {
+                minRows: 3,
+                maxRows: 5,
+              },
+            }}
+          />
+        </div>
       </DrawerForm>
     </>
   );

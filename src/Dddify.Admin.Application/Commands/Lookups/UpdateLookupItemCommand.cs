@@ -3,7 +3,11 @@ using Dddify.Admin.Domain.Aggregates.Lookups;
 
 namespace Dddify.Admin.Application.Commands.Lookups;
 
-public record UpdateLookupItemCommand(Guid LookupId, Guid ItemId, string Label, string? Color) : ICommand;
+public record UpdateLookupItemCommand(
+    Guid LookupId,
+    Guid LookupItemId,
+    string Label,
+    string? Color) : ICommand;
 
 public class UpdateLookupItemCommandValidator : AbstractValidator<UpdateLookupItemCommand>
 {
@@ -12,7 +16,7 @@ public class UpdateLookupItemCommandValidator : AbstractValidator<UpdateLookupIt
         RuleFor(x => x.LookupId)
             .NotEmpty();
 
-        RuleFor(x => x.ItemId)
+        RuleFor(x => x.LookupItemId)
             .NotEmpty();
 
         RuleFor(x => x.Label)
@@ -24,15 +28,17 @@ public class UpdateLookupItemCommandValidator : AbstractValidator<UpdateLookupIt
     }
 }
 
-public class UpdateLookupItemCommandHandler(ILookupRepository lookupRepository, IDistributedCache distributedCache) : ICommandHandler<UpdateLookupItemCommand>
+public class UpdateLookupItemCommandHandler(
+    ILookupRepository lookupRepository,
+    IDistributedCache distributedCache) : ICommandHandler<UpdateLookupItemCommand>
 {
     public async Task Handle(UpdateLookupItemCommand command, CancellationToken cancellationToken)
     {
         var lookup = await lookupRepository.GetLookupWithItemsAsync(command.LookupId, cancellationToken)
             ?? throw new LookupNotFoundException(command.LookupId);
 
-        lookup.ChangeItem(command.ItemId, command.Label, command.Color);
+        lookup.ChangeItem(command.LookupItemId, command.Label, command.Color);
 
-        distributedCache.Remove(CacheKeys.Lookup.Items(lookup.Code));
+        await distributedCache.RemoveAsync(CacheKeys.Lookup.Items(lookup.Code), cancellationToken);
     }
 }

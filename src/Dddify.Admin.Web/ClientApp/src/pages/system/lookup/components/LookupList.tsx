@@ -1,16 +1,18 @@
 import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
-import { ProTable } from '@ant-design/pro-components';
+import { ProList } from '@ant-design/pro-components';
 import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Button, Divider, message, Popconfirm, Space } from 'antd';
-import type { FC, MutableRefObject } from 'react';
+import { Button, message, Modal, Space, Tag, Typography } from 'antd';
+import type { FC, Key, RefObject } from 'react';
 import { useCallback, useMemo } from 'react';
 import { deleteLookup, searchLookups } from '@/services/v1/lookup';
 import { LOOKUP_PERMISSIONS } from '../data';
 import LookupForm from './LookupForm';
 
+const { Text } = Typography;
+
 type LookupListProps = {
-  actionRef?: MutableRefObject<ActionType | null>;
+  actionRef?: RefObject<ActionType | null>;
   selectedRowKey?: React.Key;
   onLoaded?: (lookups: API.LookupDto[]) => void;
   onSelect: (lookup: API.LookupDto) => void;
@@ -27,93 +29,98 @@ const LookupList: FC<LookupListProps> = ({
   const intl = useIntl();
   const access = useAccess();
   const [messageApi, contextHolder] = message.useMessage();
+  const [modalApi, modalContextHolder] = Modal.useModal();
 
   const handleDelete = useCallback(
-    async (lookup: API.LookupDto) => {
-      const { success, errorMessage } = await deleteLookup({ id: lookup.id });
+    (lookup: API.LookupDto) => {
+      modalApi.confirm({
+        title: <FormattedMessage id="lookup.confirm.delete.title" />,
+        content: <FormattedMessage id="lookup.confirm.delete.description" />,
+        okButtonProps: {
+          danger: true,
+        },
+        onOk: async () => {
+          const { success, errorMessage } = await deleteLookup({ id: lookup.id });
 
-      if (!success) {
-        messageApi.error(
-          errorMessage ?? intl.formatMessage({ id: 'message.delete.failure' }),
-        );
-        return;
-      }
+          if (!success) {
+            messageApi.error(
+              errorMessage ?? intl.formatMessage({ id: 'message.delete.failure' }),
+            );
+            return;
+          }
 
-      messageApi.success(intl.formatMessage({ id: 'message.delete.success' }));
-      onSuccess?.();
+          messageApi.success(intl.formatMessage({ id: 'message.delete.success' }));
+          onSuccess?.();
+        },
+      });
     },
-    [intl, messageApi, onSuccess],
+    [intl, messageApi, modalApi, onSuccess],
   );
 
   const columns = useMemo<ProColumns<API.LookupDto>[]>(
     () => [
       {
-        title: <FormattedMessage id="lookup.label.index" />,
-        dataIndex: 'index',
-        valueType: 'index',
-        width: 64,
-        align: 'center',
-        fixed: 'left',
-        search: false,
-      },
-      {
-        title: <FormattedMessage id="lookup.label.name" />,
         dataIndex: 'name',
-        minWidth: 120,
-        ellipsis: true,
-      },
-      {
-        title: <FormattedMessage id="lookup.label.code" />,
-        dataIndex: 'code',
-        minWidth: 140,
-        ellipsis: true,
-        copyable: true,
-      },
-      {
-        title: <FormattedMessage id="lookup.label.description" />,
-        dataIndex: 'description',
-        minWidth: 160,
-        ellipsis: true,
-        search: false,
-      },
-      {
-        title: <FormattedMessage id="lookup.label.option" />,
-        dataIndex: 'option',
-        valueType: 'option',
-        fixed: 'right',
-        width: 170,
-        render: (_, record) => (
-          <Space size={0} split={<Divider type="vertical" />}>
-            {access.has(LOOKUP_PERMISSIONS.update) && (
-              <LookupForm
-                trigger={
-                  <Button type="link" size="small" icon={<EditOutlined />}>
-                    <FormattedMessage id="common.button.update" />
-                  </Button>
-                }
-                lookup={record}
-                onSuccess={onSuccess}
-              />
-            )}
-
-            {access.has(LOOKUP_PERMISSIONS.delete) && (
-              <Popconfirm
-                title={<FormattedMessage id="common.confirmText.delete" />}
-                okButtonProps={{ danger: true }}
-                onConfirm={() => handleDelete(record)}
-              >
-                <Button
-                  type="link"
-                  size="small"
-                  danger
-                  icon={<DeleteOutlined />}
-                >
-                  <FormattedMessage id="common.button.delete" />
-                </Button>
-              </Popconfirm>
-            )}
-          </Space>
+        title: <FormattedMessage id="lookup.label.name" />,
+        listSlot: 'title',
+        render: (_: unknown, record: API.LookupDto) => (
+          <Text strong ellipsis>
+            {record.name}
+          </Text>
         ),
+      },
+      {
+        dataIndex: 'code',
+        title: <FormattedMessage id="lookup.label.code" />,
+        listSlot: 'subTitle',
+        render: (_: unknown, record: API.LookupDto) => (
+          <Tag color="secondary" variant="filled">{record.code}</Tag>
+        ),
+      },
+      {
+        dataIndex: 'description',
+        title: <FormattedMessage id="lookup.label.description" />,
+        search: false,
+        listSlot: 'description',
+        render: (_: unknown, record: API.LookupDto) =>
+          record.description ? (
+            <Text type="secondary" ellipsis>
+              {record.description}
+            </Text>
+          ) : (
+            <Text type="secondary">-</Text>
+          ),
+      },
+      {
+        dataIndex: 'actions',
+        valueType: 'option',
+        listSlot: 'actions',
+        render: (_: unknown, record: API.LookupDto) => [
+          access.has(LOOKUP_PERMISSIONS.update) && (
+            <LookupForm
+              key="update"
+              trigger={
+                <Button type="link" size="small" icon={<EditOutlined />}>
+                  <FormattedMessage id="common.button.update" />
+                </Button>
+              }
+              lookup={record}
+              onSuccess={onSuccess}
+            />
+          ),
+          access.has(LOOKUP_PERMISSIONS.delete) && (
+            <Button
+              key="delete"
+              type="link"
+              size="small"
+              danger
+              icon={<DeleteOutlined />}
+              onClick={() => handleDelete(record)}
+            >
+              <FormattedMessage id="common.button.delete" />
+            </Button>
+          ),
+        ].filter(Boolean),
       },
     ],
     [access, handleDelete, onSuccess],
@@ -122,19 +129,22 @@ const LookupList: FC<LookupListProps> = ({
   return (
     <>
       {contextHolder}
-      <ProTable<API.LookupDto, API.SearchLookupsParams>
+      {modalContextHolder}
+      <ProList<API.LookupDto, API.SearchLookupsParams>
         rowKey="id"
         actionRef={actionRef}
+        split={true}
+        variant="borderless"
         columns={columns}
-        scroll={{ x: 'max-content' }}
         search={{ filterType: 'light' }}
         pagination={{ showSizeChanger: true }}
-        onRow={(record) => ({
+        onItem={(record) => ({
           onClick: () => onSelect(record),
+          style: { cursor: 'pointer' },
         })}
-        rowClassName={(record) =>
-          record.id === selectedRowKey ? 'ant-table-row-selected' : ''
-        }
+        // rowClassName={(record: { id: Key | undefined; }) =>
+        //   record.id === selectedRowKey ? 'ant-table-row-selected' : ''
+        // }
         request={async (params) => {
           const { success, data } = await searchLookups(params);
           const items = data?.items ?? [];
@@ -153,7 +163,7 @@ const LookupList: FC<LookupListProps> = ({
               <LookupForm
                 trigger={
                   <Button type="primary" icon={<PlusOutlined />}>
-                    <FormattedMessage id="lookup.button.createLookup" />
+                    <FormattedMessage id="lookup.action.create" />
                   </Button>
                 }
                 onSuccess={onSuccess}

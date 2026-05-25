@@ -1,5 +1,4 @@
 using Dddify.Admin.Application.Dtos.Lookups;
-using Dddify.Primitives;
 
 namespace Dddify.Admin.Application.Queries.Lookups;
 

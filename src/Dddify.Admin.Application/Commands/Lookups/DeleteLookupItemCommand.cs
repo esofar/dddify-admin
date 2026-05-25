@@ -2,13 +2,13 @@ using Dddify.Admin.Application.Exceptions.Lookups;
 
 namespace Dddify.Admin.Application.Commands.Lookups;
 
-public record DisableLookupItemCommand(
+public record DeleteLookupItemCommand(
     Guid LookupId,
     Guid LookupItemId) : ICommand;
 
-public class DisableLookupItemCommandValidator : AbstractValidator<DisableLookupItemCommand>
+public class DeleteLookupItemCommandValidator : AbstractValidator<DeleteLookupItemCommand>
 {
-    public DisableLookupItemCommandValidator()
+    public DeleteLookupItemCommandValidator()
     {
         RuleFor(x => x.LookupId)
             .NotEmpty();
@@ -18,16 +18,16 @@ public class DisableLookupItemCommandValidator : AbstractValidator<DisableLookup
     }
 }
 
-public class DisableLookupItemCommandHandler(
+public class DeleteLookupItemCommandHandler(
     ILookupRepository lookupRepository,
-    IDistributedCache distributedCache) : ICommandHandler<DisableLookupItemCommand>
+    IDistributedCache distributedCache) : ICommandHandler<DeleteLookupItemCommand>
 {
-    public async Task Handle(DisableLookupItemCommand command, CancellationToken cancellationToken)
+    public async Task Handle(DeleteLookupItemCommand command, CancellationToken cancellationToken)
     {
         var lookup = await lookupRepository.GetLookupWithItemsAsync(command.LookupId, cancellationToken)
             ?? throw new LookupNotFoundException(command.LookupId);
 
-        lookup.DisableItem(command.LookupItemId);
+        lookup.RemoveItem(command.LookupItemId);
 
         await distributedCache.RemoveAsync(CacheKeys.Lookup.Items(lookup.Code), cancellationToken);
     }

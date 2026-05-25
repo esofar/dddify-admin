@@ -5,8 +5,9 @@ namespace Dddify.Admin.Application.Queries.Lookups;
 
 public record GetLookupActiveItemsQuery(string Code) : IQuery<IEnumerable<LookupActiveItemDto>>;
 
-public class GetLookupEnableItemsQueryHandler(ILookupRepository lookupRepository, IDistributedCache distributedCache)
-    : IQueryHandler<GetLookupActiveItemsQuery, IEnumerable<LookupActiveItemDto>>
+public class GetLookupActiveItemsQueryHandler(
+    ILookupRepository lookupRepository,
+    IDistributedCache distributedCache) : IQueryHandler<GetLookupActiveItemsQuery, IEnumerable<LookupActiveItemDto>>
 {
     public async Task<IEnumerable<LookupActiveItemDto>> Handle(GetLookupActiveItemsQuery query, CancellationToken cancellationToken)
     {

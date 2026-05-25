@@ -1,10 +1,15 @@
 import type { ActionType } from '@ant-design/pro-components';
-import { PageContainer, ProCard } from '@ant-design/pro-components';
+import { PageContainer } from '@ant-design/pro-components';
+import { FormattedMessage } from '@umijs/max';
+import { Empty, Space, Typography, theme } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
 import LookupItemList from './components/LookupItemList';
 import LookupList from './components/LookupList';
 
+const { Text } = Typography;
+
 const LookupPage: React.FC = () => {
+  const { token } = theme.useToken();
   const [selectedLookup, setSelectedLookup] = useState<API.LookupDto>();
 
   const actionRefLookup = useRef<ActionType | null>(null);
@@ -31,8 +36,14 @@ const LookupPage: React.FC = () => {
 
   return (
     <PageContainer title={false}>
-      <ProCard split="vertical">
-        <ProCard colSpan="50%" styles={{ body: { padding: 0, paddingTop: 8 } }}>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: '35% minmax(0, 1fr)',
+          gap: token.margin,
+        }}
+      >
+        <section>
           <LookupList
             actionRef={actionRefLookup}
             selectedRowKey={selectedLookup?.id}
@@ -42,17 +53,24 @@ const LookupPage: React.FC = () => {
               actionRefLookup.current?.reload();
             }}
           />
-        </ProCard>
-        <ProCard colSpan="50%" styles={{ body: { padding: 0, paddingTop: 8 } }}>
-          <LookupItemList
-            lookup={selectedLookup}
-            actionRef={actionRefLookupItem}
-            onSuccess={() => {
-              actionRefLookupItem.current?.reload();
-            }}
-          />
-        </ProCard>
-      </ProCard>
+        </section>
+        <section>
+          {selectedLookup ? (
+            <LookupItemList
+              lookup={selectedLookup}
+              actionRef={actionRefLookupItem}
+              onSuccess={() => {
+                actionRefLookupItem.current?.reload();
+              }}
+            />
+          ) : (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              style={{ padding: '80px 0' }}
+            />
+          )}
+        </section>
+      </div>
     </PageContainer>
   );
 };

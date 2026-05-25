@@ -63,11 +63,6 @@ public class LookupItem : AuditableEntity<Guid>
             throw new LookupItemAlreadyDisabledException(LookupId, Id);
         }
 
-        if (IsPreset)
-        {
-            throw new LookupPresetItemNotAllowedException(LookupId, Id);
-        }
-
         IsEnabled = false;
     }
 }

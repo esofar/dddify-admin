@@ -2,7 +2,9 @@ using Dddify.Admin.Application.Exceptions.Lookups;
 
 namespace Dddify.Admin.Application.Commands.Lookups;
 
-public record SortLookupItemsCommand(Guid Id, Guid[] OrderedItemIds) : ICommand;
+public record SortLookupItemsCommand(
+    Guid Id,
+    Guid[] OrderedItemIds) : ICommand;
 
 public class SortLookupItemsCommandValidator : AbstractValidator<SortLookupItemsCommand>
 {
@@ -16,7 +18,9 @@ public class SortLookupItemsCommandValidator : AbstractValidator<SortLookupItems
     }
 }
 
-public class SortLookupItemsCommandHandler(ILookupRepository lookupRepository) : ICommandHandler<SortLookupItemsCommand>
+public class SortLookupItemsCommandHandler(
+    ILookupRepository lookupRepository,
+    IDistributedCache distributedCache) : ICommandHandler<SortLookupItemsCommand>
 {
     public async Task Handle(SortLookupItemsCommand command, CancellationToken cancellationToken)
     {
@@ -24,5 +28,7 @@ public class SortLookupItemsCommandHandler(ILookupRepository lookupRepository) :
             ?? throw new LookupNotFoundException(command.Id);
 
         lookup.SortItems(command.OrderedItemIds);
+
+        await distributedCache.RemoveAsync(CacheKeys.Lookup.Items(lookup.Code), cancellationToken);
     }
 }
