@@ -216,7 +216,7 @@ declare namespace API {
     /** 排序值。 */
     order: number;
     /** 角色描述。 */
-    description: string;
+    description: any;
   };
 
   type CreateUserRequest = {
@@ -253,6 +253,13 @@ declare namespace API {
   type DeleteDepartmentParams = {
     /** 部门ID。 */
     id: string;
+  };
+
+  type DeleteLookupItemParams = {
+    /** 字典ID。 */
+    id: string;
+    /** 字典项ID。 */
+    itemId: string;
   };
 
   type DeleteLookupParams = {
@@ -451,13 +458,13 @@ declare namespace API {
 
   type SearchLookupsParams = {
     /** 当前页码。 */
-    current?: number;
+    Current?: number;
     /** 每页数量。 */
-    pageSize?: number;
+    PageSize?: number;
     /** 字典编码。 */
-    code?: string;
+    Code?: string;
     /** 字典名称。 */
-    name?: string;
+    Name?: string;
   };
 
   type SearchPermissionsParams = {
@@ -591,7 +598,7 @@ declare namespace API {
     /** 排序值。 */
     order: number;
     /** 角色描述。 */
-    description: string;
+    description: any;
     /** 并发标记。 */
     concurrencyStamp: any;
   };
@@ -636,6 +643,7 @@ declare namespace API {
     birthDate: any;
     gender: string;
     status: string;
+    isBuiltIn: boolean;
     department: UserDepartmentDto;
     roles: UserRoleDto[];
   };
@@ -650,6 +658,7 @@ declare namespace API {
     birthDate: any;
     gender: string;
     status: string;
+    isBuiltIn: boolean;
     department: UserDepartmentDto;
     roles: UserRoleDto[];
   };

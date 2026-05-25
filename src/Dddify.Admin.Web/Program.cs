@@ -72,10 +72,7 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 
-    app.MapScalarApiReference("/docs", options =>
-    {
-        options.Title = "Dddify Admin API";
-    });
+    app.MapScalarApiReference();
 }
 
 app.UseForwardedHeaders();

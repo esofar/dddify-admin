@@ -56,3 +56,8 @@ export const lowerCaseCodeRule: FormRule = {
   pattern: /^[a-z0-9_]+$/,
   message: <FormattedMessage id="form.rules.lowerCaseCode" />,
 };
+
+export const permissionCodeRule: FormRule = {
+  pattern: /^[a-z0-9-:]+$/,
+  message: <FormattedMessage id="form.rules.permissionCode" />,
+};
