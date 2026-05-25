@@ -371,6 +371,7 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                         {
                             Id = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
                             Code = "department_type",
+                            Description = "用于定义部门分类，便于管理与区分。",
                             IsDeleted = false,
                             Name = "部门类型"
                         });
@@ -469,13 +470,24 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                         },
                         new
                         {
+                            Id = new Guid("019e3b16-b423-79c1-a37c-7524ae11a8d7"),
+                            IsDeleted = false,
+                            IsEnabled = true,
+                            IsPreset = true,
+                            Label = "分公司",
+                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
+                            Order = 2,
+                            Value = "branch"
+                        },
+                        new
+                        {
                             Id = new Guid("019e3b16-b41b-7905-9176-d3bbcce11e83"),
                             IsDeleted = false,
                             IsEnabled = true,
                             IsPreset = true,
                             Label = "业务部门",
                             LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 2,
+                            Order = 3,
                             Value = "business"
                         },
                         new
@@ -486,7 +498,7 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                             IsPreset = true,
                             Label = "产品部门",
                             LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 3,
+                            Order = 4,
                             Value = "product"
                         },
                         new
@@ -497,52 +509,8 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                             IsPreset = true,
                             Label = "技术部门",
                             LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 4,
-                            Value = "technology"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b41c-7722-b9d9-2046045e36c3"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "运营部门",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
                             Order = 5,
-                            Value = "operations"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b41d-72c7-a4a0-6428d89d6df4"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "市场部门",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 6,
-                            Value = "marketing"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b41d-7c9c-a2af-0c0d41a1eb89"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "销售部门",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 7,
-                            Value = "sales"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b41f-75a1-9786-4ed862324a37"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "客服部门",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 8,
-                            Value = "customer_service"
+                            Value = "technology"
                         },
                         new
                         {
@@ -552,7 +520,7 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                             IsPreset = true,
                             Label = "财务部门",
                             LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 9,
+                            Order = 6,
                             Value = "finance"
                         },
                         new
@@ -563,7 +531,7 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                             IsPreset = true,
                             Label = "人力资源部",
                             LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 10,
+                            Order = 7,
                             Value = "human_resource"
                         },
                         new
@@ -574,63 +542,8 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                             IsPreset = true,
                             Label = "行政部门",
                             LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 11,
+                            Order = 8,
                             Value = "administration"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b421-76a0-801d-5001e52b6fcc"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "法务部门",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 12,
-                            Value = "legal"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b421-7105-bb22-f13c4594419e"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "安全部门",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 13,
-                            Value = "security"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b422-73c2-a178-ee95103ec424"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "采购部门",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 14,
-                            Value = "procurement"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b423-77d6-8892-d7d83a8ff17c"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "审计部门",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 15,
-                            Value = "audit"
-                        },
-                        new
-                        {
-                            Id = new Guid("019e3b16-b423-79c1-a37c-7524ae11a8d7"),
-                            IsDeleted = false,
-                            IsEnabled = true,
-                            IsPreset = true,
-                            Label = "分公司",
-                            LookupId = new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"),
-                            Order = 16,
-                            Value = "branch"
                         });
                 });
 
@@ -697,20 +610,6 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_sys_permission");
-
-                    b.HasIndex("Code")
-                        .IsUnique()
-                        .HasDatabaseName("ix_sys_permission_code");
-
-                    b.HasIndex("Type")
-                        .HasDatabaseName("ix_sys_permission_type");
-
-                    b.HasIndex("ParentId", "Name")
-                        .IsUnique()
-                        .HasDatabaseName("ix_sys_permission_parent_id_name");
-
-                    b.HasIndex("ParentId", "Order")
-                        .HasDatabaseName("ix_sys_permission_parent_id_order");
 
                     b.ToTable("sys_permission", (string)null);
 
@@ -1010,7 +909,17 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                             Code = "system:lookup:item:enable",
                             IsDeleted = false,
                             Name = "启用字典项",
-                            Order = 28,
+                            Order = 29,
+                            ParentId = new Guid("018f69e2-55a8-7c7b-80b2-55d4a1216a89"),
+                            Type = "Button"
+                        },
+                        new
+                        {
+                            Id = new Guid("019a48f8-d4c7-7049-bb57-15e38c00f979"),
+                            Code = "system:lookup:item:delete",
+                            IsDeleted = false,
+                            Name = "删除字典项",
+                            Order = 30,
                             ParentId = new Guid("018f69e2-55a8-7c7b-80b2-55d4a1216a89"),
                             Type = "Button"
                         });
@@ -1163,15 +1072,15 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                         .HasColumnName("permission_code");
 
                     b.HasKey("RoleId", "PermissionId")
-                        .HasName("pk_sys_role_permissions");
+                        .HasName("pk_sys_role_permission");
 
                     b.HasIndex("PermissionCode")
-                        .HasDatabaseName("ix_sys_role_permissions_permission_code");
+                        .HasDatabaseName("ix_sys_role_permission_permission_code");
 
                     b.HasIndex("PermissionId")
-                        .HasDatabaseName("ix_sys_role_permissions_permission_id");
+                        .HasDatabaseName("ix_sys_role_permission_permission_id");
 
-                    b.ToTable("sys_role_permissions", (string)null);
+                    b.ToTable("sys_role_permission", (string)null);
 
                     b.HasData(
                         new
@@ -1353,6 +1262,12 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                             RoleId = new Guid("018f0d8b-c694-7c32-868d-97b38f6a37c4"),
                             PermissionId = new Guid("019a075c-8b2e-7f8d-a678-95c158f2fc6d"),
                             PermissionCode = "system:lookup:item:enable"
+                        },
+                        new
+                        {
+                            RoleId = new Guid("018f0d8b-c694-7c32-868d-97b38f6a37c4"),
+                            PermissionId = new Guid("019a48f8-d4c7-7049-bb57-15e38c00f979"),
+                            PermissionCode = "system:lookup:item:delete"
                         });
                 });
 
@@ -1851,7 +1766,7 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired()
-                        .HasConstraintName("fk_sys_role_permissions_sys_role_role_id");
+                        .HasConstraintName("fk_sys_role_permission_sys_role_role_id");
                 });
 
             modelBuilder.Entity("Dddify.Admin.Domain.Aggregates.Users.User", b =>

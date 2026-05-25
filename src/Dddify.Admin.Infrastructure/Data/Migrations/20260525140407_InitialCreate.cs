@@ -197,7 +197,7 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "sys_role_permissions",
+                name: "sys_role_permission",
                 columns: table => new
                 {
                     role_id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -206,9 +206,9 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_sys_role_permissions", x => new { x.role_id, x.permission_id });
+                    table.PrimaryKey("pk_sys_role_permission", x => new { x.role_id, x.permission_id });
                     table.ForeignKey(
-                        name: "fk_sys_role_permissions_sys_role_role_id",
+                        name: "fk_sys_role_permission_sys_role_role_id",
                         column: x => x.role_id,
                         principalTable: "sys_role",
                         principalColumn: "id");
@@ -255,7 +255,7 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
             migrationBuilder.InsertData(
                 table: "sys_lookup",
                 columns: new[] { "id", "code", "created_at", "created_by", "deleted_at", "deleted_by", "description", "is_deleted", "modified_at", "modified_by", "name" },
-                values: new object[] { new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), "department_type", null, null, null, null, null, false, null, null, "部门类型" });
+                values: new object[] { new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), "department_type", null, null, null, null, "用于定义部门分类，便于管理与区分。", false, null, null, "部门类型" });
 
             migrationBuilder.InsertData(
                 table: "sys_permission",
@@ -291,7 +291,8 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                     { new Guid("01979d24-ea82-7c77-9c92-be1b4413c498"), "system:lookup:item:create", null, null, null, null, false, null, null, "新增字典项", 26, new Guid("018f69e2-55a8-7c7b-80b2-55d4a1216a89"), "Button" },
                     { new Guid("01979d24-ea82-7cf9-a242-88bd19882f78"), "system:lookup:item:update", null, null, null, null, false, null, null, "修改字典项", 27, new Guid("018f69e2-55a8-7c7b-80b2-55d4a1216a89"), "Button" },
                     { new Guid("01979d24-ea82-7d29-ab3e-aab3d1c996df"), "system:lookup:item:disable", null, null, null, null, false, null, null, "禁用字典项", 28, new Guid("018f69e2-55a8-7c7b-80b2-55d4a1216a89"), "Button" },
-                    { new Guid("019a075c-8b2e-7f8d-a678-95c158f2fc6d"), "system:lookup:item:enable", null, null, null, null, false, null, null, "启用字典项", 28, new Guid("018f69e2-55a8-7c7b-80b2-55d4a1216a89"), "Button" }
+                    { new Guid("019a075c-8b2e-7f8d-a678-95c158f2fc6d"), "system:lookup:item:enable", null, null, null, null, false, null, null, "启用字典项", 29, new Guid("018f69e2-55a8-7c7b-80b2-55d4a1216a89"), "Button" },
+                    { new Guid("019a48f8-d4c7-7049-bb57-15e38c00f979"), "system:lookup:item:delete", null, null, null, null, false, null, null, "删除字典项", 30, new Guid("018f69e2-55a8-7c7b-80b2-55d4a1216a89"), "Button" }
                 });
 
             migrationBuilder.InsertData(
@@ -324,25 +325,17 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                 values: new object[,]
                 {
                     { new Guid("019e3b16-b41b-7780-bc9d-e46e02359074"), null, null, null, null, null, false, true, true, "总部", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 1, "headquarters" },
-                    { new Guid("019e3b16-b41b-7905-9176-d3bbcce11e83"), null, null, null, null, null, false, true, true, "业务部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 2, "business" },
-                    { new Guid("019e3b16-b41c-75c8-bbd2-64834915b320"), null, null, null, null, null, false, true, true, "技术部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 4, "technology" },
-                    { new Guid("019e3b16-b41c-7722-b9d9-2046045e36c3"), null, null, null, null, null, false, true, true, "运营部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 5, "operations" },
-                    { new Guid("019e3b16-b41c-77b0-8471-5b98ea7cc354"), null, null, null, null, null, false, true, true, "产品部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 3, "product" },
-                    { new Guid("019e3b16-b41d-72c7-a4a0-6428d89d6df4"), null, null, null, null, null, false, true, true, "市场部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 6, "marketing" },
-                    { new Guid("019e3b16-b41d-7c9c-a2af-0c0d41a1eb89"), null, null, null, null, null, false, true, true, "销售部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 7, "sales" },
-                    { new Guid("019e3b16-b41f-759e-aed3-e723ce06a88d"), null, null, null, null, null, false, true, true, "财务部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 9, "finance" },
-                    { new Guid("019e3b16-b41f-75a1-9786-4ed862324a37"), null, null, null, null, null, false, true, true, "客服部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 8, "customer_service" },
-                    { new Guid("019e3b16-b420-7300-9645-db31c3391eef"), null, null, null, null, null, false, true, true, "人力资源部", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 10, "human_resource" },
-                    { new Guid("019e3b16-b420-76f4-8e33-62fae4848a01"), null, null, null, null, null, false, true, true, "行政部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 11, "administration" },
-                    { new Guid("019e3b16-b421-7105-bb22-f13c4594419e"), null, null, null, null, null, false, true, true, "安全部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 13, "security" },
-                    { new Guid("019e3b16-b421-76a0-801d-5001e52b6fcc"), null, null, null, null, null, false, true, true, "法务部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 12, "legal" },
-                    { new Guid("019e3b16-b422-73c2-a178-ee95103ec424"), null, null, null, null, null, false, true, true, "采购部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 14, "procurement" },
-                    { new Guid("019e3b16-b423-77d6-8892-d7d83a8ff17c"), null, null, null, null, null, false, true, true, "审计部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 15, "audit" },
-                    { new Guid("019e3b16-b423-79c1-a37c-7524ae11a8d7"), null, null, null, null, null, false, true, true, "分公司", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 16, "branch" }
+                    { new Guid("019e3b16-b41b-7905-9176-d3bbcce11e83"), null, null, null, null, null, false, true, true, "业务部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 3, "business" },
+                    { new Guid("019e3b16-b41c-75c8-bbd2-64834915b320"), null, null, null, null, null, false, true, true, "技术部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 5, "technology" },
+                    { new Guid("019e3b16-b41c-77b0-8471-5b98ea7cc354"), null, null, null, null, null, false, true, true, "产品部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 4, "product" },
+                    { new Guid("019e3b16-b41f-759e-aed3-e723ce06a88d"), null, null, null, null, null, false, true, true, "财务部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 6, "finance" },
+                    { new Guid("019e3b16-b420-7300-9645-db31c3391eef"), null, null, null, null, null, false, true, true, "人力资源部", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 7, "human_resource" },
+                    { new Guid("019e3b16-b420-76f4-8e33-62fae4848a01"), null, null, null, null, null, false, true, true, "行政部门", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 8, "administration" },
+                    { new Guid("019e3b16-b423-79c1-a37c-7524ae11a8d7"), null, null, null, null, null, false, true, true, "分公司", new Guid("019e3b16-b3e0-7a3e-9c01-845320b46a88"), null, null, 2, "branch" }
                 });
 
             migrationBuilder.InsertData(
-                table: "sys_role_permissions",
+                table: "sys_role_permission",
                 columns: new[] { "permission_id", "role_id", "permission_code" },
                 values: new object[,]
                 {
@@ -375,7 +368,8 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                     { new Guid("01979d24-ea82-7c77-9c92-be1b4413c498"), new Guid("018f0d8b-c694-7c32-868d-97b38f6a37c4"), "system:lookup:item:create" },
                     { new Guid("01979d24-ea82-7cf9-a242-88bd19882f78"), new Guid("018f0d8b-c694-7c32-868d-97b38f6a37c4"), "system:lookup:item:update" },
                     { new Guid("01979d24-ea82-7d29-ab3e-aab3d1c996df"), new Guid("018f0d8b-c694-7c32-868d-97b38f6a37c4"), "system:lookup:item:disable" },
-                    { new Guid("019a075c-8b2e-7f8d-a678-95c158f2fc6d"), new Guid("018f0d8b-c694-7c32-868d-97b38f6a37c4"), "system:lookup:item:enable" }
+                    { new Guid("019a075c-8b2e-7f8d-a678-95c158f2fc6d"), new Guid("018f0d8b-c694-7c32-868d-97b38f6a37c4"), "system:lookup:item:enable" },
+                    { new Guid("019a48f8-d4c7-7049-bb57-15e38c00f979"), new Guid("018f0d8b-c694-7c32-868d-97b38f6a37c4"), "system:lookup:item:delete" }
                 });
 
             migrationBuilder.InsertData(
@@ -443,28 +437,6 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_sys_permission_code",
-                table: "sys_permission",
-                column: "code",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "ix_sys_permission_parent_id_name",
-                table: "sys_permission",
-                columns: new[] { "parent_id", "name" },
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "ix_sys_permission_parent_id_order",
-                table: "sys_permission",
-                columns: new[] { "parent_id", "order" });
-
-            migrationBuilder.CreateIndex(
-                name: "ix_sys_permission_type",
-                table: "sys_permission",
-                column: "type");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_sys_role_is_default",
                 table: "sys_role",
                 column: "is_default");
@@ -481,13 +453,13 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                 column: "order");
 
             migrationBuilder.CreateIndex(
-                name: "ix_sys_role_permissions_permission_code",
-                table: "sys_role_permissions",
+                name: "ix_sys_role_permission_permission_code",
+                table: "sys_role_permission",
                 column: "permission_code");
 
             migrationBuilder.CreateIndex(
-                name: "ix_sys_role_permissions_permission_id",
-                table: "sys_role_permissions",
+                name: "ix_sys_role_permission_permission_id",
+                table: "sys_role_permission",
                 column: "permission_id");
 
             migrationBuilder.CreateIndex(
@@ -567,7 +539,7 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                 name: "sys_permission");
 
             migrationBuilder.DropTable(
-                name: "sys_role_permissions");
+                name: "sys_role_permission");
 
             migrationBuilder.DropTable(
                 name: "sys_session");

@@ -108,7 +108,7 @@ public class RolePermissionConfiguration : IEntityTypeConfiguration<RolePermissi
 {
     public void Configure(EntityTypeBuilder<RolePermission> builder)
     {
-        builder.ToTable("sys_role_permissions");
+        builder.ToTable("sys_role_permission");
 
         ConfigureKeys(builder);
         ConfigureProperties(builder);
