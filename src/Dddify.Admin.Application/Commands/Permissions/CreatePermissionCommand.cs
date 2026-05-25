@@ -8,8 +8,7 @@ public record CreatePermissionCommand(
     string Code,
     string Name,
     string Type,
-    int Order
-) : ICommand;
+    int Order) : ICommand;
 
 public class CreatePermissionCommandValidator : AbstractValidator<CreatePermissionCommand>
 {
@@ -24,7 +23,6 @@ public class CreatePermissionCommandValidator : AbstractValidator<CreatePermissi
             .MaximumLength(Permission.MaxNameLength);
 
         RuleFor(x => x.Type)
-            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .MaximumLength(20)
             .IsEnumName(typeof(PermissionType), caseSensitive: false);

@@ -29,7 +29,6 @@ public class UpdatePermissionCommandValidator : AbstractValidator<UpdatePermissi
             .MaximumLength(Permission.MaxNameLength);
 
         RuleFor(x => x.Type)
-            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .MaximumLength(20)
             .IsEnumName(typeof(PermissionType), caseSensitive: false);

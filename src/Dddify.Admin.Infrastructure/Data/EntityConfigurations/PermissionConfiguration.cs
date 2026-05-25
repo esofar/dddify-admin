@@ -9,7 +9,6 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
         builder.ToTable("sys_permission");
 
         ConfigureProperties(builder);
-        ConfigureIndexes(builder);
         ConfigureSeedData(builder);
     }
 
@@ -34,18 +33,6 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
 
         builder.Property(p => p.Order)
             .IsRequired();
-    }
-
-    private static void ConfigureIndexes(EntityTypeBuilder<Permission> builder)
-    {
-        builder.HasIndex(p => p.Code)
-            .IsUnique();
-
-        builder.HasIndex(p => new { p.ParentId, p.Name })
-            .IsUnique();
-
-        builder.HasIndex(p => new { p.ParentId, p.Order });
-        builder.HasIndex(p => p.Type);
     }
 
     private static void ConfigureSeedData(EntityTypeBuilder<Permission> builder)
@@ -98,7 +85,8 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
             new(new Guid("01979d24-ea82-7c77-9c92-be1b4413c498"), lookupId, "system:lookup:item:create", "新增字典项", PermissionType.Button, 26),
             new(new Guid("01979d24-ea82-7cf9-a242-88bd19882f78"), lookupId, "system:lookup:item:update", "修改字典项", PermissionType.Button, 27),
             new(new Guid("01979d24-ea82-7d29-ab3e-aab3d1c996df"), lookupId, "system:lookup:item:disable", "禁用字典项", PermissionType.Button, 28),
-            new(new Guid("019a075c-8b2e-7f8d-a678-95c158f2fc6d"), lookupId, "system:lookup:item:enable", "启用字典项", PermissionType.Button, 28),
+            new(new Guid("019a075c-8b2e-7f8d-a678-95c158f2fc6d"), lookupId, "system:lookup:item:enable", "启用字典项", PermissionType.Button, 29),
+            new(new Guid("019a48f8-d4c7-7049-bb57-15e38c00f979"), lookupId, "system:lookup:item:delete", "删除字典项", PermissionType.Button, 30),
         ];
     }
 }

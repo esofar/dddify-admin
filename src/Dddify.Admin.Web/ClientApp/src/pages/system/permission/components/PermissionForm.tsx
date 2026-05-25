@@ -8,7 +8,7 @@ import {
 } from '@ant-design/pro-components';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { Alert, message } from 'antd';
+import { Alert, message, Space, theme } from 'antd';
 import type { FC, ReactElement } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import {
@@ -16,7 +16,7 @@ import {
   getAllPermissions,
   updatePermission,
 } from '@/services/v1/permission';
-import { requiredRule } from '@/utils/rules';
+import { permissionCodeRule, requiredRule } from '@/utils/rules';
 import type { PermissionSelectNode } from '../data';
 import { permissionTypeValueEnum, toPermissionSelectNodes } from '../data';
 
@@ -41,6 +41,7 @@ const PermissionForm: FC<PermissionFormProps> = ({
 }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const { token } = theme.useToken();
   const formRef = useRef<ProFormInstance<PermissionFormValues> | undefined>(
     undefined,
   );
@@ -101,7 +102,6 @@ const PermissionForm: FC<PermissionFormProps> = ({
           }
           : {
             type: 'Menu',
-            order: 0,
           },
       );
     },
@@ -116,8 +116,8 @@ const PermissionForm: FC<PermissionFormProps> = ({
           <FormattedMessage
             id={
               isEditing
-                ? 'permission.formTitle.update'
-                : 'permission.formTitle.create'
+                ? 'permission.action.update'
+                : 'permission.action.create'
             }
           />
         }
@@ -126,7 +126,7 @@ const PermissionForm: FC<PermissionFormProps> = ({
         layout="horizontal"
         labelCol={{ span: 5 }}
         colProps={{ xs: 24, sm: 24 }}
-        width={520}
+        width={560}
         autoComplete="off"
         formRef={formRef}
         open={open}
@@ -168,100 +168,108 @@ const PermissionForm: FC<PermissionFormProps> = ({
           maskClosable: false,
         }}
       >
-        <ProFormSegmented
-          name="type"
-          label={<FormattedMessage id="permission.label.type" />}
-          valueEnum={permissionTypeValueEnum}
-          fieldProps={{
-            block: true,
+        <div
+          style={{
+            width: '100%',
+            padding: `${token.paddingMD}px ${token.padding}px 0`,
+            border: `1px solid ${token.colorBorderSecondary}`,
+            borderRadius: token.borderRadius,
           }}
-          rules={[requiredRule]}
-        />
+        >
+          <ProFormText
+            name="name"
+            label={<FormattedMessage id="permission.label.name" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 50,
+            }}
+            rules={[requiredRule]}
+          />
 
-        <ProFormText
-          name="code"
-          label={<FormattedMessage id="permission.label.code" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 50,
-          }}
-          rules={[
-            requiredRule,
-            {
-              pattern: /^[a-z0-9-:]+$/,
-              message: intl.formatMessage({ id: 'permission.rules.code' }),
-            },
-          ]}
-        />
+          <ProFormText
+            name="code"
+            label={<FormattedMessage id="permission.label.code" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 50,
+            }}
+            rules={[requiredRule, permissionCodeRule]}
+          />
 
-        <ProFormText
-          name="name"
-          label={<FormattedMessage id="permission.label.name" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 50,
-          }}
-          rules={[requiredRule]}
-        />
+          <ProFormSegmented
+            name="type"
+            label={<FormattedMessage id="permission.label.type" />}
+            valueEnum={permissionTypeValueEnum}
+            fieldProps={{
+              block: true,
+            }}
+            rules={[requiredRule]}
+          />
 
-        <ProFormTreeSelect
-          name="parentId"
-          label={<FormattedMessage id="permission.label.parentId" />}
-          fieldProps={{
-            treeData: permissions,
-            allowClear: true,
-            showSearch: true,
-            treeNodeFilterProp: 'name',
-            treeDataSimpleMode: {
-              id: 'id',
-              pId: 'parentId',
-            },
-            treeLine: true,
-            fieldNames: {
-              label: 'name',
-              value: 'id',
-            },
-          }}
-        />
+          <ProFormTreeSelect
+            name="parentId"
+            label={<FormattedMessage id="permission.label.parentId" />}
+            tooltip={<FormattedMessage id="permission.label.parentId.tooltip" />}
+            fieldProps={{
+              treeData: permissions,
+              allowClear: true,
+              showSearch: true,
+              treeNodeFilterProp: 'name',
+              treeDataSimpleMode: {
+                id: 'id',
+                pId: 'parentId',
+              },
+              treeLine: true,
+              fieldNames: {
+                label: 'name',
+                value: 'id',
+              },
+            }}
+          />
 
-        <ProFormDigit
-          name="order"
-          label={<FormattedMessage id="permission.label.order" />}
-          fieldProps={{
-            min: 0,
-            max: 999,
-            changeOnWheel: true,
-          }}
-          rules={[
-            requiredRule,
-            {
-              type: 'number',
-            },
-          ]}
-        />
+          <ProFormDigit
+            name="order"
+            label={<FormattedMessage id="permission.label.order" />}
+            fieldProps={{
+              min: 0,
+              max: 999,
+              changeOnWheel: true,
+            }}
+            rules={[
+              requiredRule,
+              {
+                type: 'number',
+              },
+            ]}
+          />
+        </div>
 
         <Alert
           style={{
-            width: '100%'
+            width: '100%',
+            marginTop: 16,
           }}
-          title={<FormattedMessage id="permission.form.alert.title" />}
+          title={<FormattedMessage id="permission.form.notice.title" />}
           description={
-            <div style={{ lineHeight: 1.6 }}>
-              <div>
-                <FormattedMessage id="permission.form.alert.point1" />
-              </div>
-              <div>
-                <FormattedMessage id="permission.form.alert.point2" />
-              </div>
-              <div>
-                <FormattedMessage id="permission.form.alert.point3" />
-              </div>
-              <div>
-                <FormattedMessage id="permission.form.alert.point4" />
-              </div>
-            </div>
+            <Space orientation="vertical" size={4}>
+              <span>
+                <FormattedMessage id="permission.form.notice.item0" />
+              </span>
+              <span>
+                <FormattedMessage id="permission.form.notice.item1" />
+              </span>
+              <span>
+                <FormattedMessage id="permission.form.notice.item2" />
+              </span>
+              <span>
+                <FormattedMessage id="permission.form.notice.item3" />
+              </span>
+              <span>
+                <FormattedMessage id="permission.form.notice.item4" />
+              </span>
+            </Space>
           }
-          type="warning"
+          type="info"
           showIcon
         />
       </DrawerForm>

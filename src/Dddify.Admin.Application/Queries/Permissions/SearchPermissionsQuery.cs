@@ -2,7 +2,9 @@
 
 namespace Dddify.Admin.Application.Queries.Permissions;
 
-public record SearchPermissionsQuery(string? Name, string? Code) : IQuery<IEnumerable<PermissionDto>>;
+public record SearchPermissionsQuery(
+    string? Name,
+    string? Code) : IQuery<IEnumerable<PermissionDto>>;
 
 public class SearchPermissionsQueryHandler(IPermissionRepository permissionRepository) : IQueryHandler<SearchPermissionsQuery, IEnumerable<PermissionDto>>
 {

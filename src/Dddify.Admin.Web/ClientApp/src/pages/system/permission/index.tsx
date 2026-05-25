@@ -9,7 +9,7 @@ import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { PageContainer, ProTable } from '@ant-design/pro-components';
 import { useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Button, Divider, message, Popconfirm, Space, Tag } from 'antd';
+import { Button, Divider, message, Modal, Space, Tag } from 'antd';
 import type { FC, Key } from 'react';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { deletePermission, searchPermissions } from '@/services/v1/permission';
@@ -27,6 +27,7 @@ const PermissionPage: FC = () => {
   const queryClient = useQueryClient();
   const actionRef = useRef<ActionType | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
+  const [modalApi, modalContextHolder] = Modal.useModal();
   const [expandedRowKeys, setExpandedRowKeys] = useState<Key[]>([]);
   const [allRowKeys, setAllRowKeys] = useState<Key[]>([]);
 
@@ -36,22 +37,31 @@ const PermissionPage: FC = () => {
   }, [queryClient]);
 
   const handleDelete = useCallback(
-    async (permission: API.PermissionDto) => {
-      const { success, errorMessage } = await deletePermission({
-        id: permission.id,
+    (permission: API.PermissionDto) => {
+      modalApi.confirm({
+        title: <FormattedMessage id="permission.confirm.delete.title" />,
+        content: <FormattedMessage id="permission.confirm.delete.description" />,
+        okButtonProps: {
+          danger: true,
+        },
+        onOk: async () => {
+          const { success, errorMessage } = await deletePermission({
+            id: permission.id,
+          });
+
+          if (!success) {
+            messageApi.error(
+              errorMessage ?? intl.formatMessage({ id: 'message.delete.failure' }),
+            );
+            return;
+          }
+
+          messageApi.success(intl.formatMessage({ id: 'message.delete.success' }));
+          reloadTable();
+        },
       });
-
-      if (!success) {
-        messageApi.error(
-          errorMessage ?? intl.formatMessage({ id: 'message.delete.failure' }),
-        );
-        return;
-      }
-
-      messageApi.success(intl.formatMessage({ id: 'message.delete.success' }));
-      reloadTable();
     },
-    [intl, messageApi, reloadTable],
+    [intl, messageApi, modalApi, reloadTable],
   );
 
   const columns = useMemo<ProColumns<PermissionTreeNode>[]>(
@@ -102,7 +112,7 @@ const PermissionPage: FC = () => {
         fixed: 'right',
         width: 170,
         render: (_, record) => (
-          <Space size={0} split={<Divider type="vertical" />}>
+          <Space size={0} separator={<Divider orientation="vertical" />}>
             {access.has(PERMISSION_PERMISSIONS.update) && (
               <PermissionForm
                 trigger={
@@ -116,20 +126,15 @@ const PermissionPage: FC = () => {
             )}
 
             {access.has(PERMISSION_PERMISSIONS.delete) && (
-              <Popconfirm
-                title={<FormattedMessage id="common.confirmText.delete" />}
-                okButtonProps={{ danger: true }}
-                onConfirm={() => handleDelete(record)}
+              <Button
+                type="link"
+                size="small"
+                danger
+                icon={<DeleteOutlined />}
+                onClick={() => handleDelete(record)}
               >
-                <Button
-                  type="link"
-                  size="small"
-                  danger
-                  icon={<DeleteOutlined />}
-                >
-                  <FormattedMessage id="common.button.delete" />
-                </Button>
-              </Popconfirm>
+                <FormattedMessage id="common.button.delete" />
+              </Button>
             )}
           </Space>
         ),
@@ -141,6 +146,7 @@ const PermissionPage: FC = () => {
   return (
     <PageContainer title={false}>
       {contextHolder}
+      {modalContextHolder}
       <ProTable<PermissionTreeNode, API.SearchPermissionsParams>
         actionRef={actionRef}
         columns={columns}
