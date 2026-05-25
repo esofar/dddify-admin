@@ -8,7 +8,7 @@ public record UpdateRoleCommand(
     string Name,
     bool IsDefault,
     int Order,
-    string Description,
+    string? Description,
     string? ConcurrencyStamp) : ICommand;
 
 public class UpdateRoleCommandValidator : AbstractValidator<UpdateRoleCommand>
@@ -26,7 +26,6 @@ public class UpdateRoleCommandValidator : AbstractValidator<UpdateRoleCommand>
             .GreaterThanOrEqualTo(0);
 
         RuleFor(x => x.Description)
-            .NotEmpty()
             .MaximumLength(Role.MaxDescriptionLength);
     }
 }

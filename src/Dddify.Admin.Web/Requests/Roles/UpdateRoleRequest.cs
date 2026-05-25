@@ -12,5 +12,5 @@ public sealed record UpdateRoleRequest(
     string Name,
     bool IsDefault,
     int Order,
-    string Description,
+    string? Description,
     string? ConcurrencyStamp);

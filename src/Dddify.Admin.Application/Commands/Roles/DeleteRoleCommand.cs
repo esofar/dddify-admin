@@ -20,15 +20,7 @@ public class DeleteRoleCommandHandler(IRoleRepository roleRepository) : ICommand
         var role = await roleRepository.GetAsync(command.Id, cancellationToken)
             ?? throw new RoleNotFoundException(command.Id);
 
-        if (role.IsPreset)
-        {
-            throw new PresetRoleCannotBeDeletedException(role.Id);
-        }
-
-        if (role.AssignedUserCount > 0)
-        {
-            throw new RoleHasAssignedUsersException(role.Id, role.AssignedUserCount);
-        }
+        role.EnsureCanDelete();
 
         roleRepository.Remove(role);
     }

@@ -11,4 +11,4 @@ public sealed record CreateRoleRequest(
     string Name,
     bool IsDefault,
     int Order,
-    string Description);
+    string? Description);

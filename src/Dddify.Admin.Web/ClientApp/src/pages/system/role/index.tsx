@@ -12,9 +12,10 @@ import {
   Button,
   Divider,
   message,
-  Popconfirm,
+  Modal,
   Space,
   Tag,
+  Tooltip,
   Typography,
 } from 'antd';
 import type { FC } from 'react';
@@ -32,6 +33,7 @@ const RolePage: FC = () => {
   const queryClient = useQueryClient();
   const actionRef = useRef<ActionType | null>(null);
   const [messageApi, contextHolder] = message.useMessage();
+  const [modalApi, modalContextHolder] = Modal.useModal();
   const [assigningRole, setAssigningRole] = useState<API.RoleListDto>();
 
   const reloadTable = useCallback(() => {
@@ -40,20 +42,29 @@ const RolePage: FC = () => {
   }, [queryClient]);
 
   const handleDelete = useCallback(
-    async (role: API.RoleListDto) => {
-      const { success, errorMessage } = await deleteRole({ id: role.id });
+    (role: API.RoleListDto) => {
+      modalApi.confirm({
+        title: <FormattedMessage id="role.confirm.delete.title" />,
+        content: <FormattedMessage id="role.confirm.delete.description" />,
+        okButtonProps: {
+          danger: true,
+        },
+        onOk: async () => {
+          const { success, errorMessage } = await deleteRole({ id: role.id });
 
-      if (!success) {
-        messageApi.error(
-          errorMessage ?? intl.formatMessage({ id: 'message.delete.failure' }),
-        );
-        return;
-      }
+          if (!success) {
+            messageApi.error(
+              errorMessage ?? intl.formatMessage({ id: 'message.delete.failure' }),
+            );
+            return;
+          }
 
-      messageApi.success(intl.formatMessage({ id: 'message.delete.success' }));
-      reloadTable();
+          messageApi.success(intl.formatMessage({ id: 'message.delete.success' }));
+          reloadTable();
+        },
+      });
     },
-    [intl, messageApi, reloadTable],
+    [intl, messageApi, modalApi, reloadTable],
   );
 
   const columns = useMemo<ProColumns<API.RoleListDto>[]>(
@@ -73,7 +84,7 @@ const RolePage: FC = () => {
         minWidth: 200,
         ellipsis: true,
         render: (_, record) => (
-          <Space size={6}>
+          <Space size={4}>
             <Text>{record.name}</Text>
             {record.isPreset && (
               <Tag color="purple" variant="filled">
@@ -114,7 +125,7 @@ const RolePage: FC = () => {
         fixed: 'right',
         width: 230,
         render: (_, record) => (
-          <Space size={0} split={<Divider type="vertical" />}>
+          <Space size={0} separator={<Divider orientation="vertical" />}>
             {access.has(ROLE_PERMISSIONS.update) && (
               <RoleForm
                 trigger={
@@ -128,11 +139,12 @@ const RolePage: FC = () => {
             )}
 
             {access.has(ROLE_PERMISSIONS.delete) && (
-              <Popconfirm
-                title={<FormattedMessage id="common.confirmText.delete" />}
-                okButtonProps={{ danger: true }}
-                disabled={record.isPreset}
-                onConfirm={() => handleDelete(record)}
+              <Tooltip
+                title={
+                  record.isPreset ? (
+                    <FormattedMessage id="role.tooltip.builtIn.delete" />
+                  ) : undefined
+                }
               >
                 <Button
                   type="link"
@@ -140,10 +152,11 @@ const RolePage: FC = () => {
                   danger
                   disabled={record.isPreset}
                   icon={<DeleteOutlined />}
+                  onClick={() => handleDelete(record)}
                 >
                   <FormattedMessage id="common.button.delete" />
                 </Button>
-              </Popconfirm>
+              </Tooltip>
             )}
 
             {access.has(ROLE_PERMISSIONS.assignPermissions) && (
@@ -153,7 +166,7 @@ const RolePage: FC = () => {
                 icon={<SettingOutlined />}
                 onClick={() => setAssigningRole(record)}
               >
-                <FormattedMessage id="role.button.assignPermissions" />
+                <FormattedMessage id="role.action.assignPermissions" />
               </Button>
             )}
           </Space>
@@ -166,6 +179,7 @@ const RolePage: FC = () => {
   return (
     <PageContainer title={false}>
       {contextHolder}
+      {modalContextHolder}
       <ProTable<API.RoleListDto, API.SearchRolesParams>
         actionRef={actionRef}
         columns={columns}
@@ -197,7 +211,7 @@ const RolePage: FC = () => {
           </Space>
         }
       />
-      {assigningRole && (
+      {access.has(ROLE_PERMISSIONS.assignPermissions) && assigningRole && (
         <AssignPermissionsForm
           open
           role={assigningRole}

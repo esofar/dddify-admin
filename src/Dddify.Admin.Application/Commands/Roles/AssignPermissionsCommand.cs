@@ -3,7 +3,9 @@ using Dddify.Admin.Domain.Aggregates.Roles;
 
 namespace Dddify.Admin.Application.Commands.Roles;
 
-public record AssignPermissionsCommand(Guid Id, IEnumerable<PermissionEntry> Permissions) : ICommand;
+public record AssignPermissionsCommand(
+    Guid Id,
+    IEnumerable<PermissionEntry> Permissions) : ICommand;
 
 public record PermissionEntry(Guid PermissionId, string PermissionCode);
 

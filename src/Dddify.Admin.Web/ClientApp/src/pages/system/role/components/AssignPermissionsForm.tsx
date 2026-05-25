@@ -2,12 +2,17 @@ import { DrawerForm } from '@ant-design/pro-components';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useIntl } from '@umijs/max';
 import type { TreeDataNode, TreeProps } from 'antd';
-import { Button, message, Space, Tag, Tree, theme } from 'antd';
+import { Button, message, Space, Tree, Typography, theme } from 'antd';
 import type { FC } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { getAllPermissions } from '@/services/v1/permission';
 import { assignRolePermissions, getRolePermissions } from '@/services/v1/role';
 import { permissionTypeValueEnum } from '../../permission/data';
+
+const { Text } = Typography;
+
+const EMPTY_PERMISSIONS: API.PermissionDto[] = [];
+const EMPTY_ROLE_PERMISSIONS: API.RolePermissionDto[] = [];
 
 type AssignPermissionsFormProps = {
   open: boolean;
@@ -15,9 +20,6 @@ type AssignPermissionsFormProps = {
   onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
 };
-
-const EMPTY_PERMISSIONS: API.PermissionDto[] = [];
-const EMPTY_ROLE_PERMISSIONS: API.RolePermissionDto[] = [];
 
 const AssignPermissionsForm: FC<AssignPermissionsFormProps> = ({
   open,
@@ -193,7 +195,7 @@ const AssignPermissionsForm: FC<AssignPermissionsFormProps> = ({
       <DrawerForm
         title={
           <Space>
-            <FormattedMessage id="role.formTitle.assignPermissions" />
+            <FormattedMessage id="role.action.assignPermissions" />
           </Space>
         }
         width={560}
@@ -205,7 +207,7 @@ const AssignPermissionsForm: FC<AssignPermissionsFormProps> = ({
           if (!success) {
             messageApi.error(
               errorMessage ??
-                intl.formatMessage({ id: 'message.assign.failure' }),
+              intl.formatMessage({ id: 'message.assign.failure' }),
             );
             return false;
           }
@@ -227,65 +229,78 @@ const AssignPermissionsForm: FC<AssignPermissionsFormProps> = ({
           maskClosable: false,
         }}
       >
-        <Space style={{ marginBottom: 16 }}>
-          <Button
-            onClick={() =>
-              setExpandedKeys(
-                expandedKeys.length
-                  ? []
-                  : permissionItems.map((item) => item.id),
-              )
-            }
-          >
-            {expandedKeys.length ? (
-              <FormattedMessage id="role.toolbar.collapseAll" />
-            ) : (
-              <FormattedMessage id="role.toolbar.expandAll" />
-            )}
-          </Button>
-          <Button
-            onClick={() =>
-              setCheckedKeys(
-                checkedKeys.length === permissionItems.length
-                  ? []
-                  : permissionItems.map((item) => item.id),
-              )
-            }
-          >
-            {checkedKeys.length === permissionItems.length ? (
-              <FormattedMessage id="role.toolbar.unselectAll" />
-            ) : (
-              <FormattedMessage id="role.toolbar.selectAll" />
-            )}
-          </Button>
-          <span style={{ color: token.colorTextSecondary }}>
-            <FormattedMessage
-              id="role.toolbar.selectedCount"
-              values={{
-                selected: checkedKeys.length,
-                total: permissionItems.length,
-              }}
-            />
-          </span>
-        </Space>
+        <Space orientation="vertical" size={token.marginSM} style={{ width: '100%' }}>
+          <Space>
+            <Button
+              onClick={() =>
+                setExpandedKeys(
+                  expandedKeys.length
+                    ? []
+                    : permissionItems.map((item) => item.id),
+                )
+              }
+            >
+              {expandedKeys.length ? (
+                <FormattedMessage id="role.toolbar.collapseAll" />
+              ) : (
+                <FormattedMessage id="role.toolbar.expandAll" />
+              )}
+            </Button>
+            <Button
+              onClick={() =>
+                setCheckedKeys(
+                  checkedKeys.length === permissionItems.length
+                    ? []
+                    : permissionItems.map((item) => item.id),
+                )
+              }
+            >
+              {checkedKeys.length === permissionItems.length ? (
+                <FormattedMessage id="role.toolbar.unselectAll" />
+              ) : (
+                <FormattedMessage id="role.toolbar.selectAll" />
+              )}
+            </Button>
+            <Text type="secondary">
+              <FormattedMessage
+                id="role.toolbar.selectedCount"
+                values={{
+                  selected: checkedKeys.length,
+                  total: permissionItems.length,
+                }}
+              />
+            </Text>
+          </Space>
 
-        <Tree
-          rootStyle={{
-            border: `1px solid ${token.colorBorder}`,
-            borderRadius: token.borderRadius,
-            padding: 12,
-            overflow: 'auto',
-          }}
-          checkable
-          checkStrictly
-          showIcon
-          showLine
-          treeData={treeData}
-          checkedKeys={checkedKeys}
-          expandedKeys={expandedKeys}
-          onCheck={handleCheck}
-          onExpand={(keys) => setExpandedKeys([...keys])}
-        />
+          <div
+            style={{
+              width: '100%',
+              padding: token.padding,
+              border: `1px solid ${token.colorBorderSecondary}`,
+              borderRadius: token.borderRadius,
+            }}
+          >
+            <Tree
+              style={{
+                maxHeight: 'calc(100vh - 270px)',
+                overflow: 'auto',
+              }}
+              checkable
+              checkStrictly
+              showIcon
+              showLine
+              treeData={treeData}
+              checkedKeys={checkedKeys}
+              expandedKeys={expandedKeys}
+              onCheck={handleCheck}
+              onExpand={(keys) => setExpandedKeys([...keys])}
+            />
+          </div>
+
+          <Text type="secondary">
+            <FormattedMessage id="role.assignPermissions.helpText" />
+          </Text>
+        </Space>
       </DrawerForm>
     </>
   );

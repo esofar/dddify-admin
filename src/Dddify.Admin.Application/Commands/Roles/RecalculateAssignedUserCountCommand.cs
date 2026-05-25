@@ -1,12 +1,12 @@
 namespace Dddify.Admin.Application.Commands.Roles;
 
-public record RefreshRoleUserCountCommand(
+public record RecalculateAssignedUserCountCommand(
     IEnumerable<Guid> AddedRoleIds,
     IEnumerable<Guid> RemovedRoleIds) : ICommand;
 
-public class RefreshRoleUserCountCommandValidator : AbstractValidator<RefreshRoleUserCountCommand>
+public class RecalculateAssignedUserCountCommandValidator : AbstractValidator<RecalculateAssignedUserCountCommand>
 {
-    public RefreshRoleUserCountCommandValidator()
+    public RecalculateAssignedUserCountCommandValidator()
     {
         RuleFor(c => c.AddedRoleIds)
             .NotNull();
@@ -30,9 +30,9 @@ public class RefreshRoleUserCountCommandValidator : AbstractValidator<RefreshRol
     }
 }
 
-public class RefreshRoleUserCountCommandHandler(IRoleRepository roleRepository) : ICommandHandler<RefreshRoleUserCountCommand>
+public class RecalculateAssignedUserCountCommandHandler(IRoleRepository roleRepository) : ICommandHandler<RecalculateAssignedUserCountCommand>
 {
-    public async Task Handle(RefreshRoleUserCountCommand command, CancellationToken cancellationToken)
+    public async Task Handle(RecalculateAssignedUserCountCommand command, CancellationToken cancellationToken)
     {
         var addedSet = command.AddedRoleIds.ToHashSet();
         var removedSet = command.RemovedRoleIds.ToHashSet();

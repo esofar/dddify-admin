@@ -3,7 +3,11 @@ using Dddify.Admin.Domain.Aggregates.Roles;
 
 namespace Dddify.Admin.Application.Commands.Roles;
 
-public record CreateRoleCommand(string Name, bool IsDefault, int Order, string Description) : ICommand;
+public record CreateRoleCommand(
+    string Name,
+    bool IsDefault,
+    int Order,
+    string? Description) : ICommand;
 
 public class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
 {
@@ -17,7 +21,6 @@ public class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
             .GreaterThanOrEqualTo(0);
 
         RuleFor(x => x.Description)
-            .NotEmpty()
             .MaximumLength(Role.MaxDescriptionLength);
     }
 }

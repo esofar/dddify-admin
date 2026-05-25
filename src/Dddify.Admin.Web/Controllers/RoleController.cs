@@ -53,6 +53,7 @@ public class RoleController(ISender sender) : BaseController
     /// <param name="cancellationToken">取消令牌。</param>
     /// <returns></returns>
     [HttpGet("{id}", Name = "GetRoleDetail")]
+    [Permission("system:role:index")]
     [ProducesResponseType<ApiResult<RoleDetailDto>>(StatusCodes.Status200OK)]
     public async Task<RoleDetailDto> GetRoleDetailAsync(
         [FromRoute] Guid id,
@@ -74,7 +75,11 @@ public class RoleController(ISender sender) : BaseController
     public async Task CreateAsync([FromBody] CreateRoleRequest request, CancellationToken cancellationToken)
     {
         await sender.Send(
-            new CreateRoleCommand(request.Name, request.IsDefault, request.Order, request.Description),
+            new CreateRoleCommand(
+                request.Name,
+                request.IsDefault,
+                request.Order,
+                request.Description),
             cancellationToken);
     }
 

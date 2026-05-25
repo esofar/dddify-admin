@@ -8,7 +8,7 @@ import {
 } from '@ant-design/pro-components';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { FormattedMessage, useIntl } from '@umijs/max';
-import { message } from 'antd';
+import { message, theme } from 'antd';
 import type { FC, ReactElement } from 'react';
 import { useCallback, useRef, useState } from 'react';
 import { createRole, getRoleDetail, updateRole } from '@/services/v1/role';
@@ -31,6 +31,7 @@ type RoleFormProps = {
 const RoleForm: FC<RoleFormProps> = ({ trigger, role, onSuccess }) => {
   const intl = useIntl();
   const queryClient = useQueryClient();
+  const { token } = theme.useToken();
   const formRef = useRef<ProFormInstance<RoleFormValues> | undefined>(
     undefined,
   );
@@ -69,7 +70,6 @@ const RoleForm: FC<RoleFormProps> = ({ trigger, role, onSuccess }) => {
       formRef.current?.resetFields();
       formRef.current?.setFieldsValue({
         isDefault: false,
-        order: 0,
       });
       return;
     }
@@ -112,7 +112,7 @@ const RoleForm: FC<RoleFormProps> = ({ trigger, role, onSuccess }) => {
       <DrawerForm<RoleFormValues>
         title={
           <FormattedMessage
-            id={isEditing ? 'role.formTitle.update' : 'role.formTitle.create'}
+            id={isEditing ? 'role.action.update' : 'role.action.create'}
           />
         }
         trigger={trigger}
@@ -120,7 +120,7 @@ const RoleForm: FC<RoleFormProps> = ({ trigger, role, onSuccess }) => {
         layout="horizontal"
         labelCol={{ span: 5 }}
         colProps={{ xs: 24, sm: 24 }}
-        width={520}
+        width={560}
         autoComplete="off"
         formRef={formRef}
         open={open}
@@ -162,51 +162,61 @@ const RoleForm: FC<RoleFormProps> = ({ trigger, role, onSuccess }) => {
           maskClosable: false,
         }}
       >
-        <ProFormText name="concurrencyStamp" hidden colProps={{ span: 0 }} />
-
-        <ProFormText
-          name="name"
-          label={<FormattedMessage id="role.label.name" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 50,
+        <div
+          style={{
+            width: '100%',
+            padding: `${token.paddingMD}px ${token.padding}px 0`,
+            border: `1px solid ${token.colorBorderSecondary}`,
+            borderRadius: token.borderRadius,
           }}
-          rules={[requiredRule, noSpecialRule]}
-        />
+        >
+          <ProFormText name="concurrencyStamp" hidden colProps={{ span: 0 }} />
 
-        <ProFormSwitch
-          name="isDefault"
-          label={<FormattedMessage id="role.label.isdefault" />}
-          checkedChildren={<FormattedMessage id="common.label.yes" />}
-          unCheckedChildren={<FormattedMessage id="common.label.no" />}
-          rules={[requiredRule]}
-        />
+          <ProFormText
+            name="name"
+            label={<FormattedMessage id="role.label.name" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 50,
+            }}
+            rules={[requiredRule, noSpecialRule]}
+          />
 
-        <ProFormDigit
-          name="order"
-          label={<FormattedMessage id="role.label.order" />}
-          fieldProps={{
-            min: 0,
-            max: 999,
-            changeOnWheel: true,
-          }}
-          rules={[
-            requiredRule,
-            {
-              type: 'number',
-            },
-          ]}
-        />
+          <ProFormSwitch
+            name="isDefault"
+            label={<FormattedMessage id="role.label.isdefault" />}
+            tooltip={<FormattedMessage id="role.label.isdefault.tooltip" />}
+          />
 
-        <ProFormTextArea
-          name="description"
-          label={<FormattedMessage id="role.label.description" />}
-          fieldProps={{
-            showCount: true,
-            maxLength: 100,
-          }}
-          rules={[requiredRule]}
-        />
+          <ProFormDigit
+            name="order"
+            label={<FormattedMessage id="role.label.order" />}
+            fieldProps={{
+              min: 0,
+              max: 999,
+              changeOnWheel: true,
+            }}
+            rules={[
+              requiredRule,
+              {
+                type: 'number',
+              },
+            ]}
+          />
+
+          <ProFormTextArea
+            name="description"
+            label={<FormattedMessage id="role.label.description" />}
+            fieldProps={{
+              showCount: true,
+              maxLength: 100,
+              autoSize: {
+                minRows: 3,
+                maxRows: 5,
+              },
+            }}
+          />
+        </div>
       </DrawerForm>
     </>
   );

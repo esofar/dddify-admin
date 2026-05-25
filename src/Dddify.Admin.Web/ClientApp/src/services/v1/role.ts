@@ -32,7 +32,7 @@ export async function createRole(
   });
 }
 
-/** 获取角色详情。 GET /api/v1/roles/${param0} */
+/** 获取角色详情。 权限标识：<code>system:role:index</code> GET /api/v1/roles/${param0} */
 export async function getRoleDetail(
   // 叠加生成的Param类型 (非body参数swagger默认没有生成对象)
   params: API.GetRoleDetailParams,

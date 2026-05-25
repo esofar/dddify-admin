@@ -1,4 +1,5 @@
 ﻿using Dddify.Admin.Domain.Events.Roles;
+using Dddify.Admin.Domain.Exceptions.Roles;
 
 namespace Dddify.Admin.Domain.Aggregates.Roles;
 
@@ -27,7 +28,7 @@ public class Role : AuditableAggregateRoot<Guid>, IHasConcurrencyStamp
 
     private Role() { }
 
-    public Role(Guid id, string name, bool isDefault, int order, string description)
+    public Role(Guid id, string name, bool isDefault, int order, string? description)
     {
         Id = id;
         Name = name;
@@ -36,7 +37,7 @@ public class Role : AuditableAggregateRoot<Guid>, IHasConcurrencyStamp
         Description = description;
     }
 
-    public void Change(string name, bool isDefault, int order, string description)
+    public void Change(string name, bool isDefault, int order, string? description)
     {
         IsDefault = isDefault;
         Order = order;
@@ -84,6 +85,19 @@ public class Role : AuditableAggregateRoot<Guid>, IHasConcurrencyStamp
         if (removed.Count > 0 || added.Count > 0)
         {
             AddDomainEvent(new RolePermissionsChangedDomainEvent(Id));
+        }
+    }
+
+    public void EnsureCanDelete()
+    {
+        if (IsPreset)
+        {
+            throw new PresetRoleCannotBeDeletedException(Id);
+        }
+
+        if (AssignedUserCount > 0)
+        {
+            throw new RoleHasAssignedUsersException(Id, AssignedUserCount);
         }
     }
 }

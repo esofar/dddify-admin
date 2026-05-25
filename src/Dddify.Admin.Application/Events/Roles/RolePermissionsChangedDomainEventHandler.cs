@@ -1,14 +1,17 @@
-using Dddify.Admin.Application.Commands.Sessions;
 using Dddify.Admin.Domain.Events.Roles;
+using Microsoft.Extensions.Logging;
 
 namespace Dddify.Admin.Application.Events.Roles;
 
-public class RolePermissionsChangedDomainEventHandler(ISender sender) : IDomainEventHandler<RolePermissionsChangedDomainEvent>
+public class RolePermissionsChangedDomainEventHandler(ILogger<RolePermissionsChangedDomainEventHandler> logger) : IDomainEventHandler<RolePermissionsChangedDomainEvent>
 {
     public Task Handle(RolePermissionsChangedDomainEvent @event, CancellationToken cancellationToken)
     {
-        return sender.Send(
-            new RevokeRoleUsersSessionsCommand(@event.RoleId, "role_permissions_changed"),
-            cancellationToken);
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation("Handling RolePermissionsChangedDomainEvent for RoleId: {RoleId}", @event.RoleId);
+        }
+
+        return Task.CompletedTask;
     }
 }

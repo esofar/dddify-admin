@@ -5,7 +5,9 @@ namespace Dddify.Admin.Application.Queries.Roles;
 
 public record GetRolePermissionsQuery(Guid RoleId) : IQuery<IEnumerable<RolePermissionDto>>;
 
-public class GetRolePermissionsQueryHandler(IRoleRepository roleRepository, IDistributedCache distributedCache) : IQueryHandler<GetRolePermissionsQuery, IEnumerable<RolePermissionDto>>
+public class GetRolePermissionsQueryHandler(
+    IRoleRepository roleRepository,
+    IDistributedCache distributedCache) : IQueryHandler<GetRolePermissionsQuery, IEnumerable<RolePermissionDto>>
 {
     public async Task<IEnumerable<RolePermissionDto>> Handle(GetRolePermissionsQuery query, CancellationToken cancellationToken)
     {

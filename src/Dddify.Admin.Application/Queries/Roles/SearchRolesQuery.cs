@@ -1,9 +1,11 @@
 ﻿using Dddify.Admin.Application.Dtos.Roles;
-using Dddify.Primitives;
 
 namespace Dddify.Admin.Application.Queries.Roles;
 
-public record SearchRolesQuery(int Current, int PageSize, string? Name) : IQuery<IPagedResult<RoleListDto>>;
+public record SearchRolesQuery(
+    int Current,
+    int PageSize,
+    string? Name) : IQuery<IPagedResult<RoleListDto>>;
 
 public class SearchRolesQueryHandler(IRoleRepository roleRepository) : IQueryHandler<SearchRolesQuery, IPagedResult<RoleListDto>>
 {
