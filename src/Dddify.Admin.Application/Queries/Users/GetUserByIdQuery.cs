@@ -22,6 +22,7 @@ public class GetUserByIdQueryHandler(IUserRepository userRepository) : IQueryHan
             user.BirthDate,
             user.Gender.ToString(),
             user.Status.ToString(),
+            user.IsBuiltIn,
             new UserDepartmentDto(user.Department.Id, user.Department.Name),
             user.Roles.Select(role => new UserRoleDto(role.RoleId, role.RoleName, role.IsCurrent)),
             user.ConcurrencyStamp);

@@ -1,20 +1,21 @@
 namespace Dddify.Admin.Application.Dtos.Users;
 
 /// <summary>
-/// ÓÃ»§ÏêÇé¡£
+/// ç”¨æˆ·è¯¦æƒ…ã€‚
 /// </summary>
-/// <param name="Id">ÓÃ»§ ID¡£</param>
-/// <param name="Name">ĞÕÃû¡£</param>
-/// <param name="NickName">êÇ³Æ¡£</param>
-/// <param name="Avatar">Í·Ïñ¡£</param>
-/// <param name="Email">ÓÊÏä¡£</param>
-/// <param name="PhoneNumber">ÊÖ»úºÅ¡£</param>
-/// <param name="BirthDate">³öÉúÈÕÆÚ¡£</param>
-/// <param name="Gender">ĞÔ±ğ¡£</param>
-/// <param name="Status">×´Ì¬¡£</param>
-/// <param name="Department">²¿ÃÅ¡£</param>
-/// <param name="Roles">½ÇÉ«ÁĞ±í¡£</param>
-/// <param name="ConcurrencyStamp">²¢·¢±ê¼Ç¡£</param>
+/// <param name="Id">ç”¨æˆ· IDã€‚</param>
+/// <param name="Name">å§“åã€‚</param>
+/// <param name="NickName">æ˜µç§°ã€‚</param>
+/// <param name="Avatar">å¤´åƒã€‚</param>
+/// <param name="Email">é‚®ç®±ã€‚</param>
+/// <param name="PhoneNumber">æ‰‹æœºå·ã€‚</param>
+/// <param name="BirthDate">å‡ºç”Ÿæ—¥æœŸã€‚</param>
+/// <param name="Gender">æ€§åˆ«ã€‚</param>
+/// <param name="Status">çŠ¶æ€ã€‚</param>
+/// <param name="IsBuiltIn">æ˜¯å¦ä¸ºå†…ç½®ç”¨æˆ·ã€‚</param>
+/// <param name="Department">éƒ¨é—¨ã€‚</param>
+/// <param name="Roles">è§’è‰²åˆ—è¡¨ã€‚</param>
+/// <param name="ConcurrencyStamp">å¹¶å‘æ ‡è®°ã€‚</param>
 public record UserDetailDto(
     Guid Id,
     string Name,
@@ -25,7 +26,8 @@ public record UserDetailDto(
     DateOnly? BirthDate,
     string Gender,
     string Status,
+    bool IsBuiltIn,
     UserDepartmentDto Department,
     IEnumerable<UserRoleDto> Roles,
     string? ConcurrencyStamp)
-    : UserListDto(Id, Name, NickName, Avatar, Email, PhoneNumber, BirthDate, Gender, Status, Department, Roles);
+    : UserListDto(Id, Name, NickName, Avatar, Email, PhoneNumber, BirthDate, Gender, Status, IsBuiltIn, Department, Roles);

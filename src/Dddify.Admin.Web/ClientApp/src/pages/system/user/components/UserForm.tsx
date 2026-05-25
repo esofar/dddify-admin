@@ -196,7 +196,6 @@ const UserForm: FC<UserFormProps> = ({
             padding: `${token.paddingMD}px ${token.padding}px 0`,
             border: `1px solid ${token.colorBorderSecondary}`,
             borderRadius: token.borderRadius,
-            background: token.colorFillAlter,
           }}
         >
           <ProFormText name="concurrencyStamp" hidden colProps={{ span: 0 }} />
@@ -283,7 +282,6 @@ const UserForm: FC<UserFormProps> = ({
               padding: `${token.paddingMD}px ${token.padding}px 0`,
               border: `1px solid ${token.colorBorderSecondary}`,
               borderRadius: token.borderRadius,
-              background: token.colorFillAlter,
             }}
           >
             <ProFormText.Password

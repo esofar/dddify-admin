@@ -3,7 +3,9 @@ using Dddify.Admin.Domain.Aggregates.Users;
 
 namespace Dddify.Admin.Application.Commands.Users;
 
-public record AssignUserRolesCommand(Guid UserId, IEnumerable<RoleEntry> Roles) : ICommand;
+public record AssignUserRolesCommand(
+    Guid UserId,
+    IEnumerable<RoleEntry> Roles) : ICommand;
 
 public record RoleEntry(Guid RoleId, string RoleName);
 

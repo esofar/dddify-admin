@@ -34,7 +34,7 @@ type UserGenderOption = {
 
 type UserStatusOption = {
   text: ReactNode;
-  status: 'Default' | 'Success';
+  status: 'Error' | 'Success';
 };
 
 export type DepartmentTreeNode = {
@@ -68,7 +68,7 @@ export const userStatusValueEnum: Record<string, UserStatusOption> = {
     text: (
       <FormattedMessage id="user.status.disabled" defaultMessage="Disabled" />
     ),
-    status: 'Default',
+    status: 'Error',
   },
 };
 

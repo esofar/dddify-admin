@@ -118,7 +118,7 @@ public class User : AuditableAggregateRoot<Guid>
     /// <summary>
     /// 是否内置。
     /// </summary>
-    public bool IsBuiltIn { get; private set; } = false;
+    public bool IsBuiltIn { get; private set; }
 
     /// <summary>
     /// 已分配角色集合。
@@ -289,7 +289,6 @@ public class User : AuditableAggregateRoot<Guid>
     /// 切换当前使用角色。
     /// </summary>
     /// <param name="roleId">要切换到的角色 ID。</param>
-    /// <exception cref="UserRoleNotAssignedException">用户未分配指定角色时抛出。</exception>
     public void SwitchCurrentRole(Guid roleId)
     {
         var userRole = _roles.FirstOrDefault(r => r.RoleId == roleId)
@@ -308,8 +307,8 @@ public class User : AuditableAggregateRoot<Guid>
     /// <param name="roleName">新的角色名称。</param>
     public void ChangeRoleName(Guid roleId, string roleName)
     {
-        var target = _roles.FirstOrDefault(r => r.RoleId == roleId);
-        target?.Rename(roleName);
+        var role = _roles.FirstOrDefault(r => r.RoleId == roleId);
+        role?.Rename(roleName);
     }
 
     /// <summary>
@@ -372,5 +371,27 @@ public class User : AuditableAggregateRoot<Guid>
         Status = UserStatus.Disabled;
 
         AddDomainEvent(new UserDisabledDomainEvent(Id, Email));
+    }
+
+    /// <summary>
+    /// 确保用户允许被删除。
+    /// </summary>
+    /// <exception cref="BuiltInUserCannotBeDeletedException">内置用户不允许删除时抛出。</exception>
+    public void EnsureCanDelete()
+    {
+        if (IsBuiltIn)
+        {
+            throw new BuiltInUserCannotBeDeletedException(Id);
+        }
+    }
+
+    /// <summary>
+    /// 删除用户账号，并登记用户删除领域事件。
+    /// </summary>
+    public void Delete()
+    {
+        EnsureCanDelete();
+
+        AddDomainEvent(new UserDeletedDomainEvent(Id, Email));
     }
 }

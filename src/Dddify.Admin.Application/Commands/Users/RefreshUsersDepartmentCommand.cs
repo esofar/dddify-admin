@@ -17,7 +17,7 @@ public class RefreshUsersDepartmentCommandValidator : AbstractValidator<RefreshU
     }
 }
 
-public class RefreshUsersDepartmentNameCommandHandler(IUserRepository userRepository) : ICommandHandler<RefreshUsersDepartmentCommand>
+public class RefreshUsersDepartmentCommandHandler(IUserRepository userRepository) : ICommandHandler<RefreshUsersDepartmentCommand>
 {
     public async Task Handle(RefreshUsersDepartmentCommand command, CancellationToken cancellationToken)
     {

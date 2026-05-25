@@ -1,6 +1,5 @@
-﻿using Dddify.Admin.Application.Dtos.Users;
+using Dddify.Admin.Application.Dtos.Users;
 using Dddify.Admin.Domain.Aggregates.Users;
-using Dddify.Primitives;
 
 namespace Dddify.Admin.Application.Queries.Users;
 
@@ -43,6 +42,7 @@ public class SearchUsersQueryHandler(IUserRepository userRepository) : IQueryHan
                 c.BirthDate,
                 c.Gender.ToString(),
                 c.Status.ToString(),
+                c.IsBuiltIn,
                 new UserDepartmentDto(c.Department.Id, c.Department.Name),
                 c.Roles.Select(r => new UserRoleDto(r.RoleId, r.RoleName, r.IsCurrent))))
             .ToPagedResultAsync(query.Current, query.PageSize, cancellationToken);

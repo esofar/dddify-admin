@@ -20,13 +20,11 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     public CreateUserCommandValidator()
     {
         RuleFor(x => x.Password)
-            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .MaximumLength(User.MaxPasswordLength)
             .Matches(User.PasswordPattern);
 
         RuleFor(x => x.Name)
-            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .MaximumLength(User.MaxNameLength)
             .Matches(User.NamePattern);
@@ -36,13 +34,11 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
             .Matches(User.NickNamePattern);
 
         RuleFor(x => x.Gender)
-            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .MaximumLength(20)
             .IsEnumName(typeof(UserGender), caseSensitive: false);
 
         RuleFor(x => x.Email)
-            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .MaximumLength(User.MaxEmailLength)
             .EmailAddress();
@@ -75,7 +71,10 @@ public class CreateUserCommandValidator : AbstractValidator<CreateUserCommand>
     }
 }
 
-public class CreateUserCommandHandler(IUserRepository userRepository, IGuidGenerator guidGenerator, IPasswordHasher passwordHasher) : ICommandHandler<CreateUserCommand>
+public class CreateUserCommandHandler(
+    IUserRepository userRepository,
+    IGuidGenerator guidGenerator,
+    IPasswordHasher passwordHasher) : ICommandHandler<CreateUserCommand>
 {
     public async Task Handle(CreateUserCommand command, CancellationToken cancellationToken)
     {

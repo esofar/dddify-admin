@@ -2,7 +2,9 @@ using Dddify.Admin.Domain.Aggregates.Sessions;
 
 namespace Dddify.Admin.Application.Commands.Sessions;
 
-public record RevokeRoleUsersSessionsCommand(Guid RoleId, string Reason) : ICommand;
+public record RevokeRoleUsersSessionsCommand(
+    Guid RoleId,
+    string Reason) : ICommand;
 
 public class RevokeRoleUsersSessionsCommandValidator : AbstractValidator<RevokeRoleUsersSessionsCommand>
 {

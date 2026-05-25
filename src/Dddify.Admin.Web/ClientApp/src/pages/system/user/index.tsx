@@ -25,6 +25,7 @@ import {
   Modal,
   Space,
   Tag,
+  Tooltip,
   Typography,
 } from 'antd';
 import type { FC } from 'react';
@@ -205,6 +206,12 @@ const UserPage: FC = () => {
               <Avatar icon={<UserOutlined />} size="small" />
             )}
             <Text>{record.name}</Text>
+
+             {record.isBuiltIn && (
+              <Tag color="purple" variant="filled">
+                <FormattedMessage id="user.tag.builtIn" />
+              </Tag>
+            )}
           </Space>
         ),
       },
@@ -240,14 +247,14 @@ const UserPage: FC = () => {
         dataIndex: 'email',
         minWidth: 180,
         ellipsis: true,
-        copyable: true,
+        copyable: false,
       },
       {
         title: <FormattedMessage id="user.label.phoneNumber" />,
         dataIndex: 'phoneNumber',
         minWidth: 150,
         ellipsis: true,
-        copyable: true,
+        copyable: false,
       },
       {
         title: <FormattedMessage id="user.label.departmentId" />,
@@ -367,25 +374,34 @@ const UserPage: FC = () => {
                 )}
 
               {access.has(USER_PERMISSIONS.delete) && (
-                <Button
-                  type="link"
-                  size="small"
-                  danger
-                  icon={<DeleteOutlined />}
-                  onClick={() =>
-                    handleConfirmUserAction(
-                      record,
-                      deleteUser,
-                      'user.confirm.delete.title',
-                      'user.confirm.delete.description',
-                      'message.delete.success',
-                      'message.delete.failure',
-                      true,
-                    )
+                <Tooltip
+                  title={
+                    record.isBuiltIn ? (
+                      <FormattedMessage id="user.tooltip.builtIn.delete" />
+                    ) : undefined
                   }
                 >
-                  <FormattedMessage id="common.button.delete" />
-                </Button>
+                  <Button
+                    type="link"
+                    size="small"
+                    danger
+                    disabled={record.isBuiltIn}
+                    icon={<DeleteOutlined />}
+                    onClick={() =>
+                      handleConfirmUserAction(
+                        record,
+                        deleteUser,
+                        'user.confirm.delete.title',
+                        'user.confirm.delete.description',
+                        'message.delete.success',
+                        'message.delete.failure',
+                        true,
+                      )
+                    }
+                  >
+                    <FormattedMessage id="common.button.delete" />
+                  </Button>
+                </Tooltip>
               )}
 
               {(canAssignRoles || canResetPassword) && (

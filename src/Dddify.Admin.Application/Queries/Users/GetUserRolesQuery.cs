@@ -5,7 +5,10 @@ namespace Dddify.Admin.Application.Queries.Users;
 
 public record GetUserRolesQuery(Guid UserId) : IQuery<IEnumerable<UserRoleDto>>;
 
-public class GetUserRolesQueryHandler(IUserRepository userRepository, IDistributedCache distributedCache) : IQueryHandler<GetUserRolesQuery, IEnumerable<UserRoleDto>>
+public class GetUserRolesQueryHandler(
+    IUserRepository userRepository,
+    IDistributedCache distributedCache,
+    IMapper mapper) : IQueryHandler<GetUserRolesQuery, IEnumerable<UserRoleDto>>
 {
     public async Task<IEnumerable<UserRoleDto>> Handle(GetUserRolesQuery query, CancellationToken cancellationToken)
     {
@@ -16,7 +19,7 @@ public class GetUserRolesQueryHandler(IUserRepository userRepository, IDistribut
             var user = await userRepository.GetUserWithRolesAsync(query.UserId, cancellationToken)
                 ?? throw new UserNotFoundException(query.UserId);
 
-            return user.Roles.Adapt<IEnumerable<UserRoleDto>>();
+            return mapper.Map<IEnumerable<UserRoleDto>>(user.Roles);
         },
         new DistributedCacheEntryOptions
         {
