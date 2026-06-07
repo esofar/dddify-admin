@@ -49,8 +49,8 @@ public class RoleConfiguration : IEntityTypeConfiguration<Role>
         builder.HasIndex(r => r.Name)
             .IsUnique();
 
-        builder.HasIndex(r => r.IsDefault);
-        builder.HasIndex(r => r.Order);
+        builder.HasIndex(r => new { r.IsDeleted, r.Order });
+        builder.HasIndex(r => new { r.IsDeleted, r.IsDefault, r.Order });
     }
 
     private static void ConfigureSeedData(EntityTypeBuilder<Role> builder)

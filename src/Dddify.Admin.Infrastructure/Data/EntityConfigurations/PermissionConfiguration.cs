@@ -9,6 +9,7 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
         builder.ToTable("sys_permission");
 
         ConfigureProperties(builder);
+        ConfigureIndexes(builder);
         ConfigureSeedData(builder);
     }
 
@@ -35,6 +36,17 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
             .IsRequired();
     }
 
+    private static void ConfigureIndexes(EntityTypeBuilder<Permission> builder)
+    {
+        builder.HasIndex(p => p.Code)
+            .IsUnique();
+
+        builder.HasIndex(p => new { p.ParentId, p.Name })
+            .IsUnique();
+
+        builder.HasIndex(p => new { p.IsDeleted, p.Order });
+    }
+
     private static void ConfigureSeedData(EntityTypeBuilder<Permission> builder)
     {
         builder.HasData(SeedPermissions());
@@ -48,6 +60,7 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
         var permissionId = Guid.Parse("018f69e2-55a6-7c7b-818b-93ea29100998");
         var departmentId = Guid.Parse("018f69e2-55a7-7c7b-9c64-c9f62a84ec7b");
         var lookupId = Guid.Parse("018f69e2-55a8-7c7b-80b2-55d4a1216a89");
+        var announcementId = Guid.Parse("019a9f3a-6615-7c0f-bfe3-5da758f52b1f");
 
         return
         [
@@ -87,6 +100,13 @@ public class PermissionConfiguration : IEntityTypeConfiguration<Permission>
             new(new Guid("01979d24-ea82-7d29-ab3e-aab3d1c996df"), lookupId, "system:lookup:item:disable", "禁用字典项", PermissionType.Button, 28),
             new(new Guid("019a075c-8b2e-7f8d-a678-95c158f2fc6d"), lookupId, "system:lookup:item:enable", "启用字典项", PermissionType.Button, 29),
             new(new Guid("019a48f8-d4c7-7049-bb57-15e38c00f979"), lookupId, "system:lookup:item:delete", "删除字典项", PermissionType.Button, 30),
+
+            new(announcementId, systemId, "system:announcement:index", "公告管理", PermissionType.Menu, 31),
+            new(new Guid("019a9f3a-6615-7c6d-a0fb-350d77272465"), announcementId, "system:announcement:create", "新增公告", PermissionType.Button, 32),
+            new(new Guid("019a9f3a-6615-7d0c-b85d-d9a9257c1ad1"), announcementId, "system:announcement:update", "编辑公告", PermissionType.Button, 33),
+            new(new Guid("019a9f3a-6615-7db9-a376-bae30f3035f5"), announcementId, "system:announcement:publish", "发布公告", PermissionType.Button, 34),
+            new(new Guid("019a9f3a-6615-7e58-ad93-7e450fa9f354"), announcementId, "system:announcement:withdraw", "撤回公告", PermissionType.Button, 35),
+            new(new Guid("019a9f3a-6615-7f1f-98a6-a362654f26c8"), announcementId, "system:announcement:delete", "删除公告", PermissionType.Button, 36),
         ];
     }
 }

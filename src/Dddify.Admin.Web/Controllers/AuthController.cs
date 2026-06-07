@@ -142,7 +142,7 @@ public class AuthController(
     /// <param name="request">发送登录短信验证码请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
     /// <returns></returns>
-    [HttpPost("login/sms-codes", Name = "SendLoginSmsCode")]
+    [HttpPost("login/sms-code", Name = "SendLoginSmsCode")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResult>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResult>(StatusCodes.Status429TooManyRequests)]
@@ -155,5 +155,3 @@ public class AuthController(
             cancellationToken);
     }
 }
-
-

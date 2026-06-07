@@ -80,8 +80,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasIndex(u => u.PhoneNumber)
             .IsUnique();
 
-        builder.HasIndex(u => u.Gender);
-        builder.HasIndex(u => u.Status);
+        builder.HasIndex(u => new { u.IsDeleted, u.CreatedAt });
+        builder.HasIndex(u => new { u.IsDeleted, u.Gender, u.CreatedAt });
+        builder.HasIndex(u => new { u.IsDeleted, u.Status, u.CreatedAt });
     }
 
     private static void ConfigureSeedData(EntityTypeBuilder<User> builder)

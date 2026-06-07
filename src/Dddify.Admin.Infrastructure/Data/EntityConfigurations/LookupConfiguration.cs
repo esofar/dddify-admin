@@ -43,6 +43,8 @@ public class LookupConfiguration : IEntityTypeConfiguration<Lookup>
 
         builder.HasIndex(d => d.Name)
             .IsUnique();
+
+        builder.HasIndex(d => new { d.IsDeleted, d.CreatedAt });
     }
 
     private static void ConfigureSeedData(EntityTypeBuilder<Lookup> builder)
@@ -104,7 +106,8 @@ public class LookupItemConfiguration : IEntityTypeConfiguration<LookupItem>
         builder.HasIndex(i => new { i.LookupId, i.Value })
             .IsUnique();
 
-        builder.HasIndex(i => new { i.LookupId, i.Order });
+        builder.HasIndex(i => new { i.LookupId, i.IsDeleted, i.Order });
+        builder.HasIndex(i => new { i.LookupId, i.IsDeleted, i.IsEnabled, i.Order });
     }
 
     private static void ConfigureSeedData(EntityTypeBuilder<LookupItem> builder)

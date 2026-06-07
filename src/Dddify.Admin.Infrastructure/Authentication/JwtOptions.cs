@@ -14,7 +14,7 @@ public sealed class JwtOptions
     [MinLength(32)]
     public string Secret { get; set; } = default!;
 
-    [Range(5, 30)]
+    [Range(1, 30)]
     public int AccessTokenMinutes { get; set; } = 15;
 
     [Range(1, 30)]

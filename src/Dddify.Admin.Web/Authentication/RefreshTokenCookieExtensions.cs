@@ -6,8 +6,8 @@ namespace Dddify.Admin.Web.Authentication;
 public static class RefreshTokenCookieExtensions
 {
     private const string RefreshTokenCookieName = "__Host-refresh_token";
-    private const string DeviceIdHeaderName = "X-Device-Id";
     private const string RefreshTokenCookiePath = "/";
+    private const string DeviceIdHeaderName = "X-Device-Id";
 
     /// <summary>
     /// 从请求 Cookie 中读取 Refresh Token 明文。

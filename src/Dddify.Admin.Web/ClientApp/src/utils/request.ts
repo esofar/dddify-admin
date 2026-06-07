@@ -2,54 +2,16 @@ import type { RequestOptions } from '@@/plugin-request/request';
 import { getIntl, history, request } from '@umijs/max';
 import { message } from 'antd';
 import { getFingerprint } from '@/hooks/useFingerprint';
-import { refreshToken } from '@/services/v1/auth';
+import { refreshToken as requestRefreshToken } from '@/services/v1/auth';
 
 const AUTHORIZATION_HEADER = 'Authorization';
 const DEVICE_ID_HEADER = 'X-Device-Id';
-const ACCESS_TOKEN_KEY = 'x-access-token';
 
 const TOKEN_WHITELIST = [
   '/api/v1/auth/login/account',
   '/api/v1/auth/login/sms',
   '/api/v1/auth/token/refresh',
 ];
-
-let refreshPromise: Promise<API.ApiResultOfstring> | null = null;
-let accessTokenCache = '';
-
-export function saveAccessToken(accessToken: string) {
-  accessTokenCache = accessToken;
-
-  try {
-    sessionStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
-  } catch {
-    // Fall back to in-memory token cache when sessionStorage is unavailable.
-  }
-}
-
-export function clearAccessToken() {
-  accessTokenCache = '';
-
-  try {
-    sessionStorage.removeItem(ACCESS_TOKEN_KEY);
-  } catch {
-    // Ignore storage errors.
-  }
-}
-
-export function getAccessToken() {
-  if (accessTokenCache) {
-    return accessTokenCache;
-  }
-
-  try {
-    accessTokenCache = sessionStorage.getItem(ACCESS_TOKEN_KEY) ?? '';
-  } catch {
-    accessTokenCache = '';
-  }
-
-  return accessTokenCache;
-}
 
 const HTTP_ERROR_MESSAGE_MAP: Record<number, string> = {
   400: 'error.http.badRequest',
@@ -58,6 +20,21 @@ const HTTP_ERROR_MESSAGE_MAP: Record<number, string> = {
   409: 'error.http.conflict',
   500: 'error.http.internalServerError',
 };
+
+let refreshAccessTokenPromise: Promise<API.ApiResultOfstring> | null = null;
+let accessToken = '';
+
+export function saveAccessToken(token: string) {
+  accessToken = token;
+}
+
+export function clearAccessToken() {
+  accessToken = '';
+}
+
+export function getAccessToken() {
+  return accessToken;
+}
 
 export function showHttpErrorMessage(error: any) {
   const intl = getIntl();
@@ -93,36 +70,32 @@ function isTokenWhiteUrl(url: string) {
   return TOKEN_WHITELIST.some((whiteUrl) => path === whiteUrl);
 }
 
-function createRefreshTokenFailureResult(error: any): API.ApiResultOfstring {
-  return {
-    success: false,
-    errorMessage:
-      error?.info?.errorMessage ||
-      error?.response?.data?.errorMessage ||
-      error?.data?.errorMessage,
-  };
-}
-
-async function obtainNewAccessToken(): Promise<API.ApiResultOfstring> {
-  if (!refreshPromise) {
-    refreshPromise = (async () => {
+async function refreshAccessToken(): Promise<API.ApiResultOfstring> {
+  if (!refreshAccessTokenPromise) {
+    refreshAccessTokenPromise = (async () => {
       try {
         const { deviceId } = await getFingerprint();
 
-        return await refreshToken({
+        return await requestRefreshToken({
           headers: {
             [DEVICE_ID_HEADER]: deviceId,
           },
         });
-      } catch (error) {
-        return createRefreshTokenFailureResult(error);
+      } catch (error: any) {
+        return {
+          success: false,
+          errorMessage:
+            error?.info?.errorMessage ||
+            error?.response?.data?.errorMessage ||
+            error?.data?.errorMessage,
+        };
       } finally {
-        refreshPromise = null;
+        refreshAccessTokenPromise = null;
       }
     })();
   }
 
-  return refreshPromise;
+  return refreshAccessTokenPromise;
 }
 
 export const authRequestInterceptor = (config: RequestOptions) => {
@@ -155,16 +128,9 @@ export const authResponseInterceptor: [
       return response;
     }
 
-    const currentAccessToken = getAccessToken();
-    if (!currentAccessToken) {
-      clearAccessToken();
-      setTimeout(() => history.push('/auth/login'), 100);
-      return response;
-    }
+    const { success, data: newAccessToken, errorMessage } = await refreshAccessToken();
 
-    const { success, data: accessToken, errorMessage } = await obtainNewAccessToken();
-
-    if (!success) {
+    if (!success || !newAccessToken) {
       clearAccessToken();
       if (errorMessage) {
         message.error(errorMessage);
@@ -173,12 +139,12 @@ export const authResponseInterceptor: [
       return response;
     }
 
-    saveAccessToken(accessToken);
+    saveAccessToken(newAccessToken);
 
     originalConfig._retry = true;
     originalConfig.headers = {
       ...(originalConfig.headers || {}),
-      [AUTHORIZATION_HEADER]: `Bearer ${accessToken}`,
+      [AUTHORIZATION_HEADER]: `Bearer ${newAccessToken}`,
     };
 
     try {

@@ -69,7 +69,9 @@ public class DepartmentConfiguration : IEntityTypeConfiguration<Department>
 
         builder.HasIndex(d => d.Path);
         builder.HasIndex(d => d.Level);
-        builder.HasIndex(d => new { d.ParentId, d.Order });
+        builder.HasIndex(d => new { d.IsDeleted, d.Order });
+        builder.HasIndex(d => new { d.IsDeleted, d.Type, d.IsEnabled, d.Order });
+        builder.HasIndex(d => new { d.ParentId, d.IsDeleted, d.Order });
     }
 
     private static void ConfigureSeedData(EntityTypeBuilder<Department> builder)

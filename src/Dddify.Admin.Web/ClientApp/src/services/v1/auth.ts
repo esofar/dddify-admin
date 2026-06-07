@@ -32,12 +32,12 @@ export async function smsLogin(
   });
 }
 
-/** 发送登录短信验证码。 POST /api/v1/auth/login/sms-codes */
+/** 发送登录短信验证码。 POST /api/v1/auth/login/sms-code */
 export async function sendLoginSmsCode(
   body: API.SendLoginSmsCodeRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.ApiResult>("/api/v1/auth/login/sms-codes", {
+  return request<API.ApiResult>("/api/v1/auth/login/sms-code", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
