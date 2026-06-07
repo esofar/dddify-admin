@@ -1,4 +1,6 @@
+using Dddify.Admin.Domain.Aggregates.Announcements;
 using Dddify.Admin.Domain.Aggregates.Departments;
+using Dddify.Admin.Domain.Aggregates.InboxItems;
 using Dddify.Admin.Domain.Aggregates.Lookups;
 using Dddify.Admin.Domain.Aggregates.Permissions;
 using Dddify.Admin.Domain.Aggregates.Roles;
@@ -13,6 +15,8 @@ public class ApplicationDbContext(DbContextOptions options) : DbContext(options)
     public DbSet<Permission> Permissions => Set<Permission>();
     public DbSet<Department> Departments => Set<Department>();
     public DbSet<Lookup> Lookups => Set<Lookup>();
+    public DbSet<Announcement> Announcements => Set<Announcement>();
+    public DbSet<InboxItem> InboxItems => Set<InboxItem>();
     public DbSet<Domain.Aggregates.Sessions.Session> Sessions => base.Set<Domain.Aggregates.Sessions.Session>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -3,6 +3,7 @@ using System;
 using Dddify.Admin.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Dddify.Admin.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260605081009_AddAnnouncementsAndInboxItems")]
+    partial class AddAnnouncementsAndInboxItems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,10 +68,8 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("published_by");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
+                    b.Property<int>("Status")
+                        .HasColumnType("integer")
                         .HasColumnName("status");
 
                     b.Property<string>("Summary")
@@ -1931,10 +1932,8 @@ namespace Dddify.Admin.Infrastructure.Data.Migrations
                                 .HasColumnType("uuid[]")
                                 .HasColumnName("audience_target_ids");
 
-                            b1.Property<string>("Type")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("character varying(20)")
+                            b1.Property<int>("Type")
+                                .HasColumnType("integer")
                                 .HasColumnName("audience_type");
 
                             b1.HasKey("AnnouncementId");

@@ -1,4 +1,10 @@
 {
+  "announcement_not_found": "Announcement not found.",
+  "announcement_cannot_delete_published": "Published announcements cannot be deleted.",
+  "announcement_status_invalid": "The announcement status is invalid for the current operation.",
+  "inbox_item_not_found": "Inbox item not found or has been deleted.",
+  "inbox_item_already_deleted": "Inbox item has already been deleted.",
+
   "user_invalid_credentials": "Invalid account or password.",
   "user_invalid_sms_code": "Invalid SMS verification code.",
   "user_not_found": "User not found.",

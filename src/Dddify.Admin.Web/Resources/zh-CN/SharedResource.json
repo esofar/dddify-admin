@@ -1,4 +1,10 @@
 {
+  "announcement_not_found": "公告不存在。",
+  "announcement_cannot_delete_published": "已发布的公告不能删除。",
+  "announcement_status_invalid": "公告状态不正确，无法执行当前操作。",
+  "inbox_item_not_found": "收件箱消息不存在或已被删除。",
+  "inbox_item_already_deleted": "收件箱消息已被删除。",
+
   "user_invalid_credentials": "账号或密码错误",
   "user_invalid_sms_code": "短信验证码错误",
   "user_not_found": "用户不存在",

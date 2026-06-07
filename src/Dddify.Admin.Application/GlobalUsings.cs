@@ -9,6 +9,7 @@ global using Dddify.Messaging.Events;
 global using Dddify.Messaging.Queries;
 global using Dddify.Primitives;
 global using Dddify.Timing;
+global using Dddify.Users;
 global using FluentValidation;
 global using Mapster;
 global using MapsterMapper;
