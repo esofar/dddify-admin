@@ -2,6 +2,7 @@
 /* eslint-disable */
 // API 更新时间：
 // API 唯一标识：
+import * as announcement from "./announcement";
 import * as auth from "./auth";
 import * as department from "./department";
 import * as lookup from "./lookup";
@@ -10,6 +11,7 @@ import * as permission from "./permission";
 import * as role from "./role";
 import * as user from "./user";
 export default {
+  announcement,
   auth,
   department,
   lookup,

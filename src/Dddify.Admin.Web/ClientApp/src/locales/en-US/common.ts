@@ -23,6 +23,7 @@ export default {
   'common.button.search': 'Search',
   'common.button.reset': 'Reset',
   'common.button.confirm': 'Confirm',
+  'common.button.cancel': 'Cancel',
   'common.button.disable': 'Disable',
   'common.button.enable': 'Enable',
   'common.button.clear': 'Clear',

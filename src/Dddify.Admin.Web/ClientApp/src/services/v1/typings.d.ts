@@ -12,11 +12,60 @@ declare namespace API {
     rememberMe: boolean;
   };
 
+  type AnnouncementAudienceDto = {
+    type: string;
+    targetIds: string[];
+    targets: AnnouncementAudienceTargetDto[];
+  };
+
+  type AnnouncementAudienceTargetDto = {
+    id: string;
+    name: string;
+  };
+
+  type AnnouncementContentDto = {
+    html: string;
+    plainText: string;
+  };
+
+  type AnnouncementDetailDto = {
+    id: string;
+    title: string;
+    summary: string;
+    content: AnnouncementContentDto;
+    audience: AnnouncementAudienceDto;
+    status: string;
+    publishedAt: any;
+    publishedBy: any;
+    withdrawnAt: any;
+    withdrawnBy: any;
+    createdAt: any;
+  };
+
+  type AnnouncementListDto = {
+    id: string;
+    title: string;
+    summary: string;
+    status: string;
+    audienceType: string;
+    publishedAt: any;
+    withdrawnAt: any;
+    createdAt: any;
+  };
+
   type ApiResult = {
     success?: boolean;
     errorCode?: any;
     errorMessage?: any;
     traceId?: any;
+  };
+
+  type ApiResultOfAnnouncementDetailDto = {
+    success?: boolean;
+    errorCode?: any;
+    errorMessage?: any;
+    traceId?: any;
+    data?: null | AnnouncementDetailDto;
   };
 
   type ApiResultOfCurrentUserDto = {
@@ -91,6 +140,30 @@ declare namespace API {
     data?: any;
   };
 
+  type ApiResultOfInboxItemSourceDetailDto = {
+    success?: boolean;
+    errorCode?: any;
+    errorMessage?: any;
+    traceId?: any;
+    data?: null | InboxItemSourceDetailDto;
+  };
+
+  type ApiResultOfPagedResultOfAnnouncementListDto = {
+    success?: boolean;
+    errorCode?: any;
+    errorMessage?: any;
+    traceId?: any;
+    data?: null | PagedResultOfAnnouncementListDto;
+  };
+
+  type ApiResultOfPagedResultOfInboxItemListDto = {
+    success?: boolean;
+    errorCode?: any;
+    errorMessage?: any;
+    traceId?: any;
+    data?: null | PagedResultOfInboxItemListDto;
+  };
+
   type ApiResultOfPagedResultOfLookupDto = {
     success?: boolean;
     errorCode?: any;
@@ -131,6 +204,14 @@ declare namespace API {
     data?: any;
   };
 
+  type ApiResultOfUnreadInboxItemCountDto = {
+    success?: boolean;
+    errorCode?: any;
+    errorMessage?: any;
+    traceId?: any;
+    data?: null | UnreadInboxItemCountDto;
+  };
+
   type ApiResultOfUserDetailDto = {
     success?: boolean;
     errorCode?: any;
@@ -155,6 +236,19 @@ declare namespace API {
   type AssignUserRolesParams = {
     /** 用户ID。 */
     id: string;
+  };
+
+  type CreateAnnouncementRequest = {
+    /** 公告标题。 */
+    title: string;
+    /** 公告摘要。 */
+    summary: string;
+    /** 公告内容 HTML。 */
+    contentHtml: string;
+    /** 公告受众类型。 */
+    audienceType: string;
+    /** 公告受众目标 ID 列表。 */
+    audienceTargetIds: string[];
   };
 
   type CreateDepartmentRequest = {
@@ -250,6 +344,11 @@ declare namespace API {
     permissions: string[];
   };
 
+  type DeleteAnnouncementParams = {
+    /** 公告ID。 */
+    id: string;
+  };
+
   type DeleteDepartmentParams = {
     /** 部门ID。 */
     id: string;
@@ -264,6 +363,11 @@ declare namespace API {
 
   type DeleteLookupParams = {
     /** 字典ID。 */
+    id: string;
+  };
+
+  type DeleteMeInboxItemParams = {
+    /** 收件箱消息ID。 */
     id: string;
   };
 
@@ -334,8 +438,18 @@ declare namespace API {
     id: string;
   };
 
+  type GetAnnouncementParams = {
+    /** 公告ID。 */
+    id: string;
+  };
+
   type GetDepartmentDetailParams = {
     /** 部门ID。 */
+    id: string;
+  };
+
+  type GetInboxItemSourceParams = {
+    /** 收件箱消息ID。 */
     id: string;
   };
 
@@ -369,6 +483,31 @@ declare namespace API {
     id: string;
   };
 
+  type InboxItemListDto = {
+    id: string;
+    title: string;
+    summary: string;
+    source: InboxItemSourceDto;
+    isRead: boolean;
+    readAt: any;
+    createdAt: any;
+  };
+
+  type InboxItemSourceDetailDto = {
+    sourceType: InboxItemSourceType;
+    sourceId: string;
+    isAvailable: boolean;
+    unavailableReason: any;
+    announcement: null | AnnouncementDetailDto;
+  };
+
+  type InboxItemSourceDto = {
+    type: string;
+    id: string;
+  };
+
+  type InboxItemSourceType = integer;
+
   type LookupActiveItemDto = {
     value: string;
     label: string;
@@ -390,6 +529,21 @@ declare namespace API {
     order: number;
     isPreset: boolean;
     isEnabled: boolean;
+  };
+
+  type MarkInboxItemsAsReadRequest = {
+    /** 消息ID。 */
+    ids: string[];
+  };
+
+  type PagedResultOfAnnouncementListDto = {
+    total: number;
+    items: AnnouncementListDto[];
+  };
+
+  type PagedResultOfInboxItemListDto = {
+    total: number;
+    items: InboxItemListDto[];
   };
 
   type PagedResultOfLookupDto = {
@@ -414,6 +568,11 @@ declare namespace API {
     name: string;
     type: string;
     order: number;
+  };
+
+  type PublishAnnouncementParams = {
+    /** 公告ID。 */
+    id: string;
   };
 
   type ResetUserPasswordParams = {
@@ -447,6 +606,17 @@ declare namespace API {
     permissionCode: string;
   };
 
+  type SearchAnnouncementsParams = {
+    /** 当前页码。 */
+    Current?: number;
+    /** 每页条数。 */
+    PageSize?: number;
+    /** 标题或摘要关键字。 */
+    Keyword?: string;
+    /** 公告状态。 */
+    Status?: string;
+  };
+
   type SearchDepartmentsParams = {
     /** 部门名称。 */
     name?: string;
@@ -465,6 +635,15 @@ declare namespace API {
     Code?: string;
     /** 字典名称。 */
     Name?: string;
+  };
+
+  type SearchMeInboxItemsParams = {
+    /** 当前页码。 */
+    Current?: number;
+    /** 每页条数。 */
+    PageSize?: number;
+    /** 是否已读。 */
+    IsRead?: boolean;
   };
 
   type SearchPermissionsParams = {
@@ -530,6 +709,28 @@ declare namespace API {
   type SwitchUserCurrentRoleRequest = {
     /** 角色ID。 */
     roleId: string;
+  };
+
+  type UnreadInboxItemCountDto = {
+    count: number;
+  };
+
+  type UpdateAnnouncementParams = {
+    /** 公告ID。 */
+    id: string;
+  };
+
+  type UpdateAnnouncementRequest = {
+    /** Announcement title. */
+    title: string;
+    /** Announcement summary. */
+    summary: string;
+    /** Announcement content HTML. */
+    contentHtml: string;
+    /** Announcement audience type. */
+    audienceType: string;
+    /** Announcement audience target ids. */
+    audienceTargetIds: string[];
   };
 
   type UpdateDepartmentParams = {
@@ -667,5 +868,10 @@ declare namespace API {
     roleId: string;
     roleName: string;
     isCurrent: boolean;
+  };
+
+  type WithdrawAnnouncementParams = {
+    /** 公告ID。 */
+    id: string;
   };
 }

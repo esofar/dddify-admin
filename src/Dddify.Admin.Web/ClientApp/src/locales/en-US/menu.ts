@@ -21,6 +21,7 @@ export default {
   'menu.system.permission': 'Permission Management',
   'menu.system.department': 'Department Management',
   'menu.system.lookup': 'Lookup Management',
+  'menu.system.announcement': 'Announcement Management',
 
   'menu.form': 'Form',
   'menu.form.basic-form': 'Basic Form',

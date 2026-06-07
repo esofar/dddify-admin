@@ -15,14 +15,14 @@ import {
   DocLink,
   ErrorBoundary,
   Footer,
+  InboxItemsDropdown,
   LangDropdown,
   OfflineBanner,
   SwitchRoleDropdown,
 } from '@/components';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { getMe } from './services/v1/me';
-import { getAccessToken } from './utils/request';
+import { getProfile } from './services/v1/me';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/auth/login';
@@ -39,7 +39,7 @@ export async function getInitialState(): Promise<{
 }> {
   const fetchUserInfo = async (): Promise<API.CurrentUserDto | undefined> => {
     try {
-      const { success, data } = await getMe();
+      const { success, data } = await getProfile();
       return success && data ? data : undefined;
     } catch (_error) {
       const { pathname, search, hash } = history.location;
@@ -53,18 +53,6 @@ export async function getInitialState(): Promise<{
   const { location } = history;
 
   if (![loginPath].includes(location.pathname)) {
-    if (!getAccessToken()) {
-      history.replace(
-        `${loginPath}?redirect=${encodeURIComponent(location.pathname + location.search + location.hash)}`,
-      );
-
-      return {
-        fetchUserInfo,
-        settings: defaultSettings as Partial<LayoutSettings>,
-        settingDrawerOpen: false,
-      };
-    }
-
     const currentUser = await fetchUserInfo();
 
     return {
@@ -101,6 +89,7 @@ export const layout: RunTimeLayoutConfig = ({
       <DocLink key="doc" />,
       <SwitchRoleDropdown key="switch-role" />,
       <LangDropdown key="lang" />,
+      <InboxItemsDropdown key="inbox-items" />,
     ],
     avatarProps: {
       src: initialState?.currentUser?.avatar,

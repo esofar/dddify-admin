@@ -8,6 +8,7 @@
 import Footer from './Footer';
 import { DocLink, LangDropdown } from './RightContent';
 import { AvatarDropdown } from './RightContent/AvatarDropdown';
+import InboxItemsDropdown from './RightContent/InboxItemsDropdown';
 import SwitchRoleDropdown from './RightContent/SwitchRoleDropdown';
 
 /**
@@ -20,4 +21,11 @@ export { default as OfflineBanner } from './OfflineBanner';
 export { default as StandardFormRow } from './StandardFormRow';
 export { default as TagSelect } from './TagSelect';
 
-export { AvatarDropdown, SwitchRoleDropdown, DocLink, Footer, LangDropdown };
+export {
+  AvatarDropdown,
+  SwitchRoleDropdown,
+  InboxItemsDropdown,
+  DocLink,
+  Footer,
+  LangDropdown,
+};

@@ -21,6 +21,7 @@ export default {
   'menu.system.permission': '权限管理',
   'menu.system.department': '部门管理',
   'menu.system.lookup': '字典管理',
+  'menu.system.announcement': '公告管理',
 
   'menu.form': '表单页',
   'menu.form.basic-form': '基础表单',

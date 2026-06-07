@@ -61,6 +61,12 @@ export default [
         component: './system/lookup',
         access: 'system:lookup:index',
       },
+      {
+        path: '/system/announcement',
+        name: 'announcement',
+        component: './system/announcement',
+        access: 'system:announcement:index',
+      },
     ],
   }
 ];

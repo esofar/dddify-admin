@@ -23,6 +23,7 @@ export default {
   'common.button.search': '查询',
   'common.button.reset': '重置',
   'common.button.confirm': '确定',
+  'common.button.cancel': '取消',
   'common.button.disable': '禁用',
   'common.button.enable': '启用',
   'common.button.clear': '清空',
