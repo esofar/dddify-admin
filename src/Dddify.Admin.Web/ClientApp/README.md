@@ -11,7 +11,7 @@ An out-of-box UI solution for enterprise applications as a React boilerplate.
 [![Checked with Biome](https://img.shields.io/badge/Checked_with-Biome-60a5fa?style=flat&logo=biome)](https://biomejs.dev)
 [![Ant Design](https://badgen.net/badge/icon/Ant%20Design?icon=https://gw.alipayobjects.com/zos/antfincdn/Pp4WPgVDB3/KDpgvguMpGfqaHPjicRK.svg&label)](https://ant.design/)
 
-Language: 🇺🇸 | [🇨🇳](./README.zh-CN.md)
+Language: English | [简体中文](./README.zh-CN.md)
 
 <img width="1718" height="1191" alt="light theme preview" src="https://github.com/user-attachments/assets/74ad0b4a-e086-4955-8edd-9f2cff31aee8" />
 <img width="1718" height="1191" alt="dark theme preview" src="https://github.com/user-attachments/assets/d4bcb7c1-42c7-4c0f-b130-1193a931f9f7" />
@@ -121,6 +121,27 @@ This will:
 ```bash
 npm run build
 ```
+
+## AI Skills (Claude Code)
+
+This project ships with two built-in [Claude Code Skills](https://docs.anthropic.com/en/docs/claude-code/skills) in `.claude/skills/`:
+
+| Skill | Trigger | Description |
+|---|---|---|
+| `/pro-upgrade` | "upgrade pro", "update to latest" | Auto-upgrade to the latest Ant Design Pro version. Diffs the latest template, merges framework changes while preserving your business code. |
+| `/antd` | antd-related code or questions | Query antd component APIs, props, tokens, demos; lint for deprecated usage; migrate between versions — all via `@ant-design/cli`. |
+
+**Usage in Claude Code:**
+
+```bash
+# Upgrade the project to latest Pro version
+/pro-upgrade
+
+# Query antd component info, debug issues, run lint, etc.
+/antd
+```
+
+> 💡 If your project was cloned from this repo, these skills are already included — no installation needed. To get the latest skill definitions, pull the updates from the template or run `npx skills add ant-design/ant-design-pro` to refresh them.
 
 ## Browsers support
 

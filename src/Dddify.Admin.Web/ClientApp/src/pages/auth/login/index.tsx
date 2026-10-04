@@ -15,17 +15,14 @@ import {
 import {
   FormattedMessage,
   Helmet,
-  SelectLang,
   useIntl,
-  useModel,
 } from '@umijs/max';
 import { App, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
-import React, { startTransition, useState } from 'react';
-import { Footer } from '@/components';
-import { useFingerprint } from '@/hooks/useFingerprint';
-import { accountLogin } from '@/services/v1/auth';
-import { getFakeCaptcha } from '@/services/ant-design-pro/login';
+import React, { useState } from 'react';
+import { Footer, LangDropdown } from '@/components';
+import { getFingerprint, useFingerprint } from '@/hooks/useFingerprint';
+import { accountLogin, sendLoginSmsCode, smsLogin } from '@/services/v1/auth';
 import Settings from '../../../../config/defaultSettings';
 import { saveAccessToken } from '@/utils/request';
 
@@ -91,14 +88,13 @@ const Lang = () => {
 
   return (
     <div className={styles.lang} data-lang>
-      {SelectLang && <SelectLang />}
+      <LangDropdown />
     </div>
   );
 };
 
 const Login: React.FC = () => {
   const [type, setType] = useState<string>('account');
-  const { initialState, setInitialState } = useModel('@@initialState');
   const { styles } = useStyles();
   const { message } = App.useApp();
   const { ready, deviceId, deviceName } = useFingerprint();
@@ -125,37 +121,46 @@ const Login: React.FC = () => {
     }
   };
 
-  const fetchUserInfo = async () => {
-    const userInfo = await initialState?.fetchUserInfo?.();
-    if (userInfo) {
-      startTransition(() => {
-        setInitialState((s) => ({
-          ...s,
-          currentUser: userInfo,
-        }));
-      });
-    }
-  };
-
-  const handleSubmit = async (values: API.AccountLoginRequest) => {
-    if (!ready) return;
-    const { success, data: accessToken, errorMessage } = await accountLogin({
-      ...values,
-      deviceId: deviceId,
-      deviceName: deviceName,
-    });
+  const handleSubmit = async (values: {
+    account?: string;
+    password?: string;
+    mobile?: string;
+    captcha?: string;
+    rememberMe?: boolean;
+  }) => {
+    const fingerprint = ready
+      ? { deviceId, deviceName }
+      : await getFingerprint();
+    const credentials = {
+      deviceId: fingerprint.deviceId,
+      deviceName: fingerprint.deviceName,
+      rememberMe: values.rememberMe ?? false,
+    };
+    const { success, data: accessToken, errorMessage } =
+      type === 'mobile'
+        ? await smsLogin({
+            ...credentials,
+            phoneNumber: values.mobile ?? '',
+            code: values.captcha ?? '',
+          })
+        : await accountLogin({
+            ...credentials,
+            account: values.account ?? '',
+            password: values.password ?? '',
+          });
     if (success) {
       message.success(intl.formatMessage({
         id: 'pages.login.success',
       }));
       saveAccessToken(accessToken ?? '');
-      // await fetchUserInfo();
       const urlParams = new URL(window.location.href).searchParams;
       const redirectUrl = getSafeRedirectUrl(urlParams.get('redirect'));
       window.location.href = redirectUrl;
       return;
     }
-    message.error(errorMessage);
+    message.error(
+      errorMessage ?? intl.formatMessage({ id: 'pages.login.failure' }),
+    );
   };
 
   return (
@@ -196,7 +201,7 @@ const Login: React.FC = () => {
             <ActionIcons key="icons" />,
           ]}
           onFinish={async (values) => {
-            await handleSubmit(values as API.AccountLoginRequest);
+            await handleSubmit(values);
           }}
         >
           <Tabs
@@ -327,13 +332,18 @@ const Login: React.FC = () => {
                   },
                 ]}
                 onGetCaptcha={async (phone) => {
-                  const result = await getFakeCaptcha({
-                    phone,
+                  const { success, errorMessage } = await sendLoginSmsCode({
+                    phoneNumber: phone,
                   });
-                  if (!result) {
-                    return;
+                  if (!success) {
+                    throw new Error(
+                      errorMessage ??
+                        intl.formatMessage({ id: 'pages.login.failure' }),
+                    );
                   }
-                  message.success('获取验证码成功！验证码为：666666');
+                  message.success(
+                    intl.formatMessage({ id: 'pages.login.captcha.sent' }),
+                  );
                 }}
               />
             </>

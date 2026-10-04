@@ -10,6 +10,7 @@ const DEVICE_ID_HEADER = 'X-Device-Id';
 const TOKEN_WHITELIST = [
   '/api/v1/auth/login/account',
   '/api/v1/auth/login/sms',
+  '/api/v1/auth/login/sms-code',
   '/api/v1/auth/token/refresh',
 ];
 

@@ -1,6 +1,5 @@
 import {
   LogoutOutlined,
-  SettingOutlined,
   SkinOutlined,
 } from '@ant-design/icons';
 import { history, useModel } from '@umijs/max';
@@ -16,8 +15,21 @@ type GlobalHeaderRightProps = {
   children?: React.ReactNode;
 };
 
-const loginPath = '/auth/login';
-const DEVICE_ID_HEADER = 'X-Device-Id';
+const menuItems: MenuProps['items'] = [
+  {
+    key: 'theme',
+    icon: <SkinOutlined />,
+    label: '主题设置',
+  },
+  {
+    type: 'divider' as const,
+  },
+  {
+    key: 'logout',
+    icon: <LogoutOutlined />,
+    label: '退出登录',
+  },
+];
 
 export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   children,
@@ -25,46 +37,45 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   const { initialState, setInitialState } = useModel('@@initialState');
 
   const loginOut = async () => {
-    const { deviceId } = await getFingerprint();
-    const { success, errorMessage } = await logout({
-      headers: {
-        [DEVICE_ID_HEADER]: deviceId,
-      },
-    });
-
-    if (!success) {
-      message.error(errorMessage);
-      return;
-    }
-    clearAccessToken();
-    const { search, pathname } = window.location;
-    const urlParams = new URL(window.location.href).searchParams;
-    const searchParams = new URLSearchParams({
-      redirect: pathname + search,
-    });
-    const redirect = urlParams.get('redirect');
-    if (window.location.pathname !== loginPath && !redirect) {
-      history.replace({
-        pathname: loginPath,
-        search: searchParams.toString(),
+    try {
+      const { deviceId } = await getFingerprint();
+      const { success, errorMessage } = await logout({
+        headers: { 'X-Device-Id': deviceId },
       });
+      if (!success) {
+        message.error(errorMessage);
+        return;
+      }
+
+      clearAccessToken();
+      startTransition(() => {
+        setInitialState((s) => ({ ...s, currentUser: undefined }));
+      });
+
+      const { search, pathname } = window.location;
+      const urlParams = new URL(window.location.href).searchParams;
+      const searchParams = new URLSearchParams({ redirect: pathname + search });
+      if (pathname !== '/auth/login' && !urlParams.get('redirect')) {
+        history.replace({
+          pathname: '/auth/login',
+          search: searchParams.toString(),
+        });
+      }
+    } catch {
+      // 请求拦截器负责显示网络错误，保留当前登录状态。
     }
   };
 
   const onMenuClick: MenuProps['onClick'] = (event) => {
     const { key } = event;
     if (key === 'logout') {
-      startTransition(() => {
-        setInitialState((s) => ({ ...s, currentUser: undefined }));
-      });
-      loginOut();
+      void loginOut();
       return;
     }
     if (key === 'theme') {
       setInitialState((s) => ({ ...s, settingDrawerOpen: true }));
       return;
     }
-    history.push(`/account/${key}`);
   };
 
   if (!initialState) {
@@ -76,27 +87,6 @@ export const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({
   if (!currentUser) {
     return <Spin size="small" />;
   }
-
-  const menuItems: MenuProps['items'] = [
-    {
-      key: 'settings',
-      icon: <SettingOutlined />,
-      label: '个人设置',
-    },
-    {
-      key: 'theme',
-      icon: <SkinOutlined />,
-      label: '主题设置',
-    },
-    {
-      type: 'divider' as const,
-    },
-    {
-      key: 'logout',
-      icon: <LogoutOutlined />,
-      label: '退出登录',
-    },
-  ];
 
   return (
     <HeaderDropdown

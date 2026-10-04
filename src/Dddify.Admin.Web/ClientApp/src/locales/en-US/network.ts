@@ -14,7 +14,6 @@ export default {
   'app.error.home': 'Back Home',
   'app.request.offline':
     'Network unavailable. Please check your connection and try again.',
-
   'error.http.badRequest': 'Invalid request parameters',
   'error.http.forbidden': 'You do not have permission to access this resource',
   'error.http.notFound': 'The requested resource does not exist',

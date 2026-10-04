@@ -19,10 +19,11 @@ import {
   LangDropdown,
   OfflineBanner,
   SwitchRoleDropdown,
+  VersionDropdown,
 } from '@/components';
+import { getProfile } from '@/services/v1/me';
 import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
-import { getProfile } from './services/v1/me';
 
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/auth/login';
@@ -37,7 +38,7 @@ export async function getInitialState(): Promise<{
   fetchUserInfo?: () => Promise<API.CurrentUserDto | undefined>;
   settingDrawerOpen?: boolean;
 }> {
-  const fetchUserInfo = async (): Promise<API.CurrentUserDto | undefined> => {
+  const fetchUserInfo = async () => {
     try {
       const { success, data } = await getProfile();
       return success && data ? data : undefined;
@@ -51,10 +52,8 @@ export async function getInitialState(): Promise<{
   };
   // 如果不是登录页面，执行
   const { location } = history;
-
-  if (![loginPath].includes(location.pathname)) {
+  if (location.pathname !== loginPath) {
     const currentUser = await fetchUserInfo();
-
     return {
       fetchUserInfo,
       currentUser,
@@ -85,12 +84,19 @@ export const layout: RunTimeLayoutConfig = ({
       }
       return dom;
     },
-    actionsRender: () => [
-      <DocLink key="doc" />,
-      <SwitchRoleDropdown key="switch-role" />,
-      <LangDropdown key="lang" />,
-      <InboxItemsDropdown key="inbox-items" />,
-    ],
+    actionsRender: () => {
+      // `locale: false` opts out of the language switcher. ProLayout's own
+      // `locale` prop is a locale string, so narrow to the boolean toggle here.
+      const localeEnabled =
+        (initialState?.settings as { locale?: boolean })?.locale !== false;
+      return [
+        <DocLink key="doc" />,
+        <VersionDropdown key="version" />,
+        <SwitchRoleDropdown key="switch-role" />,
+        localeEnabled && <LangDropdown key="lang" />,
+        <InboxItemsDropdown key="inbox-items" />,
+      ].filter(Boolean);
+    },
     avatarProps: {
       src: initialState?.currentUser?.avatar,
       title: initialState?.currentUser?.name,
@@ -182,7 +188,7 @@ export const layout: RunTimeLayoutConfig = ({
  * @doc https://umijs.org/docs/max/request#配置
  */
 export const request: RequestConfig = {
-  baseURL: isDev ? '' : 'https://pro-api.ant-design-demo.workers.dev',
+  baseURL: '',
   ...errorConfig,
 };
 

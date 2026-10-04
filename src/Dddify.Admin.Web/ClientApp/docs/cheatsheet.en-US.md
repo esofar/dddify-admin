@@ -1,6 +1,6 @@
 # Ant Design Pro Cheatsheet
 
-[![GitHub](https://img.shields.io/badge/GitHub-ant--design%2Fant--design--pro-181717?logo=github)](https://github.com/ant-design/ant-design-pro) [![Stars](https://img.shields.io/github/stars/ant-design/ant-design-pro?style=social)](https://github.com/ant-design/ant-design-pro) [![Version](https://img.shields.io/github/package-json/v/ant-design/ant-design-pro)](https://github.com/ant-design/ant-design-pro/releases) [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![GitHub](https://img.shields.io/badge/GitHub-ant--design%2Fant--design--pro-181717?logo=github)](https://github.com/ant-design/ant-design-pro) [![Stars](https://img.shields.io/github/stars/ant-design/ant-design-pro?style=social)](https://github.com/ant-design/ant-design-pro) [![Version](https://img.shields.io/github/package-json/v/ant-design/ant-design-pro)](https://github.com/ant-design/ant-design-pro/releases) [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org/) [![React Review](https://react.review/api/badge/ant-design/ant-design-pro)](https://react.review/repo/ant-design/ant-design-pro)
 
 ![Ant Design Pro](https://mdn.alipayobjects.com/huamei_fkc4p0/afts/img/A*EX3ISYC2ghEAAAAAddAAAAgAeobDAQ/original)
 
@@ -492,6 +492,13 @@ Edit `colorPrimary` in `config/defaultSettings.ts`. Use SettingDrawer for live p
 **Q: How to add global state?**
 Create a file in `src/models/` exporting a custom Hook, then use `useModel('filename')` in components.
 
+**Q: How to upgrade the project?**
+First, install the pro-upgrade skill into your project:
+```bash
+npx skills add ant-design/ant-design-pro
+```
+Then run `/pro-upgrade` in Claude Code at the project root — AI will auto-diff the latest template and assist your upgrade (deps, config, code patterns, etc.), with conservative handling for ambiguous merges. For other AI assistants, paste the content of `.claude/skills/pro-upgrade/SKILL.md` to them.
+
 **Q: How to deploy?**
 `npm run build` generates `dist/`. Deploy to any static file server. Set `publicPath` for non-root deployments. `npm run deploy` builds and publishes to GitHub Pages automatically (pushes to gh-pages branch).
 
@@ -555,6 +562,54 @@ git add -A && git commit -m "chore: save before simple"  # Must commit first
 npm run simple                                              # Irreversible
 npm install                                                 # Update dependencies
 ```
+
+## AI Skills (Claude Code)
+
+This project includes two built-in [Claude Code Skills](https://docs.anthropic.com/en/docs/claude-code/skills) (`.claude/skills/`):
+
+### `/pro-upgrade` — Project Upgrade Assistant
+
+Auto-upgrade to the latest Ant Design Pro version. Diffs the latest template against your project and merges framework changes while preserving business code.
+
+```bash
+# In Claude Code, just run:
+/pro-upgrade
+```
+
+What it does:
+1. Clones the latest Pro template
+2. Classifies framework vs. business files
+3. Merges dependency updates, config changes, and code pattern migrations
+4. Runs `npx antd lint` to catch antd-specific issues
+5. Verifies with `npm run lint && npm run build`
+
+### `/antd` — Ant Design CLI Helper
+
+Query antd component APIs, debug issues, lint for deprecated usage, and assist migrations — all via `@ant-design/cli` with offline bundled metadata.
+
+```bash
+# In Claude Code, just run:
+/antd
+```
+
+Key commands available:
+- `npx antd info <Component>` — props, types, version info
+- `npx antd demo <Component> <demo>` — working code examples
+- `npx antd lint ./src` — check for deprecated/problematic usage
+- `npx antd migrate <from> <to>` — migration checklist between versions
+- `npx antd doc <Component>` — full component documentation
+
+### Installation & Updates
+
+> 💡 If your project was cloned from this repo, these skills are already included — no installation needed.
+
+To get the latest skill definitions (or add them to an existing project):
+
+```bash
+npx skills add ant-design/ant-design-pro
+```
+
+For other AI assistants (Cursor, etc.), paste the content of `.claude/skills/pro-upgrade/SKILL.md` or `.claude/skills/antd/SKILL.md` into the assistant's context.
 
 ## Constraints & Gotchas
 

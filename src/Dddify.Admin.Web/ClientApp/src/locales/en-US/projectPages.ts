@@ -13,6 +13,7 @@ export default {
   'pages.login.phoneNumber.invalid': 'Invalid phone number',
   'pages.login.captcha.placeholder': 'Please enter verification code',
   'pages.login.captcha.required': 'Please enter verification code',
+  'pages.login.captcha.sent': 'Verification code sent',
   'pages.login.phoneLogin.getVerificationCode': 'Get Code',
   'pages.getCaptchaSecondText': 'Get again in seconds',
   'pages.login.success': 'Login successful',

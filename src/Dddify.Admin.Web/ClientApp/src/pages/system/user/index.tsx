@@ -3,7 +3,6 @@ import {
   CloseCircleOutlined,
   DeleteOutlined,
   EditOutlined,
-  ExclamationCircleFilled,
   PlusOutlined,
   SafetyCertificateOutlined,
   UndoOutlined,

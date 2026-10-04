@@ -1,31 +1,27 @@
 import { getIntl } from '@umijs/max';
 import { Alert } from 'antd';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useSyncExternalStore } from 'react';
+
+const subscribeOnlineStatus = (callback: () => void) => {
+  window.addEventListener('online', callback);
+  window.addEventListener('offline', callback);
+  return () => {
+    window.removeEventListener('online', callback);
+    window.removeEventListener('offline', callback);
+  };
+};
+
+const getOnlineStatus = () =>
+  typeof navigator === 'undefined' ? true : navigator.onLine;
 
 const OfflineBanner: React.FC = () => {
-  const isOnlineRef = useRef(true);
-  const [, forceUpdate] = useState<number>(0);
+  const isOnline = useSyncExternalStore(
+    subscribeOnlineStatus,
+    getOnlineStatus,
+    () => true,
+  );
 
-  useEffect(() => {
-    isOnlineRef.current = navigator.onLine;
-    forceUpdate((n) => n + 1);
-    const handleOnline = () => {
-      isOnlineRef.current = true;
-      forceUpdate((n: number) => n + 1);
-    };
-    const handleOffline = () => {
-      isOnlineRef.current = false;
-      forceUpdate((n: number) => n + 1);
-    };
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
-
-  if (isOnlineRef.current) return null;
+  if (isOnline) return null;
 
   return (
     <Alert
@@ -40,7 +36,7 @@ const OfflineBanner: React.FC = () => {
         zIndex: 10,
         maxWidth: 480,
       }}
-      message={getIntl().formatMessage({
+      title={getIntl().formatMessage({
         id: 'app.network.offline',
         defaultMessage:
           'You are currently offline. Some features may be unavailable.',

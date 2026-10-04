@@ -2,8 +2,8 @@ import { DeleteOutlined, EditOutlined, PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns } from '@ant-design/pro-components';
 import { ProList } from '@ant-design/pro-components';
 import { FormattedMessage, useAccess, useIntl } from '@umijs/max';
-import { Button, message, Modal, Space, Tag, Typography } from 'antd';
-import type { FC, Key, RefObject } from 'react';
+import { Button, message, Modal, Space, Tag, theme, Typography } from 'antd';
+import type { FC, RefObject } from 'react';
 import { useCallback, useMemo } from 'react';
 import { deleteLookup, searchLookups } from '@/services/v1/lookup';
 import { LOOKUP_PERMISSIONS } from '../data';
@@ -28,6 +28,7 @@ const LookupList: FC<LookupListProps> = ({
 }) => {
   const intl = useIntl();
   const access = useAccess();
+  const { token } = theme.useToken();
   const [messageApi, contextHolder] = message.useMessage();
   const [modalApi, modalContextHolder] = Modal.useModal();
 
@@ -140,11 +141,12 @@ const LookupList: FC<LookupListProps> = ({
         pagination={{ showSizeChanger: true }}
         onItem={(record) => ({
           onClick: () => onSelect(record),
-          style: { cursor: 'pointer' },
+          style: {
+            cursor: 'pointer',
+            backgroundColor:
+              record.id === selectedRowKey ? token.colorFillTertiary : undefined,
+          },
         })}
-        // rowClassName={(record: { id: Key | undefined; }) =>
-        //   record.id === selectedRowKey ? 'ant-table-row-selected' : ''
-        // }
         request={async (params) => {
           const { success, data } = await searchLookups(params);
           const items = data?.items ?? [];

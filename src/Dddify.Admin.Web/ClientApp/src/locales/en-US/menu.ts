@@ -14,7 +14,6 @@ export default {
   'menu.exception.403': '403',
   'menu.exception.404': '404',
   'menu.exception.500': '500',
-
   'menu.system': 'System Management',
   'menu.system.user': 'User Management',
   'menu.system.role': 'Role Management',
@@ -22,7 +21,6 @@ export default {
   'menu.system.department': 'Department Management',
   'menu.system.lookup': 'Lookup Management',
   'menu.system.announcement': 'Announcement Management',
-
   'menu.form': 'Form',
   'menu.form.basic-form': 'Basic Form',
   'menu.form.step-form': 'Step Form',
@@ -48,7 +46,7 @@ export default {
   'menu.exception.not-permission': '403',
   'menu.exception.not-find': '404',
   'menu.exception.server-error': '500',
-  'menu.exception.trigger': 'Trigger Error',
+  'menu.exception.trigger': 'Trigger',
   'menu.account': 'Account',
   'menu.account.center': 'Account Center',
   'menu.account.settings': 'Account Settings',

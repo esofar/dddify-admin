@@ -8,10 +8,10 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noImplicitReturns": true,
-    "declaration": true,
+    "declaration": false,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "types": ["jest", "node"],
+    "types": ["vitest/globals", "node"],
     "paths": {
       "@/*": ["./src/*"],
       "@@/*": ["./src/.umi/*"],
@@ -19,5 +19,12 @@
       "@root/*": ["./*"]
     }
   },
-  "include": ["./**/*.d.ts", "./**/*.ts", "./**/*.tsx"]
+  "include": [
+    "./**/*.d.ts",
+    "./**/*.ts",
+    "./**/*.tsx",
+    "./src/.umi/**/*.ts",
+    "./src/.umi/**/*.tsx"
+  ],
+  "exclude": ["cloudflare-worker", "tests", "**/*.test.ts", "**/*.test.tsx"]
 }

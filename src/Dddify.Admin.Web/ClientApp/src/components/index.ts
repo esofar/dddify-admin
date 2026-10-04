@@ -6,7 +6,7 @@
  * 布局组件
  */
 import Footer from './Footer';
-import { DocLink, LangDropdown } from './RightContent';
+import { DocLink, LangDropdown, VersionDropdown } from './RightContent';
 import { AvatarDropdown } from './RightContent/AvatarDropdown';
 import InboxItemsDropdown from './RightContent/InboxItemsDropdown';
 import SwitchRoleDropdown from './RightContent/SwitchRoleDropdown';
@@ -23,9 +23,10 @@ export { default as TagSelect } from './TagSelect';
 
 export {
   AvatarDropdown,
-  SwitchRoleDropdown,
-  InboxItemsDropdown,
   DocLink,
   Footer,
+  InboxItemsDropdown,
   LangDropdown,
+  SwitchRoleDropdown,
+  VersionDropdown,
 };

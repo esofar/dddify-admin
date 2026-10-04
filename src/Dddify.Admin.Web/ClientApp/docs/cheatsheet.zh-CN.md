@@ -1,6 +1,6 @@
 # Ant Design Pro Cheatsheet
 
-[![GitHub](https://img.shields.io/badge/GitHub-ant--design%2Fant--design--pro-181717?logo=github)](https://github.com/ant-design/ant-design-pro) [![Stars](https://img.shields.io/github/stars/ant-design/ant-design-pro?style=social)](https://github.com/ant-design/ant-design-pro) [![Version](https://img.shields.io/github/package-json/v/ant-design/ant-design-pro)](https://github.com/ant-design/ant-design-pro/releases) [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+[![GitHub](https://img.shields.io/badge/GitHub-ant--design%2Fant--design--pro-181717?logo=github)](https://github.com/ant-design/ant-design-pro) [![Stars](https://img.shields.io/github/stars/ant-design/ant-design-pro?style=social)](https://github.com/ant-design/ant-design-pro) [![Version](https://img.shields.io/github/package-json/v/ant-design/ant-design-pro)](https://github.com/ant-design/ant-design-pro/releases) [![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-339933?logo=node.js&logoColor=white)](https://nodejs.org/) [![React Review](https://react.review/api/badge/ant-design/ant-design-pro)](https://react.review/repo/ant-design/ant-design-pro)
 
 ![Ant Design Pro](https://mdn.alipayobjects.com/huamei_fkc4p0/afts/img/A*EX3ISYC2ghEAAAAAddAAAAgAeobDAQ/original)
 
@@ -492,6 +492,13 @@ export default {
 **Q: 如何添加全局状态？**
 在 `src/models/` 下创建文件，导出自定义 Hook，组件中通过 `useModel('文件名')` 使用。
 
+**Q: 如何升级项目？**
+先将 pro-upgrade skill 安装到项目中：
+```bash
+npx skills add ant-design/ant-design-pro
+```
+然后在项目根目录用 Claude Code 运行 `/pro-upgrade`，AI 会自动对比最新模板并辅助完成升级（依赖、配置、代码模式等），遇到冲突时会保守处理并询问确认。如使用其他 AI 助手，可将 `.claude/skills/pro-upgrade/SKILL.md` 中的内容提供给它。
+
 **Q: 如何部署？**
 `npm run build` 生成 `dist/` 目录，部署到任意静态服务器。配置 `publicPath` 处理非根目录部署。`npm run deploy` 会自动构建并发布到 GitHub Pages（推送到 gh-pages 分支）。
 
@@ -555,6 +562,54 @@ git add -A && git commit -m "chore: save before simple"  # 必须先提交
 npm run simple                                              # 不可逆操作
 npm install                                                 # 更新依赖
 ```
+
+## AI Skills（Claude Code）
+
+本项目内置两个 [Claude Code Skills](https://docs.anthropic.com/en/docs/claude-code/skills)（位于 `.claude/skills/`）：
+
+### `/pro-upgrade` — 项目升级助手
+
+自动升级到最新 Ant Design Pro 版本。对比最新模板差异，合并框架变更并保留业务代码。
+
+```bash
+# 在 Claude Code 中直接运行：
+/pro-upgrade
+```
+
+执行流程：
+1. 克隆最新 Pro 模板
+2. 将文件分类为框架文件和业务文件
+3. 合并依赖更新、配置变更和代码模式迁移
+4. 运行 `npx antd lint` 检查 antd 相关问题
+5. 通过 `npm run lint && npm run build` 验证
+
+### `/antd` — Ant Design CLI 助手
+
+查询 antd 组件 API、调试问题、检查废弃用法、辅助版本迁移 — 基于 `@ant-design/cli`，离线元数据，无需网络。
+
+```bash
+# 在 Claude Code 中直接运行：
+/antd
+```
+
+常用命令：
+- `npx antd info <Component>` — props、类型、版本信息
+- `npx antd demo <Component> <demo>` — 可运行的代码示例
+- `npx antd lint ./src` — 检查废弃或有问题的用法
+- `npx antd migrate <from> <to>` — 版本迁移清单
+- `npx antd doc <Component>` — 完整组件文档
+
+### 安装与更新
+
+> 💡 如果你的项目是从本仓库克隆的，这些 skill 已经内置，无需额外安装。
+
+获取最新 skill 定义（或将其添加到已有项目）：
+
+```bash
+npx skills add ant-design/ant-design-pro
+```
+
+如使用其他 AI 助手（Cursor 等），可将 `.claude/skills/pro-upgrade/SKILL.md` 或 `.claude/skills/antd/SKILL.md` 的内容提供给它。
 
 ## 注意事项
 

@@ -33,10 +33,6 @@ const AssignRolesForm: FC<AssignRolesFormProps> = ({
   const [targetKeys, setTargetKeys] = useState<Key[]>([]);
   const [selectedKeys, setSelectedKeys] = useState<Key[]>([]);
   const mergedOpen = open ?? innerOpen;
-  const assignableRoleCount = roles.filter(
-    (role) => !targetKeys.includes(role.id),
-  ).length;
-
   const saveMutation = useMutation({
     mutationFn: (roleIds: string[]) =>
       assignUserRoles({ id: user.id }, roleIds),

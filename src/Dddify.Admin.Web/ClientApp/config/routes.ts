@@ -4,7 +4,7 @@ export default [
     layout: false,
     routes: [
       {
-        name: '登录',
+        name: 'login',
         path: '/auth/login',
         component: './auth/login',
       },
@@ -16,20 +16,15 @@ export default [
   },
   {
     path: '/welcome',
-    name: '欢迎',
+    name: 'welcome',
     icon: 'smile',
     component: './Welcome',
-  },
-  {
-    component: './exception/404',
-    layout: false,
-    path: './*',
   },
   {
     path: '/system',
     name: 'system',
     icon: 'SettingOutlined',
-    access: "system",
+    access: 'system',
     routes: [
       {
         path: '/system/user',
@@ -68,5 +63,10 @@ export default [
         access: 'system:announcement:index',
       },
     ],
-  }
+  },
+  {
+    path: '/*',
+    layout: false,
+    component: './exception/404',
+  },
 ];

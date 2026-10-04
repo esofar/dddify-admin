@@ -1,12 +1,9 @@
 import type { ActionType } from '@ant-design/pro-components';
 import { PageContainer } from '@ant-design/pro-components';
-import { FormattedMessage } from '@umijs/max';
-import { Empty, Space, Typography, theme } from 'antd';
+import { Empty, theme } from 'antd';
 import React, { useCallback, useRef, useState } from 'react';
 import LookupItemList from './components/LookupItemList';
 import LookupList from './components/LookupList';
-
-const { Text } = Typography;
 
 const LookupPage: React.FC = () => {
   const { token } = theme.useToken();
