@@ -222,6 +222,10 @@ export default defineConfig({
     exclude: ['mock/requestRecord.mock.js'],
   },
   utoopack: {
+    // Use the built-in polyfill; Windows absolute providers fail in virtual modules.
+    ...(process.platform === 'win32'
+      ? { provider: { process: 'process' } }
+      : {}),
     module: {
       rules: {
         '*.md': {
