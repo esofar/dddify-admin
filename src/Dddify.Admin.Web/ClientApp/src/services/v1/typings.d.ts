@@ -1,7 +1,7 @@
 declare namespace API {
-  type AccountLoginRequest = {
-    /** 账号，支持邮箱或手机号。 */
-    account: string;
+  type PasswordLoginRequest = {
+    /** 邮箱账号。 */
+    email: string;
     /** 密码。 */
     password: string;
     /** 设备ID。 */
@@ -683,15 +683,15 @@ declare namespace API {
     Status?: string;
   };
 
-  type SendLoginSmsCodeRequest = {
-    /** 手机号。 */
-    phoneNumber: string;
+  type SendEmailVerificationCodeRequest = {
+    /** 邮箱账号。 */
+    email: string;
   };
 
-  type SmsLoginRequest = {
-    /** 手机号。 */
-    phoneNumber: string;
-    /** 短信验证码。 */
+  type VerificationCodeLoginRequest = {
+    /** 邮箱账号。 */
+    email: string;
+    /** 六位邮箱验证码。 */
     code: string;
     /** 设备ID。 */
     deviceId: string;

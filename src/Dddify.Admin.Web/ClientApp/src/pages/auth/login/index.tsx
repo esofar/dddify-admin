@@ -1,9 +1,8 @@
 import {
   AlipayCircleOutlined,
   LockOutlined,
-  MobileOutlined,
+  MailOutlined,
   TaobaoCircleOutlined,
-  UserOutlined,
   WeiboCircleOutlined,
 } from '@ant-design/icons';
 import {
@@ -12,19 +11,19 @@ import {
   ProFormCheckbox,
   ProFormText,
 } from '@ant-design/pro-components';
-import {
-  FormattedMessage,
-  Helmet,
-  useIntl,
-} from '@umijs/max';
+import { FormattedMessage, Helmet, useIntl } from '@umijs/max';
 import { App, Tabs } from 'antd';
 import { createStyles } from 'antd-style';
 import React, { useState } from 'react';
 import { Footer, LangDropdown } from '@/components';
 import { getFingerprint, useFingerprint } from '@/hooks/useFingerprint';
-import { accountLogin, sendLoginSmsCode, smsLogin } from '@/services/v1/auth';
-import Settings from '../../../../config/defaultSettings';
+import {
+  passwordLogin,
+  verificationCodeLogin,
+  sendEmailVerificationCode,
+} from '@/services/v1/auth';
 import { saveAccessToken } from '@/utils/request';
+import Settings from '../../../../config/defaultSettings';
 
 const useStyles = createStyles(({ token }) => {
   return {
@@ -94,7 +93,7 @@ const Lang = () => {
 };
 
 const Login: React.FC = () => {
-  const [type, setType] = useState<string>('account');
+  const [type, setType] = useState<string>('password');
   const { styles } = useStyles();
   const { message } = App.useApp();
   const { ready, deviceId, deviceName } = useFingerprint();
@@ -122,9 +121,8 @@ const Login: React.FC = () => {
   };
 
   const handleSubmit = async (values: {
-    account?: string;
+    email?: string;
     password?: string;
-    mobile?: string;
     captcha?: string;
     rememberMe?: boolean;
   }) => {
@@ -136,22 +134,27 @@ const Login: React.FC = () => {
       deviceName: fingerprint.deviceName,
       rememberMe: values.rememberMe ?? false,
     };
-    const { success, data: accessToken, errorMessage } =
-      type === 'mobile'
-        ? await smsLogin({
-            ...credentials,
-            phoneNumber: values.mobile ?? '',
-            code: values.captcha ?? '',
-          })
-        : await accountLogin({
-            ...credentials,
-            account: values.account ?? '',
-            password: values.password ?? '',
-          });
+    const {
+      success,
+      data: accessToken,
+      errorMessage,
+    } = type === 'verificationCode'
+      ? await verificationCodeLogin({
+          ...credentials,
+          email: values.email?.trim() ?? '',
+          code: values.captcha ?? '',
+        })
+      : await passwordLogin({
+          ...credentials,
+          email: values.email?.trim() ?? '',
+          password: values.password ?? '',
+        });
     if (success) {
-      message.success(intl.formatMessage({
-        id: 'pages.login.success',
-      }));
+      message.success(
+        intl.formatMessage({
+          id: 'pages.login.success',
+        }),
+      );
       saveAccessToken(accessToken ?? '');
       const urlParams = new URL(window.location.href).searchParams;
       const redirectUrl = getSafeRedirectUrl(urlParams.get('redirect'));
@@ -191,13 +194,10 @@ const Login: React.FC = () => {
             id: 'pages.layouts.userLayout.title',
           })}
           initialValues={{
-            autoLogin: true,
+            rememberMe: false,
           }}
           actions={[
-            <FormattedMessage
-              key="loginWith"
-              id="pages.login.loginWith"
-            />,
+            <FormattedMessage key="loginWith" id="pages.login.loginWith" />,
             <ActionIcons key="icons" />,
           ]}
           onFinish={async (values) => {
@@ -210,143 +210,124 @@ const Login: React.FC = () => {
             centered
             items={[
               {
-                key: 'account',
+                key: 'password',
                 label: intl.formatMessage({
-                  id: 'pages.login.accountLogin.tab',
+                  id: 'pages.login.passwordLogin.tab',
                 }),
               },
               {
-                key: 'mobile',
+                key: 'verificationCode',
                 label: intl.formatMessage({
-                  id: 'pages.login.phoneLogin.tab',
+                  id: 'pages.login.verificationCodeLogin.tab',
                 }),
               },
             ]}
           />
 
-          {type === 'account' && (
-            <>
-              <ProFormText
-                name="account"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <UserOutlined />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.account.placeholder',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.account.required"
-                      />
-                    ),
-                  },
-                ]}
-              />
-              <ProFormText.Password
-                name="password"
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.password.placeholder',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.password.required"
-                      />
-                    ),
-                  },
-                ]}
-              />
-            </>
+          <ProFormText
+            name="email"
+            fieldProps={{
+              size: 'large',
+              type: 'email',
+              autoComplete: 'username',
+              prefix: <MailOutlined />,
+            }}
+            placeholder={intl.formatMessage({
+              id: 'pages.login.email.placeholder',
+            })}
+            rules={[
+              {
+                required: true,
+                message: <FormattedMessage id="pages.login.email.required" />,
+              },
+              {
+                type: 'email',
+                transform: (value: string) => value?.trim(),
+                message: intl.formatMessage({
+                  id: 'pages.login.email.invalid',
+                }),
+              },
+            ]}
+          />
+
+          {type === 'password' && (
+            <ProFormText.Password
+              name="password"
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+              }}
+              placeholder={intl.formatMessage({
+                id: 'pages.login.password.placeholder',
+              })}
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage id="pages.login.password.required" />
+                  ),
+                },
+              ]}
+            />
           )}
 
-          {type === 'mobile' && (
-            <>
-              <ProFormText
-                fieldProps={{
-                  size: 'large',
-                  prefix: <MobileOutlined />,
-                }}
-                name="mobile"
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.phoneNumber.placeholder',
-                })}
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.phoneNumber.required"
-                      />
-                    ),
-                  },
-                  {
-                    pattern: /^1\d{10}$/,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.phoneNumber.invalid"
-                      />
-                    ),
-                  },
-                ]}
-              />
-              <ProFormCaptcha
-                fieldProps={{
-                  size: 'large',
-                  prefix: <LockOutlined />,
-                }}
-                captchaProps={{
-                  size: 'large',
-                }}
-                placeholder={intl.formatMessage({
-                  id: 'pages.login.captcha.placeholder',
-                })}
-                captchaTextRender={(timing, count) => {
-                  if (timing) {
-                    return `${count} ${intl.formatMessage({
-                      id: 'pages.getCaptchaSecondText',
-                    })}`;
-                  }
-                  return intl.formatMessage({
-                    id: 'pages.login.phoneLogin.getVerificationCode',
-                  });
-                }}
-                name="captcha"
-                rules={[
-                  {
-                    required: true,
-                    message: (
-                      <FormattedMessage
-                        id="pages.login.captcha.required"
-                      />
-                    ),
-                  },
-                ]}
-                onGetCaptcha={async (phone) => {
-                  const { success, errorMessage } = await sendLoginSmsCode({
-                    phoneNumber: phone,
-                  });
-                  if (!success) {
-                    throw new Error(
-                      errorMessage ??
-                        intl.formatMessage({ id: 'pages.login.failure' }),
-                    );
-                  }
-                  message.success(
-                    intl.formatMessage({ id: 'pages.login.captcha.sent' }),
+          {type === 'verificationCode' && (
+            <ProFormCaptcha
+              phoneName="email"
+              countDown={60}
+              fieldProps={{
+                size: 'large',
+                prefix: <LockOutlined />,
+                inputMode: 'numeric',
+                autoComplete: 'one-time-code',
+                maxLength: 6,
+              }}
+              captchaProps={{
+                size: 'large',
+              }}
+              placeholder={intl.formatMessage({
+                id: 'pages.login.captcha.placeholder',
+              })}
+              captchaTextRender={(timing, count) => {
+                if (timing) {
+                  return `${count} ${intl.formatMessage({
+                    id: 'pages.getCaptchaSecondText',
+                  })}`;
+                }
+                return intl.formatMessage({
+                  id: 'pages.login.verificationCodeLogin.getVerificationCode',
+                });
+              }}
+              name="captcha"
+              rules={[
+                {
+                  required: true,
+                  message: (
+                    <FormattedMessage id="pages.login.captcha.required" />
+                  ),
+                },
+                {
+                  pattern: /^[0-9]{6}$/,
+                  message: intl.formatMessage({
+                    id: 'pages.login.captcha.invalid',
+                  }),
+                },
+              ]}
+              onGetCaptcha={async (email) => {
+                const { success, errorMessage } = await sendEmailVerificationCode({
+                  email: email.trim(),
+                });
+                if (!success) {
+                  throw new Error(
+                    errorMessage ??
+                      intl.formatMessage({ id: 'pages.login.failure' }),
                   );
-                }}
-              />
-            </>
+                }
+                message.success(
+                  intl.formatMessage({ id: 'pages.login.captcha.sent' }),
+                );
+              }}
+            />
           )}
           <div
             style={{
@@ -354,9 +335,7 @@ const Login: React.FC = () => {
             }}
           >
             <ProFormCheckbox noStyle name="rememberMe">
-              <FormattedMessage
-                id="pages.login.rememberMe"
-              />
+              <FormattedMessage id="pages.login.rememberMe" />
             </ProFormCheckbox>
             <a
               href="#"
@@ -364,9 +343,7 @@ const Login: React.FC = () => {
                 float: 'right',
               }}
             >
-              <FormattedMessage
-                id="pages.login.forgotPassword"
-              />
+              <FormattedMessage id="pages.login.forgotPassword" />
             </a>
           </div>
         </LoginForm>

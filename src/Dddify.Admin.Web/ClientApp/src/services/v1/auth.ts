@@ -2,9 +2,9 @@
 /* eslint-disable */
 import { request } from "@umijs/max";
 
-/** 账号密码登录。 POST /api/v1/auth/login/account */
-export async function accountLogin(
-  body: API.AccountLoginRequest,
+/** 邮箱密码登录。 POST /api/v1/auth/login/account */
+export async function passwordLogin(
+  body: API.PasswordLoginRequest,
   options?: { [key: string]: any }
 ) {
   return request<API.ApiResultOfstring>("/api/v1/auth/login/account", {
@@ -17,12 +17,12 @@ export async function accountLogin(
   });
 }
 
-/** 手机验证码登录。 POST /api/v1/auth/login/sms */
-export async function smsLogin(
-  body: API.SmsLoginRequest,
+/** 邮箱验证码登录。 POST /api/v1/auth/login/email-code */
+export async function verificationCodeLogin(
+  body: API.VerificationCodeLoginRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.ApiResultOfstring>("/api/v1/auth/login/sms", {
+  return request<API.ApiResultOfstring>("/api/v1/auth/login/email-code", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,12 +32,12 @@ export async function smsLogin(
   });
 }
 
-/** 发送登录短信验证码。 POST /api/v1/auth/login/sms-code */
-export async function sendLoginSmsCode(
-  body: API.SendLoginSmsCodeRequest,
+/** 发送登录邮箱验证码。 POST /api/v1/auth/login/email-code/send */
+export async function sendEmailVerificationCode(
+  body: API.SendEmailVerificationCodeRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.ApiResult>("/api/v1/auth/login/sms-code", {
+  return request<API.ApiResult>("/api/v1/auth/login/email-code/send", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
