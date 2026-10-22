@@ -16,11 +16,14 @@
 		<PackageReference Include="EFCore.NamingConventions" Version="10.0.1" />
 		<PackageReference Include="HtmlAgilityPack" Version="1.13.0" />
 		<PackageReference Include="HtmlSanitizer" Version="9.2.1039" />
+		<PackageReference Include="MailKit" Version="4.18.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.12" />
 		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.12" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
 		<PackageReference Include="Polly" Version="8.8.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.23.0" />
+		<!-- Override MimeKit's transitive dependency with the security-patched version. -->
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
 		<PackageReference Include="AlibabaCloud.SDK.Dysmsapi20170525" Version="4.4.0" />
 		<PackageReference Include="TencentCloudSDK.Sms" Version="3.0.1499" />
 	</ItemGroup>
