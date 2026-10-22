@@ -5,8 +5,7 @@
   "inbox_item_not_found": "收件箱消息不存在或已被删除。",
   "inbox_item_already_deleted": "收件箱消息已被删除。",
 
-  "user_invalid_credentials": "账号或密码错误",
-  "user_invalid_sms_code": "短信验证码错误",
+  "user_invalid_credentials": "邮箱或密码错误",
   "user_not_found": "用户不存在",
   "user_email_duplicate": "邮箱已被使用",
   "user_phone_number_duplicate": "手机号已被使用",
@@ -46,8 +45,7 @@
   "lookup_item_already_disabled": "字典项已处于禁用状态",
   "lookup_item_cannot_deleted": "预设字典项不允许删除",
 
-  "sms_template_not_found": "短信模板不存在",
-  "sms_provider_unavailable": "短信服务商不可用",
-  "sms_send_failed": "短信发送失败，请稍后重试",
-  "sms_rate_limit_exceeded": "短信发送过于频繁，请稍后再试"
+  "user_invalid_email_code": "邮箱验证码错误或已过期",
+  "email_send_failed": "邮件发送失败，请稍后重试",
+  "email_code_rate_limit_exceeded": "验证码发送过于频繁，请稍后再试"
 }

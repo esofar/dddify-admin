@@ -2,9 +2,9 @@ namespace Dddify.Admin.Application.Exceptions.Users;
 
 public class UserInvalidCredentialsException : AppException
 {
-    public UserInvalidCredentialsException(string account)
+    public UserInvalidCredentialsException(string email)
     {
         WithErrorCode("user_invalid_credentials");
-        WithMetadata("Account", account);
+        WithMetadata("Email", email);
     }
 }

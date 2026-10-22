@@ -1,6 +1,5 @@
-﻿namespace Dddify.Admin.Infrastructure.Services;
+﻿namespace Dddify.Admin.Infrastructure.Email;
 
-[SingletonDependency(RegistrationMode.AsImplementedInterfaces)]
 public class FakeEmailSender(ILogger<FakeEmailSender> logger) : IEmailSender
 {
     public async Task SendAsync(

@@ -22,20 +22,20 @@ public class AuthController(
     private readonly JwtOptions jwt = jwtOptions.Value;
 
     /// <summary>
-    /// 账号密码登录。
+    /// 邮箱密码登录。
     /// </summary>
-    /// <param name="request">账号密码登录请求。</param>
+    /// <param name="request">邮箱密码登录请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPost("login/account", Name = "AccountLogin")]
+    [HttpPost("login/account", Name = "PasswordLogin")]
     [ProducesResponseType<ApiResult<string>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResultWithErrors>(StatusCodes.Status400BadRequest)]
-    public async Task<string> LoginAsync([FromBody] AccountLoginRequest request, CancellationToken cancellationToken)
+    public async Task<string> PasswordLoginAsync([FromBody] PasswordLoginRequest request, CancellationToken cancellationToken)
     {
         var result = await sender.Send(
-            new AccountLoginCommand(
-                request.Account,
+            new PasswordLoginCommand(
+                request.Email,
                 request.Password,
                 request.DeviceId,
                 request.DeviceName,
@@ -50,20 +50,20 @@ public class AuthController(
     }
 
     /// <summary>
-    /// 手机验证码登录。
+    /// 邮箱验证码登录。
     /// </summary>
-    /// <param name="request">手机验证码登录请求。</param>
+    /// <param name="request">邮箱验证码登录请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPost("login/sms", Name = "SmsLogin")]
+    [HttpPost("login/email-code", Name = "VerificationCodeLogin")]
     [ProducesResponseType<ApiResult<string>>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResultWithErrors>(StatusCodes.Status400BadRequest)]
-    public async Task<string> SmsLoginAsync([FromBody] SmsLoginRequest request, CancellationToken cancellationToken)
+    public async Task<string> VerificationCodeLoginAsync([FromBody] VerificationCodeLoginRequest request, CancellationToken cancellationToken)
     {
         var result = await sender.Send(
-            new SmsLoginCommand(
-                request.PhoneNumber,
+            new VerificationCodeLoginCommand(
+                request.Email,
                 request.Code,
                 request.DeviceId,
                 request.DeviceName,
@@ -137,21 +137,21 @@ public class AuthController(
     }
 
     /// <summary>
-    /// 发送登录短信验证码。
+    /// 发送登录邮箱验证码。
     /// </summary>
-    /// <param name="request">发送登录短信验证码请求。</param>
+    /// <param name="request">发送登录邮箱验证码请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
     /// <returns></returns>
     [AllowAnonymous]
-    [HttpPost("login/sms-code", Name = "SendLoginSmsCode")]
+    [HttpPost("login/email-code/send", Name = "SendEmailVerificationCode")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResult>(StatusCodes.Status400BadRequest)]
     [ProducesResponseType<ApiResult>(StatusCodes.Status429TooManyRequests)]
-    public async Task SendLoginSmsCodeAsync([FromBody] SendLoginSmsCodeRequest request, CancellationToken cancellationToken)
+    public async Task SendEmailVerificationCodeAsync([FromBody] SendEmailVerificationCodeRequest request, CancellationToken cancellationToken)
     {
         await sender.Send(
-            new SendLoginSmsCodeCommand(
-                request.PhoneNumber,
+            new SendEmailVerificationCodeCommand(
+                request.Email,
                 clientAccessor.IpAddress),
             cancellationToken);
     }

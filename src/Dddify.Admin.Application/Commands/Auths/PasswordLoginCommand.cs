@@ -4,8 +4,8 @@ using Dddify.Admin.Domain.Aggregates.Users;
 
 namespace Dddify.Admin.Application.Commands.Auths;
 
-public record AccountLoginCommand(
-    string Account,
+public record PasswordLoginCommand(
+    string Email,
     string Password,
     string DeviceId,
     string DeviceName,
@@ -13,13 +13,14 @@ public record AccountLoginCommand(
     string? UserAgent,
     bool RememberMe) : ICommand<TokenDto>;
 
-public class AccountLoginCommandValidator : AbstractValidator<AccountLoginCommand>
+public class PasswordLoginCommandValidator : AbstractValidator<PasswordLoginCommand>
 {
-    public AccountLoginCommandValidator()
+    public PasswordLoginCommandValidator()
     {
-        RuleFor(v => v.Account)
+        RuleFor(v => v.Email)
             .NotEmpty()
-            .MaximumLength(User.MaxEmailLength);
+            .MaximumLength(User.MaxEmailLength)
+            .EmailAddress();
 
         RuleFor(x => x.Password)
             .NotEmpty()
@@ -33,21 +34,19 @@ public class AccountLoginCommandValidator : AbstractValidator<AccountLoginComman
     }
 }
 
-public class AccountLoginCommandHandler(
+public class PasswordLoginCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     ITokenService tokenService,
-    IClock clock) : ICommandHandler<AccountLoginCommand, TokenDto>
+    IClock clock) : ICommandHandler<PasswordLoginCommand, TokenDto>
 {
-    public async Task<TokenDto> Handle(AccountLoginCommand command, CancellationToken cancellationToken)
+    public async Task<TokenDto> Handle(PasswordLoginCommand command, CancellationToken cancellationToken)
     {
-        var user = command.Account.Contains('@')
-            ? await userRepository.GetByEmailAsync(command.Account)
-            : await userRepository.GetByPhoneNumberAsync(command.Account);
+        var user = await userRepository.GetByEmailAsync(command.Email.Trim().ToLowerInvariant());
 
         if (user is null || !passwordHasher.Verify(command.Password, user.PasswordHash))
         {
-            throw new UserInvalidCredentialsException(command.Account);
+            throw new UserInvalidCredentialsException(command.Email);
         }
 
         user.EnsureActive();

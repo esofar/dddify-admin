@@ -1,6 +1,5 @@
 global using Dddify.Admin.Application.Services;
 global using Dddify.Admin.Application.Services.Locking;
-global using Dddify.Admin.Application.Services.Sms;
 global using Dddify.Admin.Domain.Repositories;
 global using Dddify.Admin.Infrastructure.Data;
 global using Dddify.Dependency;

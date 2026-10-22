@@ -5,7 +5,7 @@ global using Dddify.Admin.Infrastructure.Caching;
 global using Dddify.Admin.Infrastructure.Data;
 global using Dddify.Admin.Infrastructure.Locking;
 global using Dddify.Admin.Infrastructure.Session;
-global using Dddify.Admin.Infrastructure.Sms;
+global using Dddify.Admin.Infrastructure.Email;
 global using Dddify.Admin.Web.Authentication;
 global using Dddify.Admin.Web.Authorization;
 global using Dddify.Primitives;

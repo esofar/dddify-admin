@@ -272,6 +272,39 @@ npm run openapi
 
 Redis 当前用于缓存、分布式锁、会话辅助等场景。
 
+### 邮箱登录
+
+系统使用邮箱作为账号，支持密码登录和邮箱验证码登录：
+
+- `POST /api/v1/auth/login/account`：提交 `email` 和密码。
+- `POST /api/v1/auth/login/email-code/send`：提交 `email`，发送六位登录验证码。
+- `POST /api/v1/auth/login/email-code`：提交 `email`、`code` 和设备信息完成登录。
+
+验证码默认 5 分钟有效、60 秒发送冷却，每个邮箱每小时最多发送 5 次；连续输错 5 次失效，成功验证后立即消费。Redis 仅存验证码的 HMAC 摘要。未注册或禁用的邮箱不会发送邮件，接口统一返回发送请求已处理。
+
+`EmailVerificationCode` 配置验证码有效期、限流及 `HashSecret`。生产环境通过 `EmailVerificationCode__HashSecret` 设置至少 32 个字符的独立随机密钥。
+
+开发环境默认启用 `Email:UseDevelopmentSender`，邮件及验证码输出到后端日志，便于本地联调。实际发送邮件时将其设为 `false`，配置以下 SMTP 参数：
+
+```json
+{
+  "Email": {
+    "UseDevelopmentSender": false,
+    "Host": "smtp.example.com",
+    "Port": 587,
+    "EnableSsl": true,
+    "UserName": "noreply@example.com",
+    "Password": "",
+    "From": "noreply@example.com",
+    "DisplayName": "Dddify Admin"
+  }
+}
+```
+
+实际邮件通过 MailKit 发送。`EnableSsl: true` 时，端口 465 使用隐式 TLS，其他端口使用强制 STARTTLS（通常为 587）；服务器不支持 STARTTLS 时发送失败，不会降级为明文。`EnableSsl: false` 用于无需 TLS 的本地 SMTP 服务。SMTP 密码通过 `Email__Password` 等环境变量或 Secret 配置。开发日志发送器仅允许在 Development 环境启用。
+
+手机短信登录接口、短信供应商 SDK 及 `Sms` 配置已移除；用户手机号保留为联系方式。
+
 ## 初始数据
 
 项目包含基础种子数据：

@@ -30,7 +30,7 @@ builder.Services.AddDddify(cfg =>
 builder.Services.AddDistributedCache(builder.Configuration);
 builder.Services.AddDistributedLock();
 
-builder.Services.AddSms(builder.Configuration, builder.Environment);
+builder.Services.AddEmailVerificationCode(builder.Configuration, builder.Environment);
 
 builder.Services.AddJwtAuthentication();
 builder.Services.AddSessionCleanup();

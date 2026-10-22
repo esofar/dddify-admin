@@ -13,14 +13,9 @@ public class UserRepository : RepositoryBase<ApplicationDbContext, User, Guid>, 
 
     public async Task<User?> GetByEmailAsync(string email)
     {
+        var normalizedEmail = email.Trim().ToLowerInvariant();
         return await _context.Users
-            .FirstOrDefaultAsync(user => user.Email == email);
-    }
-
-    public async Task<User?> GetByPhoneNumberAsync(string phoneNumber)
-    {
-        return await _context.Users
-            .FirstOrDefaultAsync(user => user.PhoneNumber == phoneNumber);
+            .FirstOrDefaultAsync(user => user.Email.ToLower() == normalizedEmail);
     }
 
     public async Task<IEnumerable<User>> GetUsersByRoleIdAsync(Guid roleId, CancellationToken cancellationToken = default)

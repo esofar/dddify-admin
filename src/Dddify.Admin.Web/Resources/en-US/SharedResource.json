@@ -5,8 +5,7 @@
   "inbox_item_not_found": "Inbox item not found or has been deleted.",
   "inbox_item_already_deleted": "Inbox item has already been deleted.",
 
-  "user_invalid_credentials": "Invalid account or password.",
-  "user_invalid_sms_code": "Invalid SMS verification code.",
+  "user_invalid_credentials": "Invalid email or password.",
   "user_not_found": "User not found.",
   "user_email_duplicate": "Email address is already in use.",
   "user_phone_number_duplicate": "Phone number is already in use.",
@@ -46,8 +45,7 @@
   "lookup_item_already_disabled": "Dictionary item is already disabled.",
   "lookup_item_cannot_deleted": "Preset dictionary items cannot be deleted.",
 
-  "sms_template_not_found": "SMS template not found.",
-  "sms_provider_unavailable": "SMS provider is unavailable.",
-  "sms_send_failed": "Failed to send SMS, please try again later.",
-  "sms_rate_limit_exceeded": "SMS requests are too frequent, please try again later."
+  "user_invalid_email_code": "Invalid or expired email verification code.",
+  "email_send_failed": "Failed to send email. Please try again later.",
+  "email_code_rate_limit_exceeded": "Too many code requests. Please try again later."
 }
