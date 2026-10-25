@@ -1,5 +1,4 @@
 global using Dddify.Admin.Application.Abstractions.Authentication;
-global using Dddify.Admin.Application.Services;
 global using Dddify.Admin.Application.Abstractions.Identifiers;
 global using Dddify.Admin.Application.Abstractions.Locking;
 global using Dddify.Admin.Domain.Repositories;

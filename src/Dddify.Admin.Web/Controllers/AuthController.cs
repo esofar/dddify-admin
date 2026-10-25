@@ -8,14 +8,12 @@ namespace Dddify.Admin.Web.Controllers;
 /// </summary>
 /// <param name="sender">请求发送器。</param>
 /// <param name="clock">系统时钟。</param>
-/// <param name="clientAccessor">客户端访问上下文。</param>
 /// <param name="currentUser">当前登录用户。</param>
 /// <param name="jwtOptions">JWT 配置选项。</param>
 [Route("api/v1/auth")]
 public class AuthController(
     ISender sender,
     IClock clock,
-    IClientAccessor clientAccessor,
     ICurrentUser currentUser,
     IOptions<JwtOptions> jwtOptions) : BaseController
 {
@@ -39,8 +37,8 @@ public class AuthController(
                 request.Password,
                 request.DeviceId,
                 request.DeviceName,
-                clientAccessor.IpAddress,
-                clientAccessor.UserAgent,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                Request.Headers.UserAgent.ToString(),
                 request.RememberMe),
             cancellationToken);
 
@@ -67,8 +65,8 @@ public class AuthController(
                 request.Code,
                 request.DeviceId,
                 request.DeviceName,
-                clientAccessor.IpAddress,
-                clientAccessor.UserAgent,
+                HttpContext.Connection.RemoteIpAddress?.ToString(),
+                Request.Headers.UserAgent.ToString(),
                 request.RememberMe),
             cancellationToken);
 
@@ -152,7 +150,7 @@ public class AuthController(
         await sender.Send(
             new SendEmailVerificationCodeCommand(
                 request.Email,
-                clientAccessor.IpAddress),
+                HttpContext.Connection.RemoteIpAddress?.ToString()),
             cancellationToken);
     }
 }

@@ -1,5 +1,4 @@
 global using Dddify;
-global using Dddify.Admin.Application.Services;
 global using Dddify.Admin.Infrastructure.Authentication;
 global using Dddify.Admin.Infrastructure.BackgroundServices.Sessions;
 global using Dddify.Admin.Infrastructure.Caching;
