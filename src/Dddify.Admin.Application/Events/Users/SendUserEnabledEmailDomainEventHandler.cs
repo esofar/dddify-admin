@@ -1,4 +1,4 @@
-﻿using Dddify.Admin.Application.Services.Email;
+﻿using Dddify.Admin.Application.Abstractions.Email;
 using Dddify.Admin.Domain.Events.Users;
 
 namespace Dddify.Admin.Application.Events.Users;

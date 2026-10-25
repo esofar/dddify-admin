@@ -1,5 +1,5 @@
 using Dddify.Admin.Application.Exceptions.Email;
-using Dddify.Admin.Application.Services.Email;
+using Dddify.Admin.Application.Abstractions.Email;
 using Dddify.Admin.Infrastructure.Email;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;

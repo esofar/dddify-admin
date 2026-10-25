@@ -1,4 +1,4 @@
-﻿using Dddify.Admin.Application.Services.Security;
+﻿using Dddify.Admin.Application.Abstractions.Security;
 
 namespace Dddify.Admin.Infrastructure.Security;
 

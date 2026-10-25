@@ -1,6 +1,6 @@
 using Dddify.Admin.Application.Dtos.Auths;
 using Dddify.Admin.Application.Exceptions.Users;
-using Dddify.Admin.Application.Services.Email;
+using Dddify.Admin.Application.Abstractions.Email;
 using Dddify.Admin.Domain.Aggregates.Sessions;
 using Dddify.Admin.Domain.Aggregates.Users;
 

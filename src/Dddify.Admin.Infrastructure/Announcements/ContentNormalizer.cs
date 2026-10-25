@@ -1,4 +1,4 @@
-using Dddify.Admin.Application.Services.Announcements;
+using Dddify.Admin.Application.Abstractions.Announcements;
 using Dddify.Admin.Domain.Aggregates.Announcements;
 using Ganss.Xss;
 using HtmlAgilityPack;

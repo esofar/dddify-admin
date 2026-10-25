@@ -1,4 +1,4 @@
-namespace Dddify.Admin.Application.Services.Email;
+namespace Dddify.Admin.Application.Abstractions.Email;
 
 public interface IEmailVerificationCodeService
 {

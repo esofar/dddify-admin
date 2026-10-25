@@ -1,4 +1,4 @@
-namespace Dddify.Admin.Application.Services.Security;
+namespace Dddify.Admin.Application.Abstractions.Security;
 
 /// <summary>
 /// 密码生成器。

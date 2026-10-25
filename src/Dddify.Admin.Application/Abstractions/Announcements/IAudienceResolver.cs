@@ -1,7 +1,7 @@
 using Dddify.Admin.Application.Dtos.Announcements;
 using Dddify.Admin.Domain.Aggregates.Announcements;
 
-namespace Dddify.Admin.Application.Services.Announcements;
+namespace Dddify.Admin.Application.Abstractions.Announcements;
 
 /// <summary>
 /// 公告受众解析器。

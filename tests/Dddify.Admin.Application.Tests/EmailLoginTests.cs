@@ -1,7 +1,8 @@
 using Dddify.Admin.Application.Commands.Auths;
 using Dddify.Admin.Application.Exceptions.Users;
-using Dddify.Admin.Application.Services;
-using Dddify.Admin.Application.Services.Email;
+using Dddify.Admin.Application.Abstractions.Authentication;
+using Dddify.Admin.Application.Abstractions.Email;
+using Dddify.Admin.Application.Configuration.Email;
 using Dddify.Admin.Domain.Aggregates.Users;
 using Dddify.Admin.Domain.Events.Users;
 using Dddify.Admin.Domain.Exceptions.Users;

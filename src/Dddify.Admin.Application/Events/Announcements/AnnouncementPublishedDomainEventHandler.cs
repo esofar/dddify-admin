@@ -1,5 +1,5 @@
 using Dddify.Admin.Application.Commands.InboxItems;
-using Dddify.Admin.Application.Services.Announcements;
+using Dddify.Admin.Application.Abstractions.Announcements;
 using Dddify.Admin.Domain.Aggregates.InboxItems;
 using Dddify.Admin.Domain.Events.Announcements;
 

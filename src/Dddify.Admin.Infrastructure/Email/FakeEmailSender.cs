@@ -1,4 +1,4 @@
-﻿using Dddify.Admin.Application.Services.Email;
+﻿using Dddify.Admin.Application.Abstractions.Email;
 
 namespace Dddify.Admin.Infrastructure.Email;
 

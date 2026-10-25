@@ -1,6 +1,7 @@
-﻿global using Dddify.Admin.Application.Services;
-global using Dddify.Admin.Application.Services.Caching;
-global using Dddify.Admin.Application.Services.Security;
+﻿global using Dddify.Admin.Application.Abstractions.Authentication;
+global using Dddify.Admin.Application.Abstractions.Identifiers;
+global using Dddify.Admin.Application.Abstractions.Security;
+global using Dddify.Admin.Application.Caching;
 global using Dddify.Admin.Domain.Repositories;
 global using Dddify.EntityFrameworkCore;
 global using Dddify.Exceptions;

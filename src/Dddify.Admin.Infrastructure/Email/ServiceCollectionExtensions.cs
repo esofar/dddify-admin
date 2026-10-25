@@ -1,5 +1,5 @@
-using Dddify.Admin.Application.Services.Email;
-using Dddify.Admin.Infrastructure.Services;
+using Dddify.Admin.Application.Abstractions.Email;
+using Dddify.Admin.Application.Configuration.Email;
 using MimeKit;
 
 namespace Dddify.Admin.Infrastructure.Email;

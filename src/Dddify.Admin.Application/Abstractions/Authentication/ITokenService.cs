@@ -1,4 +1,4 @@
-namespace Dddify.Admin.Application.Services;
+namespace Dddify.Admin.Application.Abstractions.Authentication;
 
 /// <summary>
 /// 令牌服务，用于生成访问令牌、刷新令牌和刷新令牌哈希。

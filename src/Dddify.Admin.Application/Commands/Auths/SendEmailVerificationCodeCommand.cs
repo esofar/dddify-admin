@@ -1,4 +1,5 @@
-using Dddify.Admin.Application.Services.Email;
+using Dddify.Admin.Application.Abstractions.Email;
+using Dddify.Admin.Application.Configuration.Email;
 using Dddify.Admin.Domain.Aggregates.Users;
 using Microsoft.Extensions.Options;
 

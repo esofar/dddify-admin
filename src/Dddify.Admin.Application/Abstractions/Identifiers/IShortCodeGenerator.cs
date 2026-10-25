@@ -1,4 +1,4 @@
-﻿namespace Dddify.Admin.Application.Services;
+﻿namespace Dddify.Admin.Application.Abstractions.Identifiers;
 
 public interface IShortCodeGenerator
 {

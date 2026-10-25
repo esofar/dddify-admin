@@ -1,6 +1,6 @@
 using Dddify.Admin.Application.Dtos.Announcements;
 using Dddify.Admin.Application.Exceptions.Announcements;
-using Dddify.Admin.Application.Services.Announcements;
+using Dddify.Admin.Application.Abstractions.Announcements;
 
 namespace Dddify.Admin.Application.Queries.Announcements;
 

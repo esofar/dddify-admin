@@ -1,5 +1,6 @@
 using Dddify.Admin.Application.Exceptions.Email;
-using Dddify.Admin.Application.Services.Email;
+using Dddify.Admin.Application.Abstractions.Email;
+using Dddify.Admin.Application.Configuration.Email;
 using Dddify.Admin.Infrastructure.Caching;
 using StackExchange.Redis;
 using System.Security.Cryptography;

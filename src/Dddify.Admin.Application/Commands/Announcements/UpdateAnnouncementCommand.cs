@@ -1,5 +1,5 @@
 using Dddify.Admin.Application.Exceptions.Announcements;
-using Dddify.Admin.Application.Services.Announcements;
+using Dddify.Admin.Application.Abstractions.Announcements;
 using Dddify.Admin.Domain.Aggregates.Announcements;
 
 namespace Dddify.Admin.Application.Commands.Announcements;
