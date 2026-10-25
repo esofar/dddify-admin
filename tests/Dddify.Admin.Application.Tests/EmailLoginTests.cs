@@ -38,6 +38,7 @@ public class EmailLoginTests
     [Fact]
     public async Task SendCode_Normalizes_Email_And_Sends_To_Registered_Address()
     {
+        using var cancellation = new CancellationTokenSource();
         var user = CreateUser();
         string? storedEmail = null;
         string? recipient = null;
@@ -51,12 +52,15 @@ public class EmailLoginTests
             }),
             Stub<IEmailSender>((_, args) =>
             {
-                recipient = (string)args![0]!;
-                body = (string)args[2]!;
+                var message = Assert.IsType<EmailMessage>(args![0]);
+                recipient = message.To;
+                body = message.Body;
+                Assert.False(message.IsHtml);
+                Assert.Equal(cancellation.Token, Assert.IsType<CancellationToken>(args[1]));
                 return Task.CompletedTask;
             }));
 
-        await handler.Handle(new SendEmailVerificationCodeCommand(" MEMBER@example.com ", "127.0.0.1"), default);
+        await handler.Handle(new SendEmailVerificationCodeCommand(" MEMBER@example.com ", "127.0.0.1"), cancellation.Token);
         Assert.Equal("member@example.com", storedEmail);
         Assert.Equal(user.Email, recipient);
         Assert.Contains("012345", body);

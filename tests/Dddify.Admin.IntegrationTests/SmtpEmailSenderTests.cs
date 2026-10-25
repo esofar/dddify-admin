@@ -1,4 +1,5 @@
 using Dddify.Admin.Application.Exceptions.Email;
+using Dddify.Admin.Application.Services.Email;
 using Dddify.Admin.Infrastructure.Email;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
@@ -22,8 +23,13 @@ public sealed class SmtpEmailSenderTests
         settings.Password = "smtp-password";
         var body = isHtml ? "<p>验证码：012345</p>" : "验证码：012345";
 
-        await Sender(settings).SendAsync("to@example.com", "登录验证码", body, isHtml,
-            "override@example.com", ["cc@example.com"], ["bcc@example.com"]);
+        await Sender(settings).SendAsync(new EmailMessage("to@example.com", "登录验证码", body)
+        {
+            IsHtml = isHtml,
+            From = "override@example.com",
+            Cc = ["cc@example.com"],
+            Bcc = ["bcc@example.com"]
+        });
         await server.Completion;
 
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(server.Message));
@@ -45,7 +51,7 @@ public sealed class SmtpEmailSenderTests
     {
         await using var server = new SmtpTestServer(rejectMessage: true);
         await Assert.ThrowsAsync<EmailSendFailedException>(() =>
-            Sender(Settings(server)).SendAsync("to@example.com", "Subject", "Body"));
+            Sender(Settings(server)).SendAsync(new EmailMessage("to@example.com", "Subject", "Body")));
         await server.Completion;
     }
 
@@ -56,7 +62,7 @@ public sealed class SmtpEmailSenderTests
         var settings = Settings(server);
         settings.EnableSsl = true;
         await Assert.ThrowsAsync<EmailSendFailedException>(() =>
-            Sender(settings).SendAsync("to@example.com", "Subject", "Body"));
+            Sender(settings).SendAsync(new EmailMessage("to@example.com", "Subject", "Body")));
         await server.Completion;
         Assert.Empty(server.Recipients);
         Assert.Empty(server.Message);
@@ -66,9 +72,22 @@ public sealed class SmtpEmailSenderTests
     public async Task Quit_Failure_Does_Not_Fail_An_Accepted_Message()
     {
         await using var server = new SmtpTestServer(rejectQuit: true);
-        await Sender(Settings(server)).SendAsync("to@example.com", "Subject", "Body");
+        await Sender(Settings(server)).SendAsync(new EmailMessage("to@example.com", "Subject", "Body"));
         await server.Completion;
         Assert.NotEmpty(server.Message);
+    }
+
+    [Fact]
+    public async Task Caller_Cancellation_Is_Not_Wrapped_As_A_Delivery_Failure()
+    {
+        using var cancellation = new CancellationTokenSource();
+        cancellation.Cancel();
+        var sender = Sender(new EmailOptions());
+
+        var exception = await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
+            sender.SendAsync(new EmailMessage("to@example.com", "Subject", "Body"), cancellation.Token));
+
+        Assert.Equal(cancellation.Token, exception.CancellationToken);
     }
 
     private static EmailOptions Settings(SmtpTestServer server) => new()

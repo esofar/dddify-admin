@@ -1,3 +1,4 @@
+using Dddify.Admin.Application.Services.Email;
 using Dddify.Admin.Domain.Events.Users;
 
 namespace Dddify.Admin.Application.Events.Users;
@@ -10,6 +11,6 @@ public class SendPasswordResetEmailDomainEventHandler(
         var subject = "账号密码重置通知";
         var body = $"您好，管理员已重置您的账户密码，新密码为：{@event.NewPassword}。请使用新的登录凭据访问系统。";
 
-        await emailSender.SendAsync(@event.Email, subject, body);
+        await emailSender.SendAsync(new EmailMessage(@event.Email, subject, body), cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Dddify.Admin.Domain.Events.Users;
+﻿using Dddify.Admin.Application.Services.Email;
+using Dddify.Admin.Domain.Events.Users;
 
 namespace Dddify.Admin.Application.Events.Users;
 
@@ -8,6 +9,6 @@ public class SendUserEnabledEmailDomainEventHandler(IEmailSender emailSender) : 
     {
         var subject = "账号启用通知";
         var body = $"您好，您的账号已被管理员启用，可以正常登录系统。";
-        await emailSender.SendAsync(@event.Email, subject, body);
+        await emailSender.SendAsync(new EmailMessage(@event.Email, subject, body), cancellationToken);
     }
 }

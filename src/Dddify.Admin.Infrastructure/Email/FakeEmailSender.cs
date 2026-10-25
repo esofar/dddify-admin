@@ -1,18 +1,14 @@
-﻿namespace Dddify.Admin.Infrastructure.Email;
+﻿using Dddify.Admin.Application.Services.Email;
+
+namespace Dddify.Admin.Infrastructure.Email;
 
 public class FakeEmailSender(ILogger<FakeEmailSender> logger) : IEmailSender
 {
-    public async Task SendAsync(
-        string to,
-        string subject,
-        string body,
-        bool isHtml = true,
-        string? from = null,
-        IEnumerable<string>? cc = null,
-        IEnumerable<string>? bcc = null)
+    public Task SendAsync(EmailMessage message, CancellationToken cancellationToken = default)
     {
-        logger.LogInformation("FAKE EMAIL SENT: To={To}, Subject={Subject}, Body={Body}", to, subject, body);
+        cancellationToken.ThrowIfCancellationRequested();
+        logger.LogInformation("FAKE EMAIL SENT: To={To}, Subject={Subject}, Body={Body}", message.To, message.Subject, message.Body);
 
-        await Task.CompletedTask;
+        return Task.CompletedTask;
     }
 }

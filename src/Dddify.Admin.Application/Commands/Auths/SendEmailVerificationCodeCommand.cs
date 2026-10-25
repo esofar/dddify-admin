@@ -36,11 +36,15 @@ public class SendEmailVerificationCodeCommandHandler(
         try
         {
             await emailSender.SendAsync(
-                user.Email,
-                "登录验证码 / Sign-in verification code",
-                $"您的登录验证码为 {code}，{options.Value.ExpiresMinutes} 分钟内有效，请勿泄露。\n" +
-                $"Your sign-in code is {code}. It expires in {options.Value.ExpiresMinutes} minutes.",
-                isHtml: false);
+                new EmailMessage(
+                    user.Email,
+                    "登录验证码 / Sign-in verification code",
+                    $"您的登录验证码为 {code}，{options.Value.ExpiresMinutes} 分钟内有效，请勿泄露。\n" +
+                    $"Your sign-in code is {code}. It expires in {options.Value.ExpiresMinutes} minutes.")
+                {
+                    IsHtml = false
+                },
+                cancellationToken);
         }
         catch
         {
