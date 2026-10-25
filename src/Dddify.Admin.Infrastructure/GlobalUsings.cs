@@ -1,9 +1,9 @@
-global using Dddify.Admin.Application.Services;
 global using Dddify.Admin.Application.Abstractions.Authentication;
+global using Dddify.Admin.Application.Services;
 global using Dddify.Admin.Application.Abstractions.Identifiers;
 global using Dddify.Admin.Application.Abstractions.Locking;
 global using Dddify.Admin.Domain.Repositories;
-global using Dddify.Admin.Infrastructure.Data;
+global using Dddify.Admin.Infrastructure.Persistence;
 global using Dddify.Dependency;
 global using Dddify.EntityFrameworkCore;
 global using Dddify.Timing;
