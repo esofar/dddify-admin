@@ -55,20 +55,30 @@ dddify-admin
 │   │   ├── Exceptions
 │   │   └── Repositories
 │   ├── Dddify.Admin.Application
+│   │   ├── Abstractions
+│   │   ├── Caching
 │   │   ├── Commands
+│   │   ├── Configuration
 │   │   ├── Queries
 │   │   ├── Dtos
 │   │   ├── Events
-│   │   ├── Exceptions
-│   │   └── Services
+│   │   └── Exceptions
 │   ├── Dddify.Admin.Infrastructure
+│   │   ├── Announcements
 │   │   ├── Authentication
+│   │   ├── BackgroundServices
+│   │   │   └── Sessions
 │   │   ├── Caching
-│   │   ├── Data
+│   │   ├── Email
+│   │   ├── Identifiers
 │   │   ├── Locking
-│   │   ├── Repositories
+│   │   ├── Persistence
+│   │   │   ├── EntityConfigurations
+│   │   │   ├── Migrations
+│   │   │   ├── Repositories
+│   │   │   └── ApplicationDbContext.cs
 │   │   ├── Security
-│   │   └── Session
+│   │   └── Timing
 │   └── Dddify.Admin.Web
 │       ├── Authentication
 │       ├── Authorization
@@ -95,6 +105,8 @@ dddify-admin
 | Web | 提供交付入口 | Controller、Request、认证授权、OpenAPI、前端应用 |
 
 依赖方向保持由外向内：Web 依赖 Application 和 Infrastructure，Infrastructure 依赖 Application 和 Domain，Domain 不依赖外部技术实现。
+
+`Application.Abstractions` 按能力组织接口及配套契约模型，Infrastructure 使用对应的能力目录组织实现，例如 `Abstractions.Email` 对应 `Infrastructure.Email`。持久化实现统一放在 `Persistence`，会话清理等托管服务放在 `BackgroundServices`，连接参数与技术配置保留在所属实现模块中。
 
 ## 内置模块
 
@@ -200,7 +212,7 @@ dotnet ef migrations add InitialCreate `
   --project src/Dddify.Admin.Infrastructure/Dddify.Admin.Infrastructure.csproj `
   --startup-project src/Dddify.Admin.Web/Dddify.Admin.Web.csproj `
   --context ApplicationDbContext `
-  --output-dir Data/Migrations
+  --output-dir Persistence/Migrations
 ```
 
 ### 5. 启动后端
