@@ -12,7 +12,10 @@ public class SendEmailVerificationCodeCommandValidator : AbstractValidator<SendE
 {
     public SendEmailVerificationCodeCommandValidator()
     {
-        RuleFor(c => c.Email).NotEmpty().MaximumLength(User.MaxEmailLength).EmailAddress();
+        RuleFor(c => c.Email)
+            .NotEmpty()
+            .MaximumLength(User.MaxEmailLength)
+            .EmailAddress();
     }
 }
 
