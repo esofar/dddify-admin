@@ -23,12 +23,13 @@ public class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenComman
 
 public class RefreshTokenCommandHandler(
     ISessionRepository sessionRepository,
-    ITokenService tokenHelper,
+    IAccessTokenService accessTokenService,
+    IRefreshTokenService refreshTokenService,
     IClock clock) : ICommandHandler<RefreshTokenCommand, TokenDto>
 {
     public async Task<TokenDto> Handle(RefreshTokenCommand command, CancellationToken cancellationToken)
     {
-        var refreshTokenHash = tokenHelper.HashRefreshToken(command.RefreshToken);
+        var refreshTokenHash = refreshTokenService.Hash(command.RefreshToken);
 
         var session = await sessionRepository.GetByRefreshTokenHashAsync(refreshTokenHash, command.DeviceId, cancellationToken)
             ?? throw new SessionInvalidRefreshTokenException();
@@ -46,10 +47,10 @@ public class RefreshTokenCommandHandler(
             throw new SessionInvalidRefreshTokenException();
         }
 
-        var accessToken = tokenHelper.GenerateAccessToken(session.UserId);
-        var refreshToken = tokenHelper.GenerateRefreshToken();
-        var nextRefreshTokenHash = tokenHelper.HashRefreshToken(refreshToken);
-        var expiresAt = tokenHelper.GetRefreshTokenExpiresAt(now);
+        var accessToken = accessTokenService.Generate(session.UserId);
+        var refreshToken = refreshTokenService.Generate();
+        var nextRefreshTokenHash = refreshTokenService.Hash(refreshToken);
+        var expiresAt = refreshTokenService.GetExpiresAt(now);
 
         session.RotateRefreshToken(nextRefreshTokenHash, expiresAt, now);
 

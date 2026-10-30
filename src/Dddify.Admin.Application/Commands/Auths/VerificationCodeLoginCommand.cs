@@ -31,7 +31,8 @@ public class VerificationCodeLoginCommandValidator : AbstractValidator<Verificat
 public class VerificationCodeLoginCommandHandler(
     IUserRepository userRepository,
     IEmailVerificationCodeService codeService,
-    ITokenService tokenService,
+    IAccessTokenService accessTokenService,
+    IRefreshTokenService refreshTokenService,
     IClock clock) : ICommandHandler<VerificationCodeLoginCommand, TokenDto>
 {
     public async Task<TokenDto> Handle(VerificationCodeLoginCommand command, CancellationToken cancellationToken)
@@ -47,16 +48,16 @@ public class VerificationCodeLoginCommandHandler(
         user.EnsureActive();
 
         var now = clock.UtcNow;
-        var accessToken = tokenService.GenerateAccessToken(user.Id);
-        var refreshToken = tokenService.GenerateRefreshToken();
+        var accessToken = accessTokenService.Generate(user.Id);
+        var refreshToken = refreshTokenService.Generate();
 
         user.MarkLoginSucceeded(
             command.DeviceId,
             command.DeviceName,
             command.IpAddress,
             command.UserAgent,
-            tokenService.HashRefreshToken(refreshToken),
-            tokenService.GetRefreshTokenExpiresAt(now),
+            refreshTokenService.Hash(refreshToken),
+            refreshTokenService.GetExpiresAt(now),
             now,
             command.RememberMe);
 

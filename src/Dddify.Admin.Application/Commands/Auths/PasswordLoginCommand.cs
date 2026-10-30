@@ -37,7 +37,8 @@ public class PasswordLoginCommandValidator : AbstractValidator<PasswordLoginComm
 public class PasswordLoginCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    ITokenService tokenService,
+    IAccessTokenService accessTokenService,
+    IRefreshTokenService refreshTokenService,
     IClock clock) : ICommandHandler<PasswordLoginCommand, TokenDto>
 {
     public async Task<TokenDto> Handle(PasswordLoginCommand command, CancellationToken cancellationToken)
@@ -51,10 +52,10 @@ public class PasswordLoginCommandHandler(
 
         user.EnsureActive();
 
-        var accessToken = tokenService.GenerateAccessToken(user.Id);
-        var refreshToken = tokenService.GenerateRefreshToken();
-        var refreshTokenHash = tokenService.HashRefreshToken(refreshToken);
-        var expiresAt = tokenService.GetRefreshTokenExpiresAt(clock.UtcNow);
+        var accessToken = accessTokenService.Generate(user.Id);
+        var refreshToken = refreshTokenService.Generate();
+        var refreshTokenHash = refreshTokenService.Hash(refreshToken);
+        var expiresAt = refreshTokenService.GetExpiresAt(clock.UtcNow);
 
         user.MarkLoginSucceeded(
             command.DeviceId,

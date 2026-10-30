@@ -1,17 +1,15 @@
-using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using System.Security.Cryptography;
 
 namespace Dddify.Admin.Infrastructure.Authentication;
 
 [ScopedDependency(RegistrationMode.AsMatchingInterface)]
-public class TokenService(IClock clock, IOptions<JwtOptions> jwtOptions) : ITokenService
+public class AccessTokenService(IClock clock, IOptions<JwtOptions> jwtOptions) : IAccessTokenService
 {
     private readonly JwtOptions jwt = jwtOptions.Value;
 
-    public string GenerateAccessToken(Guid userId)
+    public string Generate(Guid userId)
     {
         var claims = new List<Claim>
         {
@@ -32,18 +30,4 @@ public class TokenService(IClock clock, IOptions<JwtOptions> jwtOptions) : IToke
         return new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken);
     }
 
-    public string GenerateRefreshToken()
-    {
-        return WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(64));
-    }
-
-    public DateTimeOffset GetRefreshTokenExpiresAt(DateTimeOffset now)
-    {
-        return now.AddDays(jwt.RefreshTokenDays);
-    }
-
-    public string HashRefreshToken(string refreshToken)
-    {
-        return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(refreshToken)));
-    }
 }

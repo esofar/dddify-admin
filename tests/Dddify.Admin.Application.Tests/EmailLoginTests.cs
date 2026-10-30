@@ -112,16 +112,21 @@ public class EmailLoginTests
     {
         var user = CreateUser();
         var now = DateTimeOffset.UtcNow;
-        var tokens = Stub<ITokenService>((method, _) => method switch
+        var accessTokens = Stub<IAccessTokenService>((method, args) =>
         {
-            "GenerateAccessToken" => "access-token",
-            "GenerateRefreshToken" => "refresh-token",
-            "HashRefreshToken" => "refresh-hash",
-            "GetRefreshTokenExpiresAt" => now.AddDays(7),
+            Assert.Equal("Generate", method);
+            Assert.Equal(user.Id, args![0]);
+            return "access-token";
+        });
+        var refreshTokens = Stub<IRefreshTokenService>((method, _) => method switch
+        {
+            "Generate" => "refresh-token",
+            "Hash" => "refresh-hash",
+            "GetExpiresAt" => now.AddDays(7),
             _ => throw new InvalidOperationException(method)
         });
         var handler = new VerificationCodeLoginCommandHandler(
-            Repository(user), Stub<IEmailVerificationCodeService>((_, _) => Task.FromResult(true)), tokens,
+            Repository(user), Stub<IEmailVerificationCodeService>((_, _) => Task.FromResult(true)), accessTokens, refreshTokens,
             Stub<IClock>((_, _) => now));
 
         var result = await handler.Handle(LoginCommand("012345"), default);
@@ -138,7 +143,8 @@ public class EmailLoginTests
         var handler = new VerificationCodeLoginCommandHandler(
             Stub<IUserRepository>((method, _) => throw new InvalidOperationException(method)),
             Stub<IEmailVerificationCodeService>((_, _) => Task.FromResult(false)),
-            Stub<ITokenService>((method, _) => throw new InvalidOperationException(method)),
+            Stub<IAccessTokenService>((method, _) => throw new InvalidOperationException(method)),
+            Stub<IRefreshTokenService>((method, _) => throw new InvalidOperationException(method)),
             Stub<IClock>((method, _) => throw new InvalidOperationException(method)));
 
         await Assert.ThrowsAsync<UserInvalidEmailVerificationCodeException>(() => handler.Handle(LoginCommand("012345"), default));
@@ -151,7 +157,8 @@ public class EmailLoginTests
         user.Disable();
         var handler = new VerificationCodeLoginCommandHandler(
             Repository(user), Stub<IEmailVerificationCodeService>((_, _) => Task.FromResult(true)),
-            Stub<ITokenService>((method, _) => throw new InvalidOperationException(method)),
+            Stub<IAccessTokenService>((method, _) => throw new InvalidOperationException(method)),
+            Stub<IRefreshTokenService>((method, _) => throw new InvalidOperationException(method)),
             Stub<IClock>((method, _) => throw new InvalidOperationException(method)));
 
         await Assert.ThrowsAsync<UserAlreadyDisabledException>(() => handler.Handle(LoginCommand("012345"), default));
