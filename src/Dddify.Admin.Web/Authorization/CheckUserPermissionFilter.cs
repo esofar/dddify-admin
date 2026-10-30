@@ -34,7 +34,9 @@ public class CheckUserPermissionFilter(ICurrentUser currentUser, ISender sender,
 
         var permissionCodes = permissionAttrs.Select(p => p.Code).Distinct().ToList();
 
-        var userRoles = await sender.Send(new GetUserRolesQuery(currentUser.GetIdAsGuid()));
+        var cancellationToken = context.HttpContext.RequestAborted;
+        var userRoles = await sender.Send(
+            new GetUserRolesQuery(currentUser.GetIdAsGuid(), UseCache: false), cancellationToken);
 
         if (!userRoles.Any())
         {
@@ -45,11 +47,12 @@ public class CheckUserPermissionFilter(ICurrentUser currentUser, ISender sender,
 
         var currentUserRole = userRoles.First(c => c.IsCurrent);
 
+        var rolePermissions = await sender.Send(
+            new GetRolePermissionsQuery(currentUserRole.RoleId, UseCache: false), cancellationToken);
+        var permissionCodeHashSet = rolePermissions.Select(p => p.PermissionCode).ToHashSet();
+
         foreach (var permissionCode in permissionCodes)
         {
-            var rolePermissions = await sender.Send(new GetRolePermissionsQuery(currentUserRole.RoleId));
-            var permissionCodeHashSet = rolePermissions.Select(p => p.PermissionCode).ToHashSet();
-
             if (permissionCodeHashSet.Contains(permissionCode))
             {
                 return;
