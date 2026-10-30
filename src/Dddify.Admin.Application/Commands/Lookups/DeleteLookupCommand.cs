@@ -17,6 +17,6 @@ public class DeleteLookupCommandHandler(
 
         lookupRepository.Remove(lookup);
 
-        await distributedCache.RemoveAsync(CacheKeys.Lookup.Items(lookup.Code), cancellationToken);
+        await distributedCache.RemoveAsync(CacheKeys.LookupActiveItems(lookup.Code), cancellationToken);
     }
 }

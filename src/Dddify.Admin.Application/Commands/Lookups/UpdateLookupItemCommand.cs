@@ -39,6 +39,6 @@ public class UpdateLookupItemCommandHandler(
 
         lookup.ChangeItem(command.LookupItemId, command.Label, command.Color);
 
-        await distributedCache.RemoveAsync(CacheKeys.Lookup.Items(lookup.Code), cancellationToken);
+        await distributedCache.RemoveAsync(CacheKeys.LookupActiveItems(lookup.Code), cancellationToken);
     }
 }

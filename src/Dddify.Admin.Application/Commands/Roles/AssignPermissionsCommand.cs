@@ -33,7 +33,7 @@ public class AssignPermissionsCommandValidator : AbstractValidator<AssignPermiss
     }
 }
 
-public class AssignPermissionsCommandHandler(IRoleRepository roleRepository, IDistributedCache distributedCache) : IRequestHandler<AssignPermissionsCommand>
+public class AssignPermissionsCommandHandler(IRoleRepository roleRepository, CacheInvalidationQueue cacheInvalidation) : IRequestHandler<AssignPermissionsCommand>
 {
     public async Task Handle(AssignPermissionsCommand command, CancellationToken cancellationToken)
     {
@@ -44,6 +44,6 @@ public class AssignPermissionsCommandHandler(IRoleRepository roleRepository, IDi
 
         role.AssignPermissions(rolePermissions);
 
-        await distributedCache.RemoveAsync(CacheKeys.Role.Permissions(role.Id), cancellationToken);
+        cacheInvalidation.Enqueue(CacheKeys.RolePermissions(role.Id));
     }
 }

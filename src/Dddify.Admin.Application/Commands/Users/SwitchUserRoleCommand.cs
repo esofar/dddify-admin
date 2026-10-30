@@ -16,7 +16,7 @@ public class SwitchUserRoleCommandValidator : AbstractValidator<SwitchUserRoleCo
     }
 }
 
-public class SwitchUserRoleCommandHandler(IUserRepository userRepository, IDistributedCache distributedCache) : ICommandHandler<SwitchUserRoleCommand>
+public class SwitchUserRoleCommandHandler(IUserRepository userRepository, CacheInvalidationQueue cacheInvalidation) : ICommandHandler<SwitchUserRoleCommand>
 {
     public async Task Handle(SwitchUserRoleCommand command, CancellationToken cancellationToken)
     {
@@ -25,6 +25,6 @@ public class SwitchUserRoleCommandHandler(IUserRepository userRepository, IDistr
 
         user.SwitchCurrentRole(command.RoleId);
 
-        await distributedCache.RemoveAsync(CacheKeys.User.Roles(user.Id), cancellationToken);
+        cacheInvalidation.Enqueue(CacheKeys.UserRoles(user.Id));
     }
 }

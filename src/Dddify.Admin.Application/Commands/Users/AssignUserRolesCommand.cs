@@ -33,7 +33,7 @@ public class AssignUserRolesCommandValidator : AbstractValidator<AssignUserRoles
     }
 }
 
-public class AssignUserRolesCommandHandler(IUserRepository userRepository, IDistributedCache distributedCache) : ICommandHandler<AssignUserRolesCommand>
+public class AssignUserRolesCommandHandler(IUserRepository userRepository, CacheInvalidationQueue cacheInvalidation) : ICommandHandler<AssignUserRolesCommand>
 {
     public async Task Handle(AssignUserRolesCommand command, CancellationToken cancellationToken)
     {
@@ -44,6 +44,6 @@ public class AssignUserRolesCommandHandler(IUserRepository userRepository, IDist
 
         user.AssignRoles(userRoles);
 
-        await distributedCache.RemoveAsync(CacheKeys.User.Roles(user.Id), cancellationToken);
+        cacheInvalidation.Enqueue(CacheKeys.UserRoles(user.Id));
     }
 }

@@ -11,7 +11,7 @@ public class GetLookupActiveItemsQueryHandler(
 {
     public async Task<IEnumerable<LookupActiveItemDto>> Handle(GetLookupActiveItemsQuery query, CancellationToken cancellationToken)
     {
-        var cacheKey = CacheKeys.Lookup.Items(query.Code);
+        var cacheKey = CacheKeys.LookupActiveItems(query.Code);
 
         return await distributedCache.GetOrCreateJsonAsync(cacheKey, async () =>
         {

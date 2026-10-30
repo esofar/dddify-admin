@@ -13,7 +13,7 @@ public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand>
     }
 }
 
-public class DeleteUserCommandHandler(IUserRepository userRepository) : ICommandHandler<DeleteUserCommand>
+public class DeleteUserCommandHandler(IUserRepository userRepository, CacheInvalidationQueue cacheInvalidation) : ICommandHandler<DeleteUserCommand>
 {
     public async Task Handle(DeleteUserCommand command, CancellationToken cancellationToken)
     {
@@ -23,5 +23,6 @@ public class DeleteUserCommandHandler(IUserRepository userRepository) : ICommand
         user.Delete();
 
         userRepository.Remove(user);
+        cacheInvalidation.Enqueue(CacheKeys.UserRoles(user.Id));
     }
 }

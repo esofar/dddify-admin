@@ -29,6 +29,6 @@ public class EnableLookupItemCommandHandler(
 
         lookup.EnableItem(command.LookupItemId);
 
-        await distributedCache.RemoveAsync(CacheKeys.Lookup.Items(lookup.Code), cancellationToken);
+        await distributedCache.RemoveAsync(CacheKeys.LookupActiveItems(lookup.Code), cancellationToken);
     }
 }
