@@ -36,8 +36,8 @@ public class UpdateAnnouncementCommandValidator : AbstractValidator<UpdateAnnoun
             .IsEnumName(typeof(AnnouncementAudienceType), caseSensitive: false);
 
         RuleFor(c => c.AudienceTargetIds)
-           .NotEmpty()
-           .When(c => c.AudienceType != nameof(AnnouncementAudienceType.AllUsers));
+            .NotEmpty()
+            .When(c => c.AudienceType != nameof(AnnouncementAudienceType.AllUsers));
     }
 }
 
