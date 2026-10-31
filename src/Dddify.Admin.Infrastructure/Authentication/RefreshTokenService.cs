@@ -8,18 +8,15 @@ public class RefreshTokenService(IOptions<JwtOptions> jwtOptions) : IRefreshToke
 {
     private readonly JwtOptions jwt = jwtOptions.Value;
 
-    public string Generate()
+    public GeneratedRefreshToken Generate(DateTimeOffset now)
     {
-        return WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(64));
+        var token = WebEncoders.Base64UrlEncode(RandomNumberGenerator.GetBytes(64));
+
+        return new GeneratedRefreshToken(token, Hash(token), now.AddDays(jwt.RefreshTokenDays), jwt.RefreshTokenDays);
     }
 
     public string Hash(string token)
     {
         return Convert.ToBase64String(SHA256.HashData(Encoding.UTF8.GetBytes(token)));
-    }
-
-    public DateTimeOffset GetExpiresAt(DateTimeOffset now)
-    {
-        return now.AddDays(jwt.RefreshTokenDays);
     }
 }

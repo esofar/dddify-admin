@@ -288,9 +288,9 @@ Redis 当前用于缓存、分布式锁、会话辅助等场景。
 
 系统使用邮箱作为账号，支持密码登录和邮箱验证码登录：
 
-- `POST /api/v1/auth/login/account`：提交 `email` 和密码。
-- `POST /api/v1/auth/login/email-code/send`：提交 `email`，发送六位登录验证码。
-- `POST /api/v1/auth/login/email-code`：提交 `email`、`code` 和设备信息完成登录。
+- `POST /api/v1/auth/login/password`：提交 `email` 和密码。
+- `POST /api/v1/auth/login/verification-code/send`：提交 `email`，发送六位登录验证码。
+- `POST /api/v1/auth/login/verification-code`：提交 `email`、`code` 和设备信息完成登录。
 
 验证码默认 5 分钟有效、60 秒发送冷却，每个邮箱每小时最多发送 5 次；连续输错 5 次失效，成功验证后立即消费。Redis 仅存验证码的 HMAC 摘要。未注册或禁用的邮箱不会发送邮件，接口统一返回发送请求已处理。
 

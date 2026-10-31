@@ -1,6 +1,5 @@
 using Dddify.Admin.Application.Exceptions.Email;
 using Dddify.Admin.Application.Abstractions.Email;
-using Dddify.Admin.Application.Configuration.Email;
 using Dddify.Admin.Infrastructure.Caching;
 using StackExchange.Redis;
 using System.Security.Cryptography;
@@ -56,7 +55,7 @@ public sealed class RedisEmailVerificationCodeService(
         return 0
         """;
 
-    public async Task<string> CreateAsync(string email, string? ipAddress, CancellationToken cancellationToken)
+    public async Task<GeneratedEmailVerificationCode> CreateAsync(string email, string? ipAddress, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var settings = options.Value;
@@ -74,7 +73,7 @@ public sealed class RedisEmailVerificationCodeService(
             throw new EmailVerificationCodeRateLimitExceededException(TimeSpan.FromMilliseconds(retryMilliseconds));
         }
 
-        return code;
+        return new GeneratedEmailVerificationCode(code, settings.ExpiresMinutes);
     }
 
     public async Task<bool> VerifyAsync(string email, string code, CancellationToken cancellationToken)

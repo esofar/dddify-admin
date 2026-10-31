@@ -2,13 +2,11 @@ using Dddify.Admin.Application.Commands.Auths;
 using Dddify.Admin.Application.Exceptions.Users;
 using Dddify.Admin.Application.Abstractions.Authentication;
 using Dddify.Admin.Application.Abstractions.Email;
-using Dddify.Admin.Application.Configuration.Email;
 using Dddify.Admin.Domain.Aggregates.Users;
 using Dddify.Admin.Domain.Events.Users;
 using Dddify.Admin.Domain.Exceptions.Users;
 using Dddify.Admin.Domain.Repositories;
 using Dddify.Timing;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace Dddify.Admin.Application.Tests;
@@ -19,10 +17,10 @@ public class EmailLoginTests
     [InlineData("13800138000", false)]
     [InlineData("not-an-email", false)]
     [InlineData("member@example.com", true)]
-    public void PasswordLogin_Requires_Email_Account(string email, bool valid)
+    public void LoginWithPassword_Requires_Email_Account(string email, bool valid)
     {
-        var result = new PasswordLoginCommandValidator().Validate(
-            new PasswordLoginCommand(email, "Password123", "device", "browser", null, null, false));
+        var result = new LoginWithPasswordCommandValidator().Validate(
+            new LoginWithPasswordCommand(email, "Password123", "device", "browser", null, null, false));
         Assert.Equal(valid, result.IsValid);
     }
 
@@ -31,9 +29,11 @@ public class EmailLoginTests
     [InlineData("000123", true)]
     [InlineData("12345", false)]
     [InlineData("abcdef", false)]
-    public void CodeLogin_Requires_Six_Digits(string code, bool valid)
+    [InlineData("123456\n", false)]
+    [InlineData("１２３４５６", false)]
+    public void LoginWithVerificationCode_Requires_Six_Digits(string code, bool valid)
     {
-        Assert.Equal(valid, new VerificationCodeLoginCommandValidator().Validate(LoginCommand(code)).IsValid);
+        Assert.Equal(valid, new LoginWithVerificationCodeCommandValidator().Validate(LoginCommand(code)).IsValid);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class EmailLoginTests
             {
                 Assert.Equal("CreateAsync", method);
                 storedEmail = (string)args![0]!;
-                return Task.FromResult("012345");
+                return Task.FromResult(new GeneratedEmailVerificationCode("012345", 7));
             }),
             Stub<IEmailSender>((_, args) =>
             {
@@ -65,6 +65,8 @@ public class EmailLoginTests
         Assert.Equal("member@example.com", storedEmail);
         Assert.Equal(user.Email, recipient);
         Assert.Contains("012345", body);
+        Assert.Contains("7 分钟内有效", body);
+        Assert.Contains("7 minutes", body);
     }
 
     [Theory]
@@ -77,7 +79,7 @@ public class EmailLoginTests
         var removed = false;
         var service = Stub<IEmailVerificationCodeService>((method, _) => method switch
         {
-            "CreateAsync" => Task.FromResult("012345"),
+            "CreateAsync" => Task.FromResult(new GeneratedEmailVerificationCode("012345", 5)),
             "RemoveAsync" => Remove(),
             _ => throw new InvalidOperationException(method)
         });
@@ -95,7 +97,7 @@ public class EmailLoginTests
         Task Remove() { removed = true; return Task.CompletedTask; }
         var service = Stub<IEmailVerificationCodeService>((method, _) => method switch
         {
-            "CreateAsync" => Task.FromResult("012345"),
+            "CreateAsync" => Task.FromResult(new GeneratedEmailVerificationCode("012345", 5)),
             "RemoveAsync" => Remove(),
             _ => throw new InvalidOperationException(method)
         });
@@ -118,14 +120,13 @@ public class EmailLoginTests
             Assert.Equal(user.Id, args![0]);
             return "access-token";
         });
-        var refreshTokens = Stub<IRefreshTokenService>((method, _) => method switch
+        var refreshTokens = Stub<IRefreshTokenService>((method, args) =>
         {
-            "Generate" => "refresh-token",
-            "Hash" => "refresh-hash",
-            "GetExpiresAt" => now.AddDays(7),
-            _ => throw new InvalidOperationException(method)
+            Assert.Equal("Generate", method);
+            Assert.Equal(now, args![0]);
+            return new GeneratedRefreshToken("refresh-token", "refresh-hash", now.AddDays(7), 7);
         });
-        var handler = new VerificationCodeLoginCommandHandler(
+        var handler = new LoginWithVerificationCodeCommandHandler(
             Repository(user), Stub<IEmailVerificationCodeService>((_, _) => Task.FromResult(true)), accessTokens, refreshTokens,
             Stub<IClock>((_, _) => now));
 
@@ -133,14 +134,17 @@ public class EmailLoginTests
         Assert.Equal("access-token", result.AccessToken);
         Assert.Equal("refresh-token", result.RefreshToken);
         Assert.True(result.IsPersistent);
+        Assert.Equal(7, result.RefreshTokenDays);
         Assert.Equal(now, user.LastLoginAt);
-        Assert.IsType<UserLoginSucceededDomainEvent>(Assert.Single(user.DomainEvents));
+        var loginEvent = Assert.IsType<UserLoginSucceededDomainEvent>(Assert.Single(user.DomainEvents));
+        Assert.Equal("refresh-hash", loginEvent.RefreshTokenHash);
+        Assert.Equal(now.AddDays(7), loginEvent.RefreshTokenExpiresAt);
     }
 
     [Fact]
     public async Task InvalidCode_Does_Not_Look_Up_User_Or_Issue_Tokens()
     {
-        var handler = new VerificationCodeLoginCommandHandler(
+        var handler = new LoginWithVerificationCodeCommandHandler(
             Stub<IUserRepository>((method, _) => throw new InvalidOperationException(method)),
             Stub<IEmailVerificationCodeService>((_, _) => Task.FromResult(false)),
             Stub<IAccessTokenService>((method, _) => throw new InvalidOperationException(method)),
@@ -155,7 +159,7 @@ public class EmailLoginTests
     {
         var user = CreateUser();
         user.Disable();
-        var handler = new VerificationCodeLoginCommandHandler(
+        var handler = new LoginWithVerificationCodeCommandHandler(
             Repository(user), Stub<IEmailVerificationCodeService>((_, _) => Task.FromResult(true)),
             Stub<IAccessTokenService>((method, _) => throw new InvalidOperationException(method)),
             Stub<IRefreshTokenService>((method, _) => throw new InvalidOperationException(method)),
@@ -164,7 +168,7 @@ public class EmailLoginTests
         await Assert.ThrowsAsync<UserAlreadyDisabledException>(() => handler.Handle(LoginCommand("012345"), default));
     }
 
-    private static VerificationCodeLoginCommand LoginCommand(string code) =>
+    private static LoginWithVerificationCodeCommand LoginCommand(string code) =>
         new("member@example.com", code, "device", "browser", null, null, true);
 
     private static User CreateUser() => new(Guid.NewGuid(), "hash", "Member", null, UserGender.Male,
@@ -178,7 +182,7 @@ public class EmailLoginTests
     });
 
     private static SendEmailVerificationCodeCommandHandler SendHandler(User? user, IEmailVerificationCodeService codes, IEmailSender sender) =>
-        new(Repository(user), codes, sender, Options.Create(new EmailVerificationCodeOptions()));
+        new(Repository(user), codes, sender);
 
     private static T Stub<T>(Func<string, object?[]?, object?> callback) where T : class
     {

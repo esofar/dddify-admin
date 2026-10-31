@@ -4,18 +4,18 @@ using Dddify.Admin.Domain.Aggregates.Users;
 
 namespace Dddify.Admin.Application.Commands.Auths;
 
-public record PasswordLoginCommand(
+public record LoginWithPasswordCommand(
     string Email,
     string Password,
     string DeviceId,
     string DeviceName,
     string? IpAddress,
     string? UserAgent,
-    bool RememberMe) : ICommand<TokenDto>;
+    bool IsPersistent) : ICommand<TokenPairDto>;
 
-public class PasswordLoginCommandValidator : AbstractValidator<PasswordLoginCommand>
+public class LoginWithPasswordCommandValidator : AbstractValidator<LoginWithPasswordCommand>
 {
-    public PasswordLoginCommandValidator()
+    public LoginWithPasswordCommandValidator()
     {
         RuleFor(v => v.Email)
             .NotEmpty()
@@ -34,14 +34,14 @@ public class PasswordLoginCommandValidator : AbstractValidator<PasswordLoginComm
     }
 }
 
-public class PasswordLoginCommandHandler(
+public class LoginWithPasswordCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     IAccessTokenService accessTokenService,
     IRefreshTokenService refreshTokenService,
-    IClock clock) : ICommandHandler<PasswordLoginCommand, TokenDto>
+    IClock clock) : ICommandHandler<LoginWithPasswordCommand, TokenPairDto>
 {
-    public async Task<TokenDto> Handle(PasswordLoginCommand command, CancellationToken cancellationToken)
+    public async Task<TokenPairDto> Handle(LoginWithPasswordCommand command, CancellationToken cancellationToken)
     {
         var user = await userRepository.GetByEmailAsync(command.Email.Trim().ToLowerInvariant());
 
@@ -52,21 +52,20 @@ public class PasswordLoginCommandHandler(
 
         user.EnsureActive();
 
+        var now = clock.UtcNow;
         var accessToken = accessTokenService.Generate(user.Id);
-        var refreshToken = refreshTokenService.Generate();
-        var refreshTokenHash = refreshTokenService.Hash(refreshToken);
-        var expiresAt = refreshTokenService.GetExpiresAt(clock.UtcNow);
+        var refreshToken = refreshTokenService.Generate(now);
 
         user.MarkLoginSucceeded(
             command.DeviceId,
             command.DeviceName,
             command.IpAddress,
             command.UserAgent,
-            refreshTokenHash,
-            expiresAt,
-            clock.UtcNow,
-            command.RememberMe);
+            refreshToken.Hash,
+            refreshToken.ExpiresAt,
+            now,
+            command.IsPersistent);
 
-        return new TokenDto(accessToken, refreshToken, command.RememberMe);
+        return new TokenPairDto(accessToken, refreshToken.Value, command.IsPersistent, refreshToken.RefreshTokenDays);
     }
 }

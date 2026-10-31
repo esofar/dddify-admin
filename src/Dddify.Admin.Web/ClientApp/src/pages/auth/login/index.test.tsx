@@ -3,8 +3,8 @@ import { App } from 'antd';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const api = vi.hoisted(() => ({
-  passwordLogin: vi.fn(),
-  verificationCodeLogin: vi.fn(),
+  loginWithPassword: vi.fn(),
+  loginWithVerificationCode: vi.fn(),
   sendEmailVerificationCode: vi.fn(),
 }));
 
@@ -47,11 +47,11 @@ describe('邮箱登录', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     api.sendEmailVerificationCode.mockResolvedValue({ success: true });
-    api.passwordLogin.mockResolvedValue({
+    api.loginWithPassword.mockResolvedValue({
       success: false,
       errorMessage: '测试登录失败',
     });
-    api.verificationCodeLogin.mockResolvedValue({
+    api.loginWithVerificationCode.mockResolvedValue({
       success: false,
       errorMessage: '测试登录失败',
     });
@@ -119,15 +119,15 @@ describe('邮箱登录', () => {
       screen.getByRole('button', { name: /登\s*录|Login|Log in/i }),
     );
     await waitFor(() =>
-      expect(api.passwordLogin).toHaveBeenCalledWith({
+      expect(api.loginWithPassword).toHaveBeenCalledWith({
         email: 'member@example.com',
         password: 'Password123',
         deviceId: 'device',
         deviceName: 'browser',
-        rememberMe: true,
+        isPersistent: true,
       }),
     );
-    expect(api.verificationCodeLogin).not.toHaveBeenCalled();
+    expect(api.loginWithVerificationCode).not.toHaveBeenCalled();
   });
 
   it('验证码登录提交邮箱与验证码', async () => {
@@ -143,14 +143,14 @@ describe('邮箱登录', () => {
       screen.getByRole('button', { name: /登\s*录|Login|Log in/i }),
     );
     await waitFor(() =>
-      expect(api.verificationCodeLogin).toHaveBeenCalledWith({
+      expect(api.loginWithVerificationCode).toHaveBeenCalledWith({
         email: 'member@example.com',
         code: '012345',
         deviceId: 'device',
         deviceName: 'browser',
-        rememberMe: false,
+        isPersistent: false,
       }),
     );
-    expect(api.passwordLogin).not.toHaveBeenCalled();
+    expect(api.loginWithPassword).not.toHaveBeenCalled();
   });
 });

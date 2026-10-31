@@ -18,8 +18,8 @@ import React, { useState } from 'react';
 import { Footer, LangDropdown } from '@/components';
 import { getFingerprint, useFingerprint } from '@/hooks/useFingerprint';
 import {
-  passwordLogin,
-  verificationCodeLogin,
+  loginWithPassword,
+  loginWithVerificationCode,
   sendEmailVerificationCode,
 } from '@/services/v1/auth';
 import { saveAccessToken } from '@/utils/request';
@@ -124,7 +124,7 @@ const Login: React.FC = () => {
     email?: string;
     password?: string;
     captcha?: string;
-    rememberMe?: boolean;
+    isPersistent?: boolean;
   }) => {
     const fingerprint = ready
       ? { deviceId, deviceName }
@@ -132,19 +132,19 @@ const Login: React.FC = () => {
     const credentials = {
       deviceId: fingerprint.deviceId,
       deviceName: fingerprint.deviceName,
-      rememberMe: values.rememberMe ?? false,
+      isPersistent: values.isPersistent ?? false,
     };
     const {
       success,
       data: accessToken,
       errorMessage,
     } = type === 'verificationCode'
-      ? await verificationCodeLogin({
+      ? await loginWithVerificationCode({
           ...credentials,
           email: values.email?.trim() ?? '',
           code: values.captcha ?? '',
         })
-      : await passwordLogin({
+      : await loginWithPassword({
           ...credentials,
           email: values.email?.trim() ?? '',
           password: values.password ?? '',
@@ -194,7 +194,7 @@ const Login: React.FC = () => {
             id: 'pages.layouts.userLayout.title',
           })}
           initialValues={{
-            rememberMe: false,
+            isPersistent: false,
           }}
           actions={[
             <FormattedMessage key="loginWith" id="pages.login.loginWith" />,
@@ -334,7 +334,7 @@ const Login: React.FC = () => {
               marginBottom: 24,
             }}
           >
-            <ProFormCheckbox noStyle name="rememberMe">
+            <ProFormCheckbox noStyle name="isPersistent">
               <FormattedMessage id="pages.login.rememberMe" />
             </ProFormCheckbox>
             <a

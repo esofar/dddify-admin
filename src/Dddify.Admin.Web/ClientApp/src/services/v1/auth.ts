@@ -2,12 +2,12 @@
 /* eslint-disable */
 import { request } from "@umijs/max";
 
-/** 邮箱密码登录。 POST /api/v1/auth/login/account */
-export async function passwordLogin(
+/** 邮箱密码登录。 POST /api/v1/auth/login/password */
+export async function loginWithPassword(
   body: API.PasswordLoginRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.ApiResultOfstring>("/api/v1/auth/login/account", {
+  return request<API.ApiResultOfstring>("/api/v1/auth/login/password", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -17,12 +17,12 @@ export async function passwordLogin(
   });
 }
 
-/** 邮箱验证码登录。 POST /api/v1/auth/login/email-code */
-export async function verificationCodeLogin(
+/** 邮箱验证码登录。 POST /api/v1/auth/login/verification-code */
+export async function loginWithVerificationCode(
   body: API.VerificationCodeLoginRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.ApiResultOfstring>("/api/v1/auth/login/email-code", {
+  return request<API.ApiResultOfstring>("/api/v1/auth/login/verification-code", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -32,12 +32,12 @@ export async function verificationCodeLogin(
   });
 }
 
-/** 发送登录邮箱验证码。 POST /api/v1/auth/login/email-code/send */
+/** 发送邮箱登录验证码。 POST /api/v1/auth/login/verification-code/send */
 export async function sendEmailVerificationCode(
   body: API.SendEmailVerificationCodeRequest,
   options?: { [key: string]: any }
 ) {
-  return request<API.ApiResult>("/api/v1/auth/login/email-code/send", {
+  return request<API.ApiResult>("/api/v1/auth/login/verification-code/send", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Dddify.Admin.Application.Configuration.Email;
+namespace Dddify.Admin.Infrastructure.Email;
 
 public sealed class EmailVerificationCodeOptions
 {

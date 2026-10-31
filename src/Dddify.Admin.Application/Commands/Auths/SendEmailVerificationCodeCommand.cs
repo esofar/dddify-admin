@@ -1,7 +1,5 @@
 using Dddify.Admin.Application.Abstractions.Email;
-using Dddify.Admin.Application.Configuration.Email;
 using Dddify.Admin.Domain.Aggregates.Users;
-using Microsoft.Extensions.Options;
 
 namespace Dddify.Admin.Application.Commands.Auths;
 
@@ -22,18 +20,17 @@ public class SendEmailVerificationCodeCommandValidator : AbstractValidator<SendE
 public class SendEmailVerificationCodeCommandHandler(
     IUserRepository userRepository,
     IEmailVerificationCodeService codeService,
-    IEmailSender emailSender,
-    IOptions<EmailVerificationCodeOptions> options) : ICommandHandler<SendEmailVerificationCodeCommand>
+    IEmailSender emailSender) : ICommandHandler<SendEmailVerificationCodeCommand>
 {
     public async Task Handle(SendEmailVerificationCodeCommand command, CancellationToken cancellationToken)
     {
         var email = command.Email.Trim().ToLowerInvariant();
-        // Unknown and disabled accounts receive the same response and rate limits.
+        // 未注册和禁用账号使用相同响应与限流规则。
         var code = await codeService.CreateAsync(email, command.IpAddress, cancellationToken);
         var user = await userRepository.GetByEmailAsync(email);
         if (user is null || user.Status != UserStatus.Enabled)
         {
-            await codeService.RemoveAsync(email, code, cancellationToken);
+            await codeService.RemoveAsync(email, code.Value, cancellationToken);
             return;
         }
 
@@ -43,8 +40,8 @@ public class SendEmailVerificationCodeCommandHandler(
                 new EmailMessage(
                     user.Email,
                     "登录验证码 / Sign-in verification code",
-                    $"您的登录验证码为 {code}，{options.Value.ExpiresMinutes} 分钟内有效，请勿泄露。\n" +
-                    $"Your sign-in code is {code}. It expires in {options.Value.ExpiresMinutes} minutes.")
+                    $"您的登录验证码为 {code.Value}，{code.ExpiresMinutes} 分钟内有效，请勿泄露。\n" +
+                    $"Your sign-in code is {code.Value}. It expires in {code.ExpiresMinutes} minutes.")
                 {
                     IsHtml = false
                 },
@@ -52,7 +49,7 @@ public class SendEmailVerificationCodeCommandHandler(
         }
         catch
         {
-            await codeService.RemoveAsync(email, code, CancellationToken.None);
+            await codeService.RemoveAsync(email, code.Value, CancellationToken.None);
             throw;
         }
     }

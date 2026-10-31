@@ -8,8 +8,8 @@ declare namespace API {
     deviceId: string;
     /** 设备名称。 */
     deviceName: string;
-    /** 是否保持登录。 */
-    rememberMe: boolean;
+    /** 是否持久化登录状态。 */
+    isPersistent: boolean;
   };
 
   type AnnouncementAudienceDto = {
@@ -697,8 +697,8 @@ declare namespace API {
     deviceId: string;
     /** 设备名称。 */
     deviceName: string;
-    /** 是否保持登录。 */
-    rememberMe: boolean;
+    /** 是否持久化登录状态。 */
+    isPersistent: boolean;
   };
 
   type SortLookupItemsParams = {

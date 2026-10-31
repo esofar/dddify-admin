@@ -1,7 +1,7 @@
 namespace Dddify.Admin.Web.Authentication;
 
 /// <summary>
-/// Refresh Token Cookie 扩展方法。
+/// 刷新令牌 Cookie 扩展。
 /// </summary>
 public static class RefreshTokenCookieExtensions
 {
@@ -10,10 +10,10 @@ public static class RefreshTokenCookieExtensions
     private const string DeviceIdHeaderName = "X-Device-Id";
 
     /// <summary>
-    /// 从请求 Cookie 中读取 Refresh Token 明文。
+    /// 读取刷新令牌 Cookie。
     /// </summary>
-    /// <param name="httpContext">当前 HTTP 上下文。</param>
-    /// <returns>Refresh Token 明文；不存在时返回空字符串。</returns>
+    /// <param name="httpContext">HTTP 上下文。</param>
+    /// <returns>令牌明文，不存在时为空字符串。</returns>
     public static string GetRefreshTokenCookie(this HttpContext httpContext)
     {
         return httpContext.Request.Cookies[RefreshTokenCookieName] ?? string.Empty;
@@ -32,44 +32,44 @@ public static class RefreshTokenCookieExtensions
     }
 
     /// <summary>
-    /// 写入 Refresh Token Cookie。
+    /// 写入 HttpOnly 刷新令牌 Cookie。
     /// </summary>
-    /// <param name="httpContext">当前 HTTP 上下文。</param>
-    /// <param name="refreshToken">Refresh Token 明文，仅写入 HttpOnly Cookie。</param>
-    /// <param name="persistent">是否持久化 Cookie；为 false 时创建浏览器会话 Cookie。</param>
-    /// <param name="jwtOptions">JWT 配置，用于获取 Refresh Token 有效期。</param>
+    /// <param name="httpContext">HTTP 上下文。</param>
+    /// <param name="refreshToken">刷新令牌明文。</param>
+    /// <param name="persistent">是否持久化；为 false 时使用会话 Cookie。</param>
+    /// <param name="refreshTokenDays">刷新令牌有效天数。</param>
     /// <param name="clock">系统时钟。</param>
     public static void AppendRefreshTokenCookie(
         this HttpContext httpContext,
         string refreshToken,
         bool persistent,
-        JwtOptions jwtOptions,
+        int refreshTokenDays,
         IClock clock)
     {
         var options = CreateRefreshTokenCookieOptions();
 
         if (persistent)
         {
-            options.MaxAge = TimeSpan.FromDays(jwtOptions.RefreshTokenDays);
-            options.Expires = clock.UtcNow.AddDays(jwtOptions.RefreshTokenDays);
+            options.MaxAge = TimeSpan.FromDays(refreshTokenDays);
+            options.Expires = clock.UtcNow.AddDays(refreshTokenDays);
         }
 
         httpContext.Response.Cookies.Append(RefreshTokenCookieName, refreshToken, options);
     }
 
     /// <summary>
-    /// 删除 Refresh Token Cookie。
+    /// 删除刷新令牌 Cookie。
     /// </summary>
-    /// <param name="httpContext">当前 HTTP 上下文。</param>
+    /// <param name="httpContext">HTTP 上下文。</param>
     public static void DeleteRefreshTokenCookie(this HttpContext httpContext)
     {
         httpContext.Response.Cookies.Delete(RefreshTokenCookieName, CreateRefreshTokenCookieOptions());
     }
 
     /// <summary>
-    /// 创建 Refresh Token Cookie 安全选项。
+    /// 创建刷新令牌 Cookie 安全选项。
     /// </summary>
-    /// <returns>Refresh Token Cookie 选项。</returns>
+    /// <returns>Cookie 安全选项。</returns>
     private static CookieOptions CreateRefreshTokenCookieOptions()
     {
         return new CookieOptions

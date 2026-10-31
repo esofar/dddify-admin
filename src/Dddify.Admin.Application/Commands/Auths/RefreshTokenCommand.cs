@@ -6,7 +6,7 @@ namespace Dddify.Admin.Application.Commands.Auths;
 
 public record RefreshTokenCommand(
     string RefreshToken,
-    string DeviceId) : ICommand<TokenDto>;
+    string DeviceId) : ICommand<TokenPairDto>;
 
 public class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenCommand>
 {
@@ -25,9 +25,9 @@ public class RefreshTokenCommandHandler(
     ISessionRepository sessionRepository,
     IAccessTokenService accessTokenService,
     IRefreshTokenService refreshTokenService,
-    IClock clock) : ICommandHandler<RefreshTokenCommand, TokenDto>
+    IClock clock) : ICommandHandler<RefreshTokenCommand, TokenPairDto>
 {
-    public async Task<TokenDto> Handle(RefreshTokenCommand command, CancellationToken cancellationToken)
+    public async Task<TokenPairDto> Handle(RefreshTokenCommand command, CancellationToken cancellationToken)
     {
         var refreshTokenHash = refreshTokenService.Hash(command.RefreshToken);
 
@@ -48,12 +48,10 @@ public class RefreshTokenCommandHandler(
         }
 
         var accessToken = accessTokenService.Generate(session.UserId);
-        var refreshToken = refreshTokenService.Generate();
-        var nextRefreshTokenHash = refreshTokenService.Hash(refreshToken);
-        var expiresAt = refreshTokenService.GetExpiresAt(now);
+        var refreshToken = refreshTokenService.Generate(now);
 
-        session.RotateRefreshToken(nextRefreshTokenHash, expiresAt, now);
+        session.RotateRefreshToken(refreshToken.Hash, refreshToken.ExpiresAt, now);
 
-        return new TokenDto(accessToken, refreshToken, session.IsPersistent);
+        return new TokenPairDto(accessToken, refreshToken.Value, session.IsPersistent, refreshToken.RefreshTokenDays);
     }
 }
