@@ -37,12 +37,10 @@ public class PermissionFilterTests
                 case GetUserRolesQuery query:
                     roleQueries++;
                     Assert.Equal(userId, query.UserId);
-                    Assert.False(query.UseCache);
                     return Task.FromResult<IEnumerable<UserRoleDto>>([new(roleId, "Current role", true)]);
                 case GetRolePermissionsQuery query:
                     permissionQueries++;
                     Assert.Equal(roleId, query.RoleId);
-                    Assert.False(query.UseCache);
                     return Task.FromResult<IEnumerable<RolePermissionDto>>(hasPermission
                         ? [new(Guid.NewGuid().ToString(), "required:permission")]
                         : []);
@@ -67,7 +65,6 @@ public class PermissionFilterTests
         var sender = Stub<ISender>((_, args) =>
         {
             var query = Assert.IsType<GetUserRolesQuery>(args![0]);
-            Assert.False(query.UseCache);
             return Task.FromResult<IEnumerable<UserRoleDto>>([]);
         });
         var context = CreateContext(default);

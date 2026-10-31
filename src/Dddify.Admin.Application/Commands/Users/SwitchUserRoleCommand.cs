@@ -16,7 +16,7 @@ public class SwitchUserRoleCommandValidator : AbstractValidator<SwitchUserRoleCo
     }
 }
 
-public class SwitchUserRoleCommandHandler(IUserRepository userRepository, CacheInvalidationQueue cacheInvalidation) : ICommandHandler<SwitchUserRoleCommand>
+public class SwitchUserRoleCommandHandler(IUserRepository userRepository) : ICommandHandler<SwitchUserRoleCommand>
 {
     public async Task Handle(SwitchUserRoleCommand command, CancellationToken cancellationToken)
     {
@@ -24,7 +24,5 @@ public class SwitchUserRoleCommandHandler(IUserRepository userRepository, CacheI
             ?? throw new UserNotFoundException(command.UserId);
 
         user.SwitchCurrentRole(command.RoleId);
-
-        cacheInvalidation.Enqueue(CacheKeys.UserRoles(user.Id));
     }
 }

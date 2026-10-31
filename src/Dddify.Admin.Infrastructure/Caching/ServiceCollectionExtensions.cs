@@ -1,4 +1,3 @@
-using Dddify.Admin.Application.Caching;
 using StackExchange.Redis;
 
 namespace Dddify.Admin.Infrastructure.Caching;
@@ -17,9 +16,6 @@ public static class ServiceCollectionExtensions
         }
 
         services.Configure<RedisOptions>(redisSection);
-
-        services.AddScoped<CacheInvalidationQueue>();
-        services.AddScoped<CacheInvalidationInterceptor>();
 
         services.AddSingleton<IConnectionMultiplexer>(_ =>
         {

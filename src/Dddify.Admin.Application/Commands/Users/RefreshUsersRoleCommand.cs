@@ -17,7 +17,7 @@ public class RefreshUsersRoleCommandValidator : AbstractValidator<RefreshUsersRo
     }
 }
 
-public class RefreshUsersRoleCommandHandler(IUserRepository userRepository, CacheInvalidationQueue cacheInvalidation) : ICommandHandler<RefreshUsersRoleCommand>
+public class RefreshUsersRoleCommandHandler(IUserRepository userRepository) : ICommandHandler<RefreshUsersRoleCommand>
 {
     public async Task Handle(RefreshUsersRoleCommand command, CancellationToken cancellationToken)
     {
@@ -26,7 +26,6 @@ public class RefreshUsersRoleCommandHandler(IUserRepository userRepository, Cach
         foreach (var user in users)
         {
             user.ChangeRoleName(command.RoleId, command.RoleName);
-            cacheInvalidation.Enqueue(CacheKeys.UserRoles(user.Id));
         }
     }
 }

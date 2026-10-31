@@ -13,11 +13,10 @@ builder.Services.AddDddify(cfg =>
 
     cfg.AddApiResultWrapping();
 
-    cfg.AddDbContextWithUnitOfWork<ApplicationDbContext>((provider, options) =>
+    cfg.AddDbContextWithUnitOfWork<ApplicationDbContext>(options =>
     {
         options.UseNpgsql(builder.Configuration.GetConnectionString("Default"));
         options.UseSnakeCaseNamingConvention();
-        options.AddInterceptors(provider.GetRequiredService<CacheInvalidationInterceptor>());
 
         if (builder.Environment.IsDevelopment())
         {

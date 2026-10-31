@@ -33,7 +33,7 @@ public class AssignUserRolesCommandValidator : AbstractValidator<AssignUserRoles
     }
 }
 
-public class AssignUserRolesCommandHandler(IUserRepository userRepository, CacheInvalidationQueue cacheInvalidation) : ICommandHandler<AssignUserRolesCommand>
+public class AssignUserRolesCommandHandler(IUserRepository userRepository) : ICommandHandler<AssignUserRolesCommand>
 {
     public async Task Handle(AssignUserRolesCommand command, CancellationToken cancellationToken)
     {
@@ -43,7 +43,5 @@ public class AssignUserRolesCommandHandler(IUserRepository userRepository, Cache
         var userRoles = command.Roles.Select(p => new UserRole(user.Id, p.RoleId, p.RoleName));
 
         user.AssignRoles(userRoles);
-
-        cacheInvalidation.Enqueue(CacheKeys.UserRoles(user.Id));
     }
 }

@@ -19,8 +19,7 @@ public class SortLookupItemsCommandValidator : AbstractValidator<SortLookupItems
 }
 
 public class SortLookupItemsCommandHandler(
-    ILookupRepository lookupRepository,
-    IDistributedCache distributedCache) : ICommandHandler<SortLookupItemsCommand>
+    ILookupRepository lookupRepository, IDistributedCache distributedCache) : ICommandHandler<SortLookupItemsCommand>
 {
     public async Task Handle(SortLookupItemsCommand command, CancellationToken cancellationToken)
     {

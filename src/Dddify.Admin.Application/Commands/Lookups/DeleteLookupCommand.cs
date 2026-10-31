@@ -5,8 +5,7 @@ namespace Dddify.Admin.Application.Commands.Lookups;
 public record DeleteLookupCommand(Guid Id) : ICommand;
 
 public class DeleteLookupCommandHandler(
-    ILookupRepository lookupRepository,
-    IDistributedCache distributedCache) : ICommandHandler<DeleteLookupCommand>
+    ILookupRepository lookupRepository, IDistributedCache distributedCache) : ICommandHandler<DeleteLookupCommand>
 {
     public async Task Handle(DeleteLookupCommand command, CancellationToken cancellationToken)
     {

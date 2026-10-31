@@ -22,7 +22,7 @@ public class CreateLookupCommandValidator : AbstractValidator<CreateLookupComman
     }
 }
 
-public class CreateLookupCommandHandler(ILookupRepository lookupRepository, IGuidGenerator guidGenerator) : ICommandHandler<CreateLookupCommand>
+public class CreateLookupCommandHandler(ILookupRepository lookupRepository, IGuidGenerator guidGenerator, IDistributedCache distributedCache) : ICommandHandler<CreateLookupCommand>
 {
     public async Task Handle(CreateLookupCommand command, CancellationToken cancellationToken)
     {
@@ -40,5 +40,7 @@ public class CreateLookupCommandHandler(ILookupRepository lookupRepository, IGui
             command.Description);
 
         await lookupRepository.AddAsync(lookup, cancellationToken);
+
+        await distributedCache.RemoveAsync(CacheKeys.LookupActiveItems(lookup.Code), cancellationToken);
     }
 }

@@ -29,8 +29,7 @@ public class UpdateLookupItemCommandValidator : AbstractValidator<UpdateLookupIt
 }
 
 public class UpdateLookupItemCommandHandler(
-    ILookupRepository lookupRepository,
-    IDistributedCache distributedCache) : ICommandHandler<UpdateLookupItemCommand>
+    ILookupRepository lookupRepository, IDistributedCache distributedCache) : ICommandHandler<UpdateLookupItemCommand>
 {
     public async Task Handle(UpdateLookupItemCommand command, CancellationToken cancellationToken)
     {

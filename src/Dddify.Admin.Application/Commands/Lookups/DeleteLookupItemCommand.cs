@@ -19,8 +19,7 @@ public class DeleteLookupItemCommandValidator : AbstractValidator<DeleteLookupIt
 }
 
 public class DeleteLookupItemCommandHandler(
-    ILookupRepository lookupRepository,
-    IDistributedCache distributedCache) : ICommandHandler<DeleteLookupItemCommand>
+    ILookupRepository lookupRepository, IDistributedCache distributedCache) : ICommandHandler<DeleteLookupItemCommand>
 {
     public async Task Handle(DeleteLookupItemCommand command, CancellationToken cancellationToken)
     {

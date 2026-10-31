@@ -4,17 +4,18 @@ using Dddify.Admin.Application.Queries.Users;
 namespace Dddify.Admin.Web.Authorization;
 
 /// <summary>
-/// 根据接口上的 <see cref="PermissionAttribute"/> 校验当前用户是否拥有访问权限。
+/// 按当前角色校验接口访问权限。
 /// </summary>
-/// <param name="currentUser">当前登录用户上下文。</param>
-/// <param name="sender">MediatR 发送器，用于查询用户角色与角色权限。</param>
-/// <param name="logger">权限校验日志记录器。</param>
+/// <param name="currentUser">当前登录用户。</param>
+/// <param name="sender">请求发送器。</param>
+/// <param name="logger">日志记录器。</param>
+/// <remarks>声明多个权限时，满足任意一个即可。</remarks>
 public class CheckUserPermissionFilter(ICurrentUser currentUser, ISender sender, ILogger<CheckUserPermissionFilter> logger) : IAsyncAuthorizationFilter
 {
     /// <summary>
-    /// 执行接口权限校验。
+    /// 校验当前用户的访问权限。
     /// </summary>
-    /// <param name="context">授权过滤器上下文。</param>
+    /// <param name="context">授权上下文。</param>
     public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
     {
         var endpoint = context.HttpContext.GetEndpoint();
@@ -34,9 +35,10 @@ public class CheckUserPermissionFilter(ICurrentUser currentUser, ISender sender,
 
         var permissionCodes = permissionAttrs.Select(p => p.Code).Distinct().ToList();
 
+        // 授权查询直接读库，及时反映角色与权限变更。
         var cancellationToken = context.HttpContext.RequestAborted;
         var userRoles = await sender.Send(
-            new GetUserRolesQuery(currentUser.GetIdAsGuid(), UseCache: false), cancellationToken);
+            new GetUserRolesQuery(currentUser.GetIdAsGuid()), cancellationToken);
 
         if (!userRoles.Any())
         {
@@ -48,7 +50,7 @@ public class CheckUserPermissionFilter(ICurrentUser currentUser, ISender sender,
         var currentUserRole = userRoles.First(c => c.IsCurrent);
 
         var rolePermissions = await sender.Send(
-            new GetRolePermissionsQuery(currentUserRole.RoleId, UseCache: false), cancellationToken);
+            new GetRolePermissionsQuery(currentUserRole.RoleId), cancellationToken);
         var permissionCodeHashSet = rolePermissions.Select(p => p.PermissionCode).ToHashSet();
 
         foreach (var permissionCode in permissionCodes)

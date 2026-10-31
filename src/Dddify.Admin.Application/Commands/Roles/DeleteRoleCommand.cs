@@ -13,7 +13,7 @@ public class DeleteRoleCommandValidator : AbstractValidator<DeleteRoleCommand>
     }
 }
 
-public class DeleteRoleCommandHandler(IRoleRepository roleRepository, CacheInvalidationQueue cacheInvalidation) : ICommandHandler<DeleteRoleCommand>
+public class DeleteRoleCommandHandler(IRoleRepository roleRepository) : ICommandHandler<DeleteRoleCommand>
 {
     public async Task Handle(DeleteRoleCommand command, CancellationToken cancellationToken)
     {
@@ -23,6 +23,5 @@ public class DeleteRoleCommandHandler(IRoleRepository roleRepository, CacheInval
         role.EnsureCanDelete();
 
         roleRepository.Remove(role);
-        cacheInvalidation.Enqueue(CacheKeys.RolePermissions(role.Id));
     }
 }

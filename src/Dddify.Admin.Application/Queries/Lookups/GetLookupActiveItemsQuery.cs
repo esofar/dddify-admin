@@ -13,9 +13,9 @@ public class GetLookupActiveItemsQueryHandler(
     {
         var cacheKey = CacheKeys.LookupActiveItems(query.Code);
 
-        return await distributedCache.GetOrCreateJsonAsync(cacheKey, async () =>
+        return await distributedCache.GetOrCreateJsonAsync(cacheKey, async token =>
         {
-            var lookup = await lookupRepository.GetLookupWithItemsAsync(query.Code, cancellationToken)
+            var lookup = await lookupRepository.GetLookupWithItemsAsync(query.Code, token)
                 ?? throw new LookupNotFoundException(query.Code);
 
             return lookup.Items
@@ -25,8 +25,8 @@ public class GetLookupActiveItemsQueryHandler(
         },
         new DistributedCacheEntryOptions
         {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1)
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(Random.Shared.Next(45, 61))
         },
-        cancellationToken);
+        cancellationToken: cancellationToken);
     }
 }
