@@ -1,4 +1,4 @@
-using Dddify.Admin.Application.Commands.Auths;
+﻿using Dddify.Admin.Application.Commands.Auths;
 using Dddify.Admin.Web.Requests.Auths;
 
 namespace Dddify.Admin.Web.Controllers;
@@ -34,8 +34,8 @@ public class AuthController(
                 request.Password,
                 request.DeviceId,
                 request.DeviceName,
-                HttpContext.Connection.RemoteIpAddress?.ToString(),
-                Request.Headers.UserAgent.ToString(),
+                HttpContext.GetClientIpAddress(),
+                HttpContext.GetUserAgent(),
                 request.IsPersistent),
             cancellationToken);
 
@@ -63,8 +63,8 @@ public class AuthController(
                 request.Code,
                 request.DeviceId,
                 request.DeviceName,
-                HttpContext.Connection.RemoteIpAddress?.ToString(),
-                Request.Headers.UserAgent.ToString(),
+                HttpContext.GetClientIpAddress(),
+                HttpContext.GetUserAgent(),
                 request.IsPersistent),
             cancellationToken);
 
@@ -146,7 +146,7 @@ public class AuthController(
         await sender.Send(
             new SendEmailVerificationCodeCommand(
                 request.Email,
-                HttpContext.Connection.RemoteIpAddress?.ToString()),
+                HttpContext.GetClientIpAddress()),
             cancellationToken);
     }
 }

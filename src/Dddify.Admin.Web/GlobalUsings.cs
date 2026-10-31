@@ -7,6 +7,7 @@ global using Dddify.Admin.Infrastructure.Locking;
 global using Dddify.Admin.Infrastructure.Persistence;
 global using Dddify.Admin.Web.Authentication;
 global using Dddify.Admin.Web.Authorization;
+global using Dddify.Admin.Web.Extensions;
 global using Dddify.Primitives;
 global using Dddify.ResultWrapping;
 global using Dddify.Timing;

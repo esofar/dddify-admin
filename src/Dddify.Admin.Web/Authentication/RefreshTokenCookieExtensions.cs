@@ -7,7 +7,6 @@ public static class RefreshTokenCookieExtensions
 {
     private const string RefreshTokenCookieName = "__Host-refresh_token";
     private const string RefreshTokenCookiePath = "/";
-    private const string DeviceIdHeaderName = "X-Device-Id";
 
     /// <summary>
     /// 读取刷新令牌 Cookie。
@@ -17,18 +16,6 @@ public static class RefreshTokenCookieExtensions
     public static string GetRefreshTokenCookie(this HttpContext httpContext)
     {
         return httpContext.Request.Cookies[RefreshTokenCookieName] ?? string.Empty;
-    }
-
-    /// <summary>
-    /// 获取设备ID。
-    /// </summary>
-    /// <param name="httpContext"></param>
-    /// <returns></returns>
-    public static string GetDeviceId(this HttpContext httpContext)
-    {
-        return httpContext.Request.Headers.TryGetValue(DeviceIdHeaderName, out var value)
-            ? value.ToString()
-            : string.Empty;
     }
 
     /// <summary>

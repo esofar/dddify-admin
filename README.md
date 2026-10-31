@@ -284,6 +284,36 @@ npm run openapi
 
 Redis 当前用于缓存、分布式锁、会话辅助等场景。
 
+### 反向代理
+
+客户端 IP 由 `ForwardedHeaders` 中间件解析，控制器使用 `HttpContext.GetClientIpAddress()` 获取；User-Agent 使用 `HttpContext.GetUserAgent()` 获取。
+
+默认信任框架配置的回环地址，支持同机 Nginx。容器、网关或其他代理通过 `ForwardedHeaders:KnownProxies` 指定可信代理 IP，或通过 `KnownIPNetworks` 指定可信 CIDR 网段。多级代理将 `ForwardLimit` 设置为实际需要解析的跳数，并配齐沿途可信代理；只配置实际代理，不信任所有来源。
+
+例如，以下配置表示经过两个可信代理；地址和网段应替换为实际部署值：
+
+```json
+{
+  "ForwardedHeaders": {
+    "ForwardLimit": 2,
+    "KnownProxies": ["10.20.0.10"],
+    "KnownIPNetworks": ["10.30.0.0/24"]
+  }
+}
+```
+
+Nginx 的 API 转发配置示例，端口需与 Kestrel 监听端口一致：
+
+```nginx
+location /api/ {
+    proxy_pass http://127.0.0.1:5000;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header User-Agent $http_user_agent;
+}
+```
+
 ### 邮箱登录
 
 系统使用邮箱作为账号，支持密码登录和邮箱验证码登录：

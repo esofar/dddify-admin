@@ -7,6 +7,7 @@ using Dddify.Users;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Reflection;
 
 namespace Dddify.Admin.IntegrationTests;
@@ -24,6 +25,8 @@ public class AuthControllerTests
     {
         var now = new DateTimeOffset(2026, 10, 31, 0, 0, 0, TimeSpan.Zero);
         var context = new DefaultHttpContext();
+        context.Connection.RemoteIpAddress = IPAddress.Parse("::ffff:203.0.113.10");
+        context.Request.Headers.UserAgent = "Browser/1.0";
         context.Request.Headers.Cookie = "__Host-refresh_token=old-refresh-token";
         context.Request.Headers["X-Device-Id"] = "device";
         var commandType = flow switch
@@ -39,10 +42,14 @@ public class AuthControllerTests
             if (args[0] is LoginWithPasswordCommand passwordLogin)
             {
                 Assert.Equal(persistent, passwordLogin.IsPersistent);
+                Assert.Equal("203.0.113.10", passwordLogin.IpAddress);
+                Assert.Equal("Browser/1.0", passwordLogin.UserAgent);
             }
             if (args[0] is LoginWithVerificationCodeCommand verificationCodeLogin)
             {
                 Assert.Equal(persistent, verificationCodeLogin.IsPersistent);
+                Assert.Equal("203.0.113.10", verificationCodeLogin.IpAddress);
+                Assert.Equal("Browser/1.0", verificationCodeLogin.UserAgent);
             }
             return Task.FromResult(new TokenPairDto("access-token", "refresh-token", persistent, 14));
         });
