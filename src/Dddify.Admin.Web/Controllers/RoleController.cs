@@ -17,7 +17,7 @@ public class RoleController(ISender sender) : BaseController
     /// 获取所有角色。
     /// </summary>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>角色列表。</returns>
     [HttpGet("all", Name = "GetAllRoles")]
     [ProducesResponseType<ApiResult<IEnumerable<RoleListDto>>>(StatusCodes.Status200OK)]
     public async Task<IEnumerable<RoleListDto>> GetAllRolesAsync(CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ public class RoleController(ISender sender) : BaseController
     /// <param name="pageSize">每页数量。</param>
     /// <param name="name">角色名称。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>角色分页列表。</returns>
     [HttpGet(Name = "SearchRoles")]
     [Permission("system:role:index")]
     [ProducesResponseType<ApiResult<PagedResult<RoleListDto>>>(StatusCodes.Status200OK)]
@@ -49,9 +49,9 @@ public class RoleController(ISender sender) : BaseController
     /// <summary>
     /// 获取角色详情。
     /// </summary>
-    /// <param name="id">角色ID。</param>
+    /// <param name="id">角色 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>角色详情。</returns>
     [HttpGet("{id}", Name = "GetRoleDetail")]
     [Permission("system:role:index")]
     [ProducesResponseType<ApiResult<RoleDetailDto>>(StatusCodes.Status200OK)]
@@ -67,7 +67,6 @@ public class RoleController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">新增角色请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPost(Name = "CreateRole")]
     [Permission("system:role:create")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -86,10 +85,9 @@ public class RoleController(ISender sender) : BaseController
     /// <summary>
     /// 修改角色。
     /// </summary>
-    /// <param name="id">角色ID。</param>
+    /// <param name="id">角色 ID。</param>
     /// <param name="request">修改角色请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}", Name = "UpdateRole")]
     [Permission("system:role:update")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -113,9 +111,8 @@ public class RoleController(ISender sender) : BaseController
     /// <summary>
     /// 删除角色。
     /// </summary>
-    /// <param name="id">角色ID。</param>
+    /// <param name="id">角色 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpDelete("{id}", Name = "DeleteRole")]
     [Permission("system:role:delete")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -128,9 +125,9 @@ public class RoleController(ISender sender) : BaseController
     /// <summary>
     /// 获取角色权限。
     /// </summary>
-    /// <param name="id">角色ID。</param>
+    /// <param name="id">角色 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>角色权限列表。</returns>
     [HttpGet("{id}/permissions", Name = "GetRolePermissions")]
     [ProducesResponseType<ApiResult<IEnumerable<RolePermissionDto>>>(StatusCodes.Status200OK)]
     public async Task<IEnumerable<RolePermissionDto>> GetRolePermissionsAsync(
@@ -143,10 +140,9 @@ public class RoleController(ISender sender) : BaseController
     /// <summary>
     /// 分配角色权限。
     /// </summary>
-    /// <param name="id">角色ID。</param>
-    /// <param name="permissionIds">权限ID列表。</param>
+    /// <param name="id">角色 ID。</param>
+    /// <param name="permissionIds">权限 ID 列表。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}/permissions", Name = "AssignRolePermissions")]
     [Permission("system:role:assign-permissions")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]

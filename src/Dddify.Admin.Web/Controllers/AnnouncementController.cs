@@ -17,7 +17,7 @@ public class AnnouncementController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">查询公告列表请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>公告分页列表。</returns>
     [HttpGet(Name = "SearchAnnouncements")]
     [Permission("system:announcement:index")]
     [ProducesResponseType<ApiResult<PagedResult<AnnouncementListDto>>>(StatusCodes.Status200OK)]
@@ -37,9 +37,9 @@ public class AnnouncementController(ISender sender) : BaseController
     /// <summary>
     /// 获取公告详情。
     /// </summary>
-    /// <param name="id">公告ID。</param>
+    /// <param name="id">公告 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>公告详情。</returns>
     [HttpGet("{id}", Name = "GetAnnouncement")]
     [Permission("system:announcement:index")]
     [ProducesResponseType<ApiResult<AnnouncementDetailDto>>(StatusCodes.Status200OK)]
@@ -55,7 +55,6 @@ public class AnnouncementController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">创建公告请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPost(Name = "CreateAnnouncement")]
     [Permission("system:announcement:create")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -76,10 +75,9 @@ public class AnnouncementController(ISender sender) : BaseController
     /// <summary>
     /// 修改公告。
     /// </summary>
-    /// <param name="id">公告ID。</param>
+    /// <param name="id">公告 ID。</param>
     /// <param name="request">修改公告请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}", Name = "UpdateAnnouncement")]
     [Permission("system:announcement:update")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -102,9 +100,8 @@ public class AnnouncementController(ISender sender) : BaseController
     /// <summary>
     /// 发布公告。
     /// </summary>
-    /// <param name="id">公告ID。</param>
+    /// <param name="id">公告 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}/publish", Name = "PublishAnnouncement")]
     [Permission("system:announcement:publish")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -118,9 +115,8 @@ public class AnnouncementController(ISender sender) : BaseController
     /// <summary>
     /// 撤回公告。
     /// </summary>
-    /// <param name="id">公告ID。</param>
+    /// <param name="id">公告 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}/withdraw", Name = "WithdrawAnnouncement")]
     [Permission("system:announcement:withdraw")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -134,9 +130,8 @@ public class AnnouncementController(ISender sender) : BaseController
     /// <summary>
     /// 删除公告。
     /// </summary>
-    /// <param name="id">公告ID。</param>
+    /// <param name="id">公告 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpDelete("{id}", Name = "DeleteAnnouncement")]
     [Permission("system:announcement:delete")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]

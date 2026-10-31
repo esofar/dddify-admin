@@ -17,7 +17,7 @@ public class DepartmentController(ISender sender) : BaseController
     /// 获取所有部门。
     /// </summary>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>部门列表。</returns>
     [HttpGet("all", Name = "GetAllDepartments")]
     [ProducesResponseType<ApiResult<IEnumerable<DepartmentListDto>>>(StatusCodes.Status200OK)]
     public async Task<IEnumerable<DepartmentListDto>> GetAllDepartmentsAsync(CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ public class DepartmentController(ISender sender) : BaseController
     /// <param name="type">部门类型。</param>
     /// <param name="isEnabled">启用状态。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>部门列表。</returns>
     [HttpGet(Name = "SearchDepartments")]
     [Permission("system:department:index")]
     [ProducesResponseType<ApiResult<IEnumerable<DepartmentListDto>>>(StatusCodes.Status200OK)]
@@ -48,9 +48,9 @@ public class DepartmentController(ISender sender) : BaseController
     /// <summary>
     /// 获取部门详情。
     /// </summary>
-    /// <param name="id">部门ID。</param>
+    /// <param name="id">部门 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>部门详情。</returns>
     [HttpGet("{id}", Name = "GetDepartmentDetail")]
     [Permission("system:department:index")]
     [ProducesResponseType<ApiResult<DepartmentDetailDto>>(StatusCodes.Status200OK)]
@@ -66,7 +66,6 @@ public class DepartmentController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">新增部门请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPost(Name = "CreateDepartment")]
     [Permission("system:department:create")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -90,10 +89,9 @@ public class DepartmentController(ISender sender) : BaseController
     /// <summary>
     /// 修改部门。
     /// </summary>
-    /// <param name="id">部门ID。</param>
+    /// <param name="id">部门 ID。</param>
     /// <param name="request">修改部门请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}", Name = "UpdateDepartment")]
     [Permission("system:department:update")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -122,9 +120,8 @@ public class DepartmentController(ISender sender) : BaseController
     /// <summary>
     /// 删除部门。
     /// </summary>
-    /// <param name="id">部门ID。</param>
+    /// <param name="id">部门 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpDelete("{id}", Name = "DeleteDepartment")]
     [Permission("system:department:delete")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]

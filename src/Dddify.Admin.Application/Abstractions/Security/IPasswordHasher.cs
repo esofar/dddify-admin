@@ -13,10 +13,10 @@ public interface IPasswordHasher
     string Hash(string password);
 
     /// <summary>
-    /// 验证明文密码是否与密码哈希匹配。
+    /// 验证明文密码与哈希是否匹配。
     /// </summary>
     /// <param name="password">明文密码。</param>
     /// <param name="passwordHash">密码哈希值。</param>
-    /// <returns>匹配返回 <see langword="true" />，否则返回 <see langword="false" />。</returns>
+    /// <returns>是否匹配。</returns>
     bool Verify(string password, string passwordHash);
 }

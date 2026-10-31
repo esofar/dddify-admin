@@ -8,8 +8,8 @@ namespace Dddify.Admin.Web.Requests.Users;
 /// <param name="Name">姓名。</param>
 /// <param name="Email">邮箱。</param>
 /// <param name="PhoneNumber">手机号。</param>
-/// <param name="DepartmentId">部门ID。</param>
-/// <param name="RoleId">角色ID。</param>
+/// <param name="DepartmentId">部门 ID。</param>
+/// <param name="RoleId">角色 ID。</param>
 /// <param name="Gender">性别。</param>
 /// <param name="Status">状态。</param>
 public sealed record SearchUserRequest(

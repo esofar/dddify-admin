@@ -1,19 +1,20 @@
 namespace Dddify.Admin.Application.Abstractions.Locking;
 
 /// <summary>
-/// 提供跨进程、跨实例的分布式互斥锁能力。
+/// 分布式锁服务。
 /// </summary>
 public interface IDistributedLock
 {
     /// <summary>
-    /// 尝试获取指定资源的分布式锁。
+    /// 获取指定资源的分布式锁。
     /// </summary>
-    /// <param name="resource">需要加锁的资源名称，同一资源在同一时间只允许一个持有者。</param>
-    /// <param name="leaseTime">锁租约时长，超过该时间未续约时锁会自动过期。</param>
-    /// <param name="timeout">获取锁的最长等待时间；为 <see cref="TimeSpan.Zero" /> 时表示不等待。</param>
-    /// <param name="autoRenew">是否在持有锁期间自动续约，适用于执行时间可能超过租约的任务。</param>
-    /// <param name="cancellationToken">取消等待或获取锁操作的令牌。</param>
-    /// <returns>成功获取后的锁句柄，释放或释放资源时会解除锁。</returns>
+    /// <param name="resource">加锁资源名称。</param>
+    /// <param name="leaseTime">锁租约时长，未续约时到期失效。</param>
+    /// <param name="timeout">最长等待时间；为 null 时持续等待，为零时仅尝试一次。</param>
+    /// <param name="autoRenew">是否自动续约，默认开启。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
+    /// <returns>锁句柄，异步释放时解除锁。</returns>
+    /// <exception cref="TimeoutException">等待超时仍未获取锁。</exception>
     Task<IDistributedLockHandle> AcquireAsync(
         string resource,
         TimeSpan leaseTime,

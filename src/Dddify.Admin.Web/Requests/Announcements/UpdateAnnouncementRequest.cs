@@ -1,13 +1,13 @@
 namespace Dddify.Admin.Web.Requests.Announcements;
 
 /// <summary>
-/// Update announcement request.
+/// 修改公告请求。
 /// </summary>
-/// <param name="Title">Announcement title.</param>
-/// <param name="Summary">Announcement summary.</param>
-/// <param name="ContentHtml">Announcement content HTML.</param>
-/// <param name="AudienceType">Announcement audience type.</param>
-/// <param name="AudienceTargetIds">Announcement audience target ids.</param>
+/// <param name="Title">公告标题。</param>
+/// <param name="Summary">公告摘要。</param>
+/// <param name="ContentHtml">公告正文 HTML。</param>
+/// <param name="AudienceType">受众类型。</param>
+/// <param name="AudienceTargetIds">受众目标 ID 列表。</param>
 public record UpdateAnnouncementRequest(
     string Title,
     string Summary,

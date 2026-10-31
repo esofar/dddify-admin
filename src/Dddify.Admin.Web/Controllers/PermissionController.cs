@@ -16,7 +16,7 @@ public class PermissionController(ISender sender) : BaseController
     /// 获取所有权限。
     /// </summary>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>权限列表。</returns>
     [HttpGet("all", Name = "GetAllPermissions")]
     [ProducesResponseType<ApiResult<IEnumerable<PermissionDto>>>(StatusCodes.Status200OK)]
     public async Task<IEnumerable<PermissionDto>> GetAllPermissionsAsync(CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ public class PermissionController(ISender sender) : BaseController
     /// <param name="name">权限名称。</param>
     /// <param name="code">权限标识。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>权限列表。</returns>
     [HttpGet(Name = "SearchPermissions")]
     [Permission("system:permission:index")]
     [ProducesResponseType<ApiResult<IEnumerable<PermissionDto>>>(StatusCodes.Status200OK)]
@@ -47,7 +47,6 @@ public class PermissionController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">新增权限请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPost(Name = "CreatePermission")]
     [Permission("system:permission:create")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -67,10 +66,9 @@ public class PermissionController(ISender sender) : BaseController
     /// <summary>
     /// 修改权限。
     /// </summary>
-    /// <param name="id">权限ID。</param>
+    /// <param name="id">权限 ID。</param>
     /// <param name="request">修改权限请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}", Name = "UpdatePermission")]
     [Permission("system:permission:update")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -94,9 +92,8 @@ public class PermissionController(ISender sender) : BaseController
     /// <summary>
     /// 删除权限。
     /// </summary>
-    /// <param name="id">权限ID。</param>
+    /// <param name="id">权限 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpDelete("{id}", Name = "DeletePermission")]
     [Permission("system:permission:delete")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]

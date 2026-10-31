@@ -10,7 +10,7 @@ namespace Dddify.Admin.Web.Requests.Users;
 /// <param name="BirthDate">出生日期。</param>
 /// <param name="Email">邮箱。</param>
 /// <param name="PhoneNumber">手机号。</param>
-/// <param name="DepartmentId">部门ID。</param>
+/// <param name="DepartmentId">部门 ID。</param>
 public sealed record CreateUserRequest(
     string Password,
     string Name,

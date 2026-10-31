@@ -19,10 +19,10 @@ namespace Dddify.Admin.Web.Controllers;
 public class MeController(ISender sender, ICurrentUser currentUser) : BaseController
 {
     /// <summary>
-    /// 获取用户属性信息。
+    /// 获取当前用户资料。
     /// </summary>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>当前用户资料、角色及权限。</returns>
     [HttpGet(Name = "GetProfile")]
     [ProducesResponseType<ApiResult<CurrentUserDto>>(StatusCodes.Status200OK)]
     public async Task<CurrentUserDto> GetProfileAsync(CancellationToken cancellationToken)
@@ -51,7 +51,6 @@ public class MeController(ISender sender, ICurrentUser currentUser) : BaseContro
     /// </summary>
     /// <param name="request">切换当前角色请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("roles", Name = "SwitchRole")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResultWithErrors>(StatusCodes.Status400BadRequest)]
@@ -71,7 +70,7 @@ public class MeController(ISender sender, ICurrentUser currentUser) : BaseContro
     /// </summary>
     /// <param name="request">查询收件箱列表请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>收件箱消息分页列表。</returns>
     [HttpGet("inbox-items", Name = "SearchMeInboxItems")]
     [ProducesResponseType<ApiResult<PagedResult<InboxItemListDto>>>(StatusCodes.Status200OK)]
     public async Task<IPagedResult<InboxItemListDto>> SearchInboxItemsAsync(
@@ -88,10 +87,10 @@ public class MeController(ISender sender, ICurrentUser currentUser) : BaseContro
     }
 
     /// <summary>
-    /// 查询未读收件箱数量。
+    /// 获取未读消息数量。
     /// </summary>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>未读消息数量。</returns>
     [HttpGet("inbox-items/unread-count", Name = "GetUnreadInboxItemCount")]
     [ProducesResponseType<ApiResult<UnreadInboxItemCountDto>>(StatusCodes.Status200OK)]
     public async Task<UnreadInboxItemCountDto> GetUnreadInboxItemCountAsync(CancellationToken cancellationToken)
@@ -104,9 +103,8 @@ public class MeController(ISender sender, ICurrentUser currentUser) : BaseContro
     /// <summary>
     /// 标记收件箱消息为已读。
     /// </summary>
-    /// <param name="request">标记收件箱消息为已读请求。</param>
+    /// <param name="request">标记消息已读请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("inbox-items/read", Name = "MarkInboxItemsAsRead")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
     public async Task MarkInboxItemsAsReadAsync(
@@ -121,9 +119,8 @@ public class MeController(ISender sender, ICurrentUser currentUser) : BaseContro
     /// <summary>
     /// 删除收件箱消息。
     /// </summary>
-    /// <param name="id">收件箱消息ID。</param>
+    /// <param name="id">收件箱消息 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpDelete("inbox-items/{id}", Name = "DeleteMeInboxItem")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
     public async Task DeleteInboxItemAsync([FromRoute] Guid id, CancellationToken cancellationToken)
@@ -134,11 +131,11 @@ public class MeController(ISender sender, ICurrentUser currentUser) : BaseContro
     }
 
     /// <summary>
-    /// 读取收件箱消息来源详情。
+    /// 获取消息来源详情。
     /// </summary>
-    /// <param name="id">收件箱消息ID。</param>
+    /// <param name="id">收件箱消息 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>消息来源详情。</returns>
     [HttpGet("inbox-items/{id}/source", Name = "GetInboxItemSource")]
     [ProducesResponseType<ApiResult<InboxItemSourceDetailDto>>(StatusCodes.Status200OK)]
     public async Task<InboxItemSourceDetailDto> GetInboxItemSourceAsync(

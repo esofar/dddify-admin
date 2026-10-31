@@ -1,28 +1,28 @@
 namespace Dddify.Admin.Application.Abstractions.Locking;
 
 /// <summary>
-/// 表示一次已获取的分布式锁持有句柄。
+/// 分布式锁句柄。
 /// </summary>
 public interface IDistributedLockHandle : IAsyncDisposable
 {
     /// <summary>
-    /// 当前锁保护的资源名称。
+    /// 加锁资源名称。
     /// </summary>
     string Resource { get; }
 
     /// <summary>
-    /// 当前锁持有者的唯一令牌，用于确保只释放自己持有的锁。
+    /// 锁持有者令牌，用于校验释放权限。
     /// </summary>
     string Token { get; }
 
     /// <summary>
-    /// 指示当前句柄是否仍然持有锁。
+    /// 本地记录的锁持有状态，不实时查询锁是否有效。
     /// </summary>
     bool IsAcquired { get; }
 
     /// <summary>
-    /// 主动释放当前持有的分布式锁。
+    /// 释放锁并停止续约。
     /// </summary>
-    /// <param name="cancellationToken">取消释放操作的令牌。</param>
+    /// <param name="cancellationToken">取消令牌。</param>
     ValueTask ReleaseAsync(CancellationToken cancellationToken = default);
 }

@@ -19,7 +19,7 @@ public class UserController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">查询用户列表请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>用户分页列表。</returns>
     [HttpGet(Name = "SearchUsers")]
     [Permission("system:user:index")]
     [ProducesResponseType<ApiResult<PagedResult<UserListDto>>>(StatusCodes.Status200OK)]
@@ -43,9 +43,9 @@ public class UserController(ISender sender) : BaseController
     /// <summary>
     /// 获取用户详情。
     /// </summary>
-    /// <param name="id">用户ID。</param>
+    /// <param name="id">用户 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>用户详情。</returns>
     [HttpGet("{id}", Name = "GetUserDetail")]
     [ProducesResponseType<ApiResult<UserDetailDto>>(StatusCodes.Status200OK)]
     public async Task<UserDetailDto> GetUserDetailAsync(
@@ -60,7 +60,6 @@ public class UserController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">新增用户请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPost(Name = "CreateUser")]
     [Permission("system:user:create")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -90,10 +89,9 @@ public class UserController(ISender sender) : BaseController
     /// <summary>
     /// 修改用户。
     /// </summary>
-    /// <param name="id">用户ID。</param>
+    /// <param name="id">用户 ID。</param>
     /// <param name="request">修改用户请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}", Name = "UpdateUser")]
     [Permission("system:user:update")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -122,9 +120,8 @@ public class UserController(ISender sender) : BaseController
     /// <summary>
     /// 删除用户。
     /// </summary>
-    /// <param name="id">用户ID。</param>
+    /// <param name="id">用户 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpDelete("{id}", Name = "DeleteUser")]
     [Permission("system:user:delete")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -137,9 +134,9 @@ public class UserController(ISender sender) : BaseController
     /// <summary>
     /// 获取用户角色。
     /// </summary>
-    /// <param name="id">用户ID。</param>
+    /// <param name="id">用户 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>用户角色列表。</returns>
     [HttpGet("{id}/roles", Name = "GetUserRoles")]
     [ProducesResponseType<ApiResult<IEnumerable<UserRoleDto>>>(StatusCodes.Status200OK)]
     public async Task<IEnumerable<UserRoleDto>> GetUserRolesAsync(
@@ -152,10 +149,9 @@ public class UserController(ISender sender) : BaseController
     /// <summary>
     /// 分配用户角色。
     /// </summary>
-    /// <param name="id">用户ID。</param>
-    /// <param name="roleIds">角色ID列表。</param>
+    /// <param name="id">用户 ID。</param>
+    /// <param name="roleIds">角色 ID 列表。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}/roles", Name = "AssignUserRoles")]
     [Permission("system:user:assign-roles")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -174,9 +170,8 @@ public class UserController(ISender sender) : BaseController
     /// <summary>
     /// 重置用户密码。
     /// </summary>
-    /// <param name="id">用户ID。</param>
+    /// <param name="id">用户 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPatch("{id}/password", Name = "ResetUserPassword")]
     [Permission("system:user:reset-password")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -191,9 +186,8 @@ public class UserController(ISender sender) : BaseController
     /// <summary>
     /// 启用用户。
     /// </summary>
-    /// <param name="id">用户ID。</param>
+    /// <param name="id">用户 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPatch("{id}/enable", Name = "EnableUser")]
     [Permission("system:user:enable")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -206,9 +200,8 @@ public class UserController(ISender sender) : BaseController
     /// <summary>
     /// 禁用用户。
     /// </summary>
-    /// <param name="id">用户ID。</param>
+    /// <param name="id">用户 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPatch("{id}/disable", Name = "DisableUser")]
     [Permission("system:user:disable")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]

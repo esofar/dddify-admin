@@ -17,7 +17,7 @@ public class LookupController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">查询字典列表请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>字典分页列表。</returns>
     [HttpGet(Name = "SearchLookups")]
     [Permission("system:lookup:index")]
     [ProducesResponseType<ApiResult<PagedResult<LookupDto>>>(StatusCodes.Status200OK)]
@@ -38,7 +38,6 @@ public class LookupController(ISender sender) : BaseController
     /// </summary>
     /// <param name="request">新增字典请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPost(Name = "CreateLookup")]
     [Permission("system:lookup:create")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -51,10 +50,9 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 修改字典。
     /// </summary>
-    /// <param name="id">字典ID。</param>
+    /// <param name="id">字典 ID。</param>
     /// <param name="request">修改字典请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}", Name = "UpdateLookup")]
     [Permission("system:lookup:update")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -70,9 +68,8 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 删除字典。
     /// </summary>
-    /// <param name="id">字典ID。</param>
+    /// <param name="id">字典 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpDelete("{id}", Name = "DeleteLookup")]
     [Permission("system:lookup:delete")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -85,9 +82,9 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 获取字典项列表。
     /// </summary>
-    /// <param name="id">字典ID。</param>
+    /// <param name="id">字典 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>字典项列表。</returns>
     [HttpGet("{id}/items", Name = "GetLookupItems")]
     [ProducesResponseType<ApiResult<IEnumerable<LookupItemDto>>>(StatusCodes.Status200OK)]
     public async Task<IEnumerable<LookupItemDto>> GetItemsAsync(
@@ -100,10 +97,9 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 新增字典项。
     /// </summary>
-    /// <param name="id">字典ID。</param>
+    /// <param name="id">字典 ID。</param>
     /// <param name="request">新增字典项请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPost("{id}/items", Name = "CreateLookupItem")]
     [Permission("system:lookup:item:create")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -119,11 +115,10 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 修改字典项。
     /// </summary>
-    /// <param name="id">字典ID。</param>
-    /// <param name="itemId">字典项ID。</param>
+    /// <param name="id">字典 ID。</param>
+    /// <param name="itemId">字典项 ID。</param>
     /// <param name="request">修改字典项请求。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}/items/{itemId}", Name = "UpdateLookupItem")]
     [Permission("system:lookup:item:update")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -140,10 +135,9 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 删除字典项。
     /// </summary>
-    /// <param name="id">字典ID。</param>
-    /// <param name="itemId">字典项ID。</param>
+    /// <param name="id">字典 ID。</param>
+    /// <param name="itemId">字典项 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpDelete("{id}/items/{itemId}", Name = "DeleteLookupItem")]
     [Permission("system:lookup:item:delete")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -159,10 +153,9 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 启用字典项。
     /// </summary>
-    /// <param name="id">字典ID。</param>
-    /// <param name="itemId">字典项ID。</param>
+    /// <param name="id">字典 ID。</param>
+    /// <param name="itemId">字典项 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}/items/{itemId}/enable", Name = "EnableLookupItem")]
     [Permission("system:lookup:item:enable")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -178,10 +171,9 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 禁用字典项。
     /// </summary>
-    /// <param name="id">字典ID。</param>
-    /// <param name="itemId">字典项ID。</param>
+    /// <param name="id">字典 ID。</param>
+    /// <param name="itemId">字典项 ID。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}/items/{itemId}/disable", Name = "DisableLookupItem")]
     [Permission("system:lookup:item:disable")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
@@ -197,10 +189,9 @@ public class LookupController(ISender sender) : BaseController
     /// <summary>
     /// 排序字典项。
     /// </summary>
-    /// <param name="id">字典ID。</param>
-    /// <param name="orderedItemIds">已排序的字典项ID列表。</param>
+    /// <param name="id">字典 ID。</param>
+    /// <param name="orderedItemIds">已排序的字典项 ID 列表。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
     [HttpPut("{id}/items/sort", Name = "SortLookupItems")]
     [ProducesResponseType<ApiResult>(StatusCodes.Status200OK)]
     [ProducesResponseType<ApiResultWithErrors>(StatusCodes.Status400BadRequest)]
@@ -217,7 +208,7 @@ public class LookupController(ISender sender) : BaseController
     /// </summary>
     /// <param name="code">字典编码。</param>
     /// <param name="cancellationToken">取消令牌。</param>
-    /// <returns></returns>
+    /// <returns>可用字典项列表。</returns>
     [HttpGet("items", Name = "GetLookupActiveItems")]
     [ProducesResponseType<ApiResult<IEnumerable<LookupActiveItemDto>>>(StatusCodes.Status200OK)]
     public async Task<IEnumerable<LookupActiveItemDto>> GetActiveItemsAsync(

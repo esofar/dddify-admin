@@ -6,10 +6,10 @@ namespace Dddify.Admin.Application.Abstractions.Security;
 public interface IPasswordGenerator
 {
     /// <summary>
-    /// 生成符合安全要求的随机密码。
+    /// 生成随机密码。
     /// </summary>
-    /// <param name="length">密码长度，默认 12 位。</param>
+    /// <param name="length">密码长度，范围 8～16，默认 12。</param>
     /// <param name="includeSpecialCharacters">是否包含特殊字符。</param>
-    /// <returns>随机生成的明文密码。</returns>
+    /// <returns>随机明文密码。</returns>
     string Generate(int length = 12, bool includeSpecialCharacters = true);
 }
